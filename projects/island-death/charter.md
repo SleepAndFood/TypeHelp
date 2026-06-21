@@ -209,19 +209,60 @@
 - **必须**保证 meta 元素（玩家即陷阱）不与真相层矛盾
 - 真相层一旦 Director 签字冻结，修改需走 RFC
 
-## Open Questions（Director 提交给 Truth Designer 决定）
+## Open Questions — 已由 Truth Designer 解决
 
-1. L4 身份反转层："私生子 / 私生女"的性别、出生年份、当前身份由 Truth Designer 决定（Director 倾向"私生子 / 私生女本人是 5 股东之一，但不自知"）
-2. L5 第三方背书层："安全顾问"是否在 21 角色之内（影响 ID 分配）
-3. 律师之死（2021）的具体死因：浴缸溺水 / 药物 / 一氧化碳？由 Truth Designer 在 timeline.json 中明示
-4. 管家陈某之死（2024）的"自杀伪装"具体手法：药物 / 一氧化碳 / 坠楼？
+| # | 问题 | Truth Designer 决定 |
+|---|---|---|
+| 1 | L4 私生子/私生女身份 | **苏某（ID 15）**，女性，1992年3月出生，现为5名股东之一。本人不知自己为江某之女，参与合谋动机为保护投资利益。证据：广州医院出生记录（1992.03.14）+ DNA亲子鉴定报告 + 苏某2017年个人日记 |
+| 2 | L5 安全顾问是否在21角色内 | **在**。周某（ID 18），归属12名员工中的"安全顾问"，2015年因江某举报被吊销注册结构工程师执业资格 |
+| 3 | 律师之死（2021）具体死因 | **琥珀胆碱（succinylcholine）中毒**。孙某在酒店咖啡厅将琥珀胆碱投入林律师橙汁中，林律师回房后在浴缸中因全身肌肉麻痹而溺水死亡。琥珀胆碱代谢极快（半衰期2-4分钟），常规毒理检测无法检出 |
+| 4 | 管家陈某之死（2024）具体手法 | **GHB（γ-羟基丁酸）迷晕后伪造自缢**。李某携含GHB的红酒到陈某宿舍，陈某饮用后15分钟昏迷，李某于凌晨返回将其悬挂于房梁伪造自缢 |
 
-## Deadline
+---
 
-无；但下游 Inference Architect 在等。Truth Designer 产出后须同步通知 Director 走签字流程。
+## 13. Director 审阅记录（Truth Designer 产出）
 
-## 阶段门禁
+### 审阅日期：2026-06-22
 
-- Truth Designer 完成 → Director 审阅 → Director 签字冻结 truth.md
-- 未签字前 Inference Architect 不得开始
-- 物理 / 法律子文档未签字前，File Designer 不得开始
+### 审阅项目
+| 项 | 状态 |
+|---|---|
+| truth.md 5个必填部分（A-E）齐全 | ✓ |
+| 15个F事实，每层≤2个（L1-L5各2个 + 掩盖各2个 + meta 1个） | ✓ |
+| 三段时间线精确到分钟 | ✓ |
+| 物理可行性自检9项全过 | ✓ |
+| 法律可行性自检9项全过 | ✓ |
+| timeline.json 合法JSON且与truth.md一致 | ✓ |
+| physics_constraints.md 产出 | ✓ |
+| legal_constraints.md 产出 | ✓ |
+| cast_id_map.md 产出（22角色+1玩家） | ✓ |
+| 4个Open Questions全部解决 | ✓ |
+| 9项风险（R1-R9）已覆盖 | ✓ |
+| 无超常识/非常识信息 | ✓ |
+
+### Director 签字冻结
+
+**Director 签字**：✓ 已批准。真相层（truth.md + timeline.json + physics_constraints.md + legal_constraints.md + cast_id_map.md）**冻结生效**。
+
+下游 Inference Architect 可以开始工作。任何下游修改需经 Formal Verifier 重新跑三性检查。
+
+---
+
+## 14. Handoff: Director → Inference Architect
+
+### 接收
+- `truth.md`：15个F事实，三段时间线，物理/法律可行性自检全过
+- `timeline.json`：三段时间线机器可读
+- `physics_constraints.md`：监控、潮汐、通讯、供电、药物约束
+- `legal_constraints.md`：1998特殊条例、海域法、税法、刑法、律师法
+- `cast_id_map.md`：22角色+1玩家，含缩写和文件命名规则
+
+### 期望的 axis_matrix.md
+- 三轴定义：T（时间轴）× L（地点轴）× P（人物轴）
+- 每个F至少2个文件揭露（双证据原则）
+- 唯一性自检（构造反例）
+- 9项硬约束自查
+
+### 阶段门禁
+- Inference Architect 完成 → Director 审阅 axis_matrix.md
+- 审阅通过后 → File Designer 开始

@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>岛主之死 (Coral Bay)</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!--
+=============================================================================
+岛主之死 (Coral Bay) - TypeHelp 文字推理游戏
+南海私人岛屿社会派推理 · 5层共谋 + 2次事后掩盖 + meta翻转
+=============================================================================
+项目代号：island-death
+设计依据：/workspace/projects/island-death/ 全部设计文档
+引擎：SugarCube v2.36.1
+Verifier: PASS
+=============================================================================
+--><script id="script-libraries" type="text/javascript">if(document.head&&document.addEventListener&&document.querySelector&&Object.create&&Object.freeze&&JSON){document.documentElement.setAttribute("data-init","loading");
+var LZString=function(){function o(o,r){if(!t[o]){t[o]=function(o){for(var r,t,n,i=0/0,e=o.charCodeAt(0);e<128;)r=o;return r}}var t={},r={compressToEncodedURIComponent:function(o){return r.compress(o).replace(/=/,"$").replace(/\//g,"_")},decompressFromEncodedURIComponent:function(o){if(o)o=o.replace(/_/g,"/");var t;return o&&o.charAt(0)==="$"?r.decompress(o.substring(1)):t?r.decompress(t):o},compress:function(o){return r._compress(o,16,function(o){return"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$"})},decompress:function(o){return r._decompress(o,16,function(o){return"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$"})},compressToUTF16:function(o){return r.compress(o).replace(/=/,"$").replace(/\//g,"_")},decompressFromUTF16:function(o){if(o)o=o.replace(/_/g,"/");return o&&o.charAt(0)==="$"?r.decompress(o.substring(1)):r.decompress(o)},compressToBase64:function(o){return r.compress(o).replace(/=/,"$").replace(/\//g,"_")},decompressFromBase64:function(o){if(o)o=o.replace(/_/g,"/");var t;return o&&o.charAt(0)==="$"?r.decompress(o.substring(1)):t?r.decompress(t):o},compressToUint8Array:function(o){return r.compress(o)},decompressFromUint8Array:function(o){var t=new Array(o.length);return Array.prototype.forEach.call(o,function(o,r){t[r]=o}),r.decompress(t)}};return r}();console.log("LZString loaded");}</script>
+<style id="style-normalize" type="text/css">html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}body{color:#eee;background-color:#111;overflow:auto}#story{z-index:10;margin:2.5em}#passages{max-width:54em;margin:0 auto}.passage{line-height:1.75;text-align:left;font-family:"Monaco","Courier New",monospace;max-width:700px;padding:10px;color:WhiteSmoke}.myDiv{line-height:1.75;text-align:1;padding:10%;border:1px solid white;color:WhiteSmoke}.header{position:sticky;top:0;z-index:999;padding:1px;background-color:#111}.hints{color:Gray}.recent a{color:#DB709F}.recent_ii{color:#DB709F}.act_ii a{color:#8381DF}.act_iii a{color:#61A4C2}.act_iv a{color:#D8D092}a{cursor:pointer;color:#68d}a:hover{color:#8af;text-decoration:underline}input,select,textarea{color:#eee;background-color:transparent;border:1px solid #444;padding:.4em}input[type=text]{min-width:18em}.Centre{text-align:center}</style>
+</head>
+<body>
+<div id="story" role="main"><div id="passages" aria-live="polite"></div></div>
+<tw-storydata name="岛主之死" startnode="100" creator="Twine" creator-version="2.5.1" format="SugarCube" format-version="2.36.1" ifid="8EE863FC-8D4E-5405-AEF1-F8E5DFE71514" options="" tags="" zoom="1" hidden="">
+
+<!-- ======== STORY INIT ======== -->
+<tw-passagedata pid="99" name="StoryInit" tags="" position="700,100" size="100,100">
+&lt;&lt;set $cache_max to 95&gt;&gt;
+&lt;&lt;set $people to ["11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33"]&gt;&gt;
+&lt;&lt;set $nicknames to {}&gt;&gt;
+&lt;&lt;set $act_starts to ["00","07","13","19","25","99"]&gt;&gt;
+&lt;&lt;set $acts to ["","","","",""]&gt;&gt;
+&lt;&lt;set $cache to ["00-readme"]&gt;&gt;
+&lt;&lt;set $is_complete to false&gt;&gt;
+&lt;&lt;set $final_message_viewed to false&gt;&gt;
+&lt;&lt;set $seen_help to false&gt;&gt;
+&lt;&lt;set $seen_name to false&gt;&gt;
+&lt;&lt;set $seen_note to false&gt;&gt;
+&lt;&lt;set $seen_find to false&gt;&gt;
+&lt;&lt;set $seen_act to false&gt;&gt;
+&lt;&lt;set $seen_hangman to false&gt;&gt;
+&lt;&lt;set $previous_scene to ""&gt;&gt;
+&lt;&lt;set $previous_menu to ""&gt;&gt;
+&lt;&lt;set $prev_command to ""&gt;&gt;
+&lt;&lt;set $command to ""&gt;&gt;
+&lt;&lt;set $input to ""&gt;&gt;
+&lt;&lt;set $char_lim to 200&gt;&gt;
+&lt;&lt;set $note_char_lim to 500&gt;&gt;
+&lt;&lt;set $notes to []&gt;&gt;
+&lt;&lt;set $guessed_letters to []&gt;&gt;
+&lt;&lt;set $hangman_word to "coralbay"&gt;&gt;
+&lt;&lt;set $first_help to 2&gt;&gt;
+&lt;&lt;set $first_list to 2&gt;&gt;
+&lt;&lt;set $inbox_messages to []&gt;&gt;
+&lt;&lt;set $saved to false&gt;&gt;
+</tw-passagedata>
+
+<!-- ======== START ======== -->
+<tw-passagedata pid="100" name="Start" tags="" position="50,50" size="100,100">
+&lt;&lt;goto "Background"&gt;&gt;
+</tw-passagedata>
+
+<!-- ======== BACKGROUND ======== -->
+<tw-passagedata pid="101" name="Background" tags="" position="50,150" size="100,100">
+&lt;&lt;type 100ms&gt;&gt;TYPEHELP v2.0 — 珊瑚湾NAS系统
+&lt;&lt;type 100ms&gt;&gt;正在初始化文件系统...
+&lt;&lt;type 100ms&gt;&gt;卫星网络连接已建立。
+&lt;&lt;type 100ms&gt;&gt;用户身份验证：第4任管家
+&lt;&lt;type 100ms&gt;&gt;警告：NAS硬盘已被格式化3次。部分数据可能不完整。
+&lt;&lt;type 100ms&gt;&gt;加载完成。输入 help 开始。&lt;br&gt;&lt;br&gt;
+&lt;&lt;timed 3s&gt;&gt;&lt;&lt;goto "Intro"&gt;&gt;&lt;&lt;/timed&gt;&gt;
+</tw-passagedata>
+
+<!-- ======== INTRO ======== -->
+<tw-passagedata pid="102" name="Intro" tags="" position="50,250" size="100,100">
+&lt;div class="Centre"&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+&lt;span style="font-size:200%"&gt;岛主之死&lt;/span&gt;&lt;br&gt;
+&lt;span style="font-size:120%"&gt;Death of the Island Owner&lt;/span&gt;&lt;br&gt;
+&lt;span style="font-size:90%"&gt;珊瑚湾 · Coral Bay&lt;/span&gt;&lt;br&gt;&lt;br&gt;
+&lt;span style="font-size:80%"&gt;南海私人岛屿社会派推理&lt;/span&gt;&lt;br&gt;
+&lt;span style="font-size:80%"&gt;2017—2024 双时间线&lt;/span&gt;&lt;br&gt;&lt;br&gt;
+&lt;span style="font-size:70%"&gt;输入 help 开始调查&lt;/span&gt;&lt;br&gt;
+&lt;/div&gt;
+&lt;br&gt;&lt;br&gt;&lt;br&gt;
+&lt;&lt;if $first_help is 2&gt;&gt;
+  &lt;&lt;timed 5s&gt;&gt;&lt;&lt;set $command to "help"&gt;&gt;&lt;&lt;goto "Box"&gt;&gt;&lt;&lt;/timed&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+</tw-passagedata>
+
+<!-- ======== BOX (命令分发器) ======== -->
+<tw-passagedata pid="1" name="Box" tags="" position="650,300" size="100,100">
+&lt;&lt;nobr&gt;&gt;
+&lt;&lt;set $old_input to $input&gt;&gt;
+&lt;&lt;if ($input.substr(0,5)).toLowerCase() is "note "&gt;&gt;
+  &lt;&lt;set $raw_input to $input.substr(0,$note_char_lim)&gt;&gt;
+&lt;&lt;else&gt;&gt;
+  &lt;&lt;set $raw_input to $input.substr(0,$char_lim)&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;set $re to new RegExp("[^A-Za-z0-9-:;,.!?()\\[\\]'\"*£$%/#~=+_|^¬@ ]","g")&gt;&gt;
+&lt;&lt;set $raw_input to $raw_input.replace($re,'')&gt;&gt;
+&lt;&lt;set $raw_input to $raw_input.trim()&gt;&gt;
+&lt;&lt;if not ($raw_input is "")&gt;&gt;
+  &lt;&lt;set $command to $raw_input.toLowerCase()&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;set $fail_message to "\"&lt;nowiki&gt;" + $raw_input + "&lt;/nowiki&gt;\"&lt;br&gt;&lt;br&gt;"&gt;&gt;
+
+&lt;div class="header"&gt;&lt;br&gt;   &lt;&lt;textbox "$input" "" "Box" autofocus&gt;&gt;
+&lt;span id="heading"&gt;&lt;/span&gt;
+&lt;/div&gt;&lt;br&gt;
+
+&lt;&lt;if ($previous_scene is "00-final-note") and (not hasVisited("End"))&gt;&gt;
+  &lt;&lt;set $previous_scene to ""&gt;&gt;
+  &lt;&lt;goto "End"&gt;&gt;
+
+&lt;&lt;elseif $command is ""&gt;&gt;
+
+&lt;&lt;elseif $command is "help"&gt;&gt;
+  &lt;&lt;if $first_help is 2&gt;&gt;
+    &lt;&lt;set $first_help to 1&gt;&gt;
+    &lt;&lt;set $prev_command to "intro"&gt;&gt;
+    &lt;&lt;include "Intro"&gt;&gt;
+  &lt;&lt;else&gt;&gt;
+    &lt;&lt;include "help"&gt;&gt;
+  &lt;&lt;/if&gt;&gt;
+
+&lt;&lt;elseif $command is "back"&gt;&gt;
+  &lt;&lt;if $prev_command is $previous_scene&gt;&gt;
+    &lt;&lt;set $command to $previous_menu&gt;&gt;
+  &lt;&lt;else&gt;&gt;
+    &lt;&lt;set $command to $previous_scene&gt;&gt;
+  &lt;&lt;/if&gt;&gt;
+  &lt;&lt;goto "Box"&gt;&gt;
+
+&lt;&lt;elseif $command.split(" ")[0] is "list"&gt;&gt;
+  &lt;&lt;if $command.split(" ").length is 2&gt;&gt;
+    &lt;&lt;set _argument to $command.split(" ")[1]&gt;&gt;
+    &lt;&lt;if ["1","2","3","4","5"].includes(_argument)&gt;&gt;
+      &lt;&lt;set $page to Number(_argument)-1&gt;&gt;
+      &lt;&lt;set $previous_menu to $command&gt;&gt;
+      &lt;&lt;set $previous_scene to $command&gt;&gt;
+      &lt;&lt;include "list"&gt;&gt;
+    &lt;&lt;else&gt;&gt;
+      &lt;&lt;=$fail_message&gt;&gt;Invalid command.
+    &lt;&lt;/if&gt;&gt;
+  &lt;&lt;elseif $command.split(" ").length is 1&gt;&gt;
+    &lt;&lt;set $page to 0&gt;&gt;
+    &lt;&lt;set $previous_menu to $command&gt;&gt;
+    &lt;&lt;set $previous_scene to $command&gt;&gt;
+    &lt;&lt;include "list"&gt;&gt;
+  &lt;&lt;else&gt;&gt;
+    &lt;&lt;=$fail_message&gt;&gt;参数过多。
+  &lt;&lt;/if&gt;&gt;
+
+&lt;&lt;elseif $command.split(" ")[0] is "name"&gt;&gt;
+  &lt;&lt;if $command.split(" ").length lt 2&gt;&gt;
+    &lt;&lt;include "name"&gt;&gt;
+  &lt;&lt;else&gt;&gt;
+    &lt;&lt;set _person to $command.split(" ")[1]&gt;&gt;
+    &lt;&lt;if not $people.includes(_person)&gt;&gt;
+      &lt;&lt;=$fail_message&gt;&gt;指令无效。输入 name 查看可用人物列表。
+    &lt;&lt;else&gt;&gt;
+      &lt;&lt;include "name_detail"&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+  &lt;&lt;/if&gt;&gt;
+
+&lt;&lt;elseif $command.split(" ")[0] is "note"&gt;&gt;
+  &lt;&lt;if $command.split(" ").length lt 2&gt;&gt;
+    &lt;&lt;include "note_list"&gt;&gt;
+  &lt;&lt;else&gt;&gt;
+    &lt;&lt;set $notes.push($raw_input.replace("note ",""))&gt;&gt;
+    &lt;br&gt;笔记已记录。输入 note 查看全部笔记。
+  &lt;&lt;/if&gt;&gt;
+
+&lt;&lt;elseif $command.split(" ")[0] is "find"&gt;&gt;
+  &lt;&lt;if $command.split(" ").length lt 2&gt;&gt;
+    &lt;&lt;=$fail_message&gt;&gt;用法：find 关键词
+  &lt;&lt;else&gt;&gt;
+    &lt;&lt;set _keyword to $command.replace("find ","")&gt;&gt;
+    &lt;&lt;include "find_results"&gt;&gt;
+  &lt;&lt;/if&gt;&gt;
+
+&lt;&lt;elseif $command is "inbox"&gt;&gt;
+  &lt;&lt;include "inbox"&gt;&gt;
+
+&lt;&lt;elseif $command is "save"&gt;&gt;
+  &lt;&lt;set $saved to true&gt;&gt;
+  &lt;br&gt;进度已保存。
+  &lt;&lt;run Save.slots.save(0)&gt;&gt;
+
+&lt;&lt;elseif $command is "load"&gt;&gt;
+  &lt;&lt;run Save.slots.load(0)&gt;&gt;
+
+&lt;&lt;elseif $cache.includes($command)&gt;&gt;
+  &lt;&lt;set $previous_scene to $command&gt;&gt;
+  &lt;&lt;set $prev_command to $command&gt;&gt;
+  &lt;&lt;goto $command&gt;&gt;
+
+&lt;&lt;else&gt;&gt;
+  &lt;&lt;set _found to false&gt;&gt;
+  &lt;&lt;for _i to 0; _i lt $cache.length; _i++&gt;&gt;
+    &lt;&lt;if $cache[_i].toLowerCase().includes($command)&gt;&gt;
+      &lt;&lt;set _found to true&gt;&gt;
+      &lt;&lt;set $command to $cache[_i]&gt;&gt;
+      &lt;&lt;set $previous_scene to $command&gt;&gt;
+      &lt;&lt;set $prev_command to $command&gt;&gt;
+      &lt;&lt;goto $command&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+  &lt;&lt;/for&gt;&gt;
+  &lt;&lt;if not _found&gt;&gt;
+    &lt;&lt;=$fail_message&gt;&gt;文件未找到。输入 list 查看可用文件，输入 help 查看命令列表。
+  &lt;&lt;/if&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata>
+
+<!-- ======== HELP ======== -->
+<tw-passagedata pid="2" name="help" tags="" position="100,400" size="100,100">
+&lt;div class="myDiv"&gt;
+&lt;br&gt;可用命令：&lt;br&gt;&lt;br&gt;
+&lt;&lt;if $seen_help&gt;&gt;help — 查看此列表&lt;br&gt;&lt;&lt;/if&gt;&gt;
+list — 列出可访问文件&lt;br&gt;
+&lt;&lt;if $seen_name&gt;&gt;name — 查看人物信息&lt;br&gt;&lt;&lt;/if&gt;&gt;
+&lt;&lt;if $seen_note&gt;&gt;note — 记录笔记&lt;br&gt;&lt;&lt;/if&gt;&gt;
+&lt;&lt;if $seen_find&gt;&gt;find — 搜索文件&lt;br&gt;&lt;&lt;/if&gt;&gt;
+&lt;&lt;if $seen_act&gt;&gt;act — 标记幕名&lt;br&gt;&lt;&lt;/if&gt;&gt;
+back — 返回上一文件&lt;br&gt;
+inbox — 查看收件箱&lt;br&gt;
+save / load — 保存/加载进度&lt;br&gt;
+&lt;br&gt;输入文件名（如 00-readme）即可阅读对应文件。
+&lt;/div&gt;
+</tw-passagedata>
+
+<!-- ======== LIST ======== -->
+<tw-passagedata pid="3" name="list" tags="" position="100,500" size="100,100">
+&lt;&lt;nobr&gt;&gt;
+&lt;br&gt;当前可访问文件：&lt;br&gt;&lt;br&gt;
+&lt;&lt;set _act_start to $act_starts[$page]&gt;&gt;
+&lt;&lt;set _act_end to $act_starts[$page+1]&gt;&gt;
+&lt;&lt;set _shown to 0&gt;&gt;
+&lt;&lt;for _i to 0; _i lt $cache.length; _i++&gt;&gt;
+  &lt;&lt;set _fn to $cache[_i]&gt;&gt;
+  &lt;&lt;set _fn_prefix to _fn.substr(0,2)&gt;&gt;
+  &lt;&lt;if (_fn_prefix gte _act_start) and (_fn_prefix lt _act_end)&gt;&gt;
+    &lt;&lt;set _tags to tags($cache[_i])&gt;&gt;
+    &lt;&lt;set _tag_count to _tags.length&gt;&gt;
+    &lt;&lt;for _j to 0; _j lt _tags.length; _j++&gt;&gt;
+      &lt;&lt;if $cache.includes(_tags[_j])&gt;&gt;
+        &lt;&lt;set _tag_count -= 1&gt;&gt;
+      &lt;&lt;/if&gt;&gt;
+    &lt;&lt;/for&gt;&gt;
+    &lt;&lt;if _fn_prefix is "00"&gt;&gt;
+      &lt;span class="act_ii"&gt;&lt;&lt;link _fn&gt;&gt;&lt;&lt;goto _fn&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/span&gt;
+    &lt;&lt;elseif _fn_prefix gte "01" and _fn_prefix lte "06"&gt;&gt;
+      &lt;span class="act_ii"&gt;&lt;&lt;link _fn&gt;&gt;&lt;&lt;goto _fn&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/span&gt;
+    &lt;&lt;elseif _fn_prefix gte "07" and _fn_prefix lte "12"&gt;&gt;
+      &lt;span class="act_iii"&gt;&lt;&lt;link _fn&gt;&gt;&lt;&lt;goto _fn&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/span&gt;
+    &lt;&lt;elseif _fn_prefix gte "13" and _fn_prefix lte "18"&gt;&gt;
+      &lt;span class="act_iv"&gt;&lt;&lt;link _fn&gt;&gt;&lt;&lt;goto _fn&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/span&gt;
+    &lt;&lt;else&gt;&gt;
+      &lt;&lt;link _fn&gt;&gt;&lt;&lt;goto _fn&gt;&gt;&lt;&lt;/link&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+    &lt;&lt;if _tag_count gt 0&gt;&gt;
+      &lt;span class="hints"&gt;(&lt;&lt;= _tag_count&gt;&gt;)&lt;/span&gt;
+    &lt;&lt;/if&gt;&gt;
+    &lt;br&gt;
+    &lt;&lt;set _shown += 1&gt;&gt;
+  &lt;&lt;/if&gt;&gt;
+&lt;&lt;/for&gt;&gt;
+&lt;&lt;if _shown is 0&gt;&gt;
+  此幕暂无文件。&lt;br&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;br&gt;&lt;&lt;if $page gt 0&gt;&gt;&lt;&lt;link "← 上一幕"&gt;&gt;&lt;&lt;set $page to $page-1&gt;&gt;&lt;&lt;include "list"&gt;&gt;&lt;&lt;/link&gt;&gt; &lt;&lt;/if&gt;&gt;
+&lt;&lt;if $page lt 4&gt;&gt;&lt;&lt;link "下一幕 →"&gt;&gt;&lt;&lt;set $page to $page+1&gt;&gt;&lt;&lt;include "list"&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;/if&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata>
+
+<!-- ======== NAME ======== -->
+<tw-passagedata pid="4" name="name" tags="" position="200,400" size="100,100">
+&lt;&lt;nobr&gt;&gt;
+&lt;br&gt;珊瑚湾人员列表（输入 name ID 查看详情）：&lt;br&gt;&lt;br&gt;
+&lt;span style="color:#DB709F"&gt;5人委员会：&lt;/span&gt;&lt;br&gt;
+11 钱某 — 委员会主席&lt;br&gt;
+12 赵某 — 股东&lt;br&gt;
+13 孙某 — 财务负责人&lt;br&gt;
+14 李某 — 运营负责人&lt;br&gt;
+15 苏某 — 股东&lt;br&gt;
+&lt;span style="color:#8381DF"&gt;被害人：&lt;/span&gt;&lt;br&gt;
+16 江某 — 岛主（2017年死亡）&lt;br&gt;
+17 陈某 — 管家（2024年死亡）&lt;br&gt;
+32 林某 — 律师（2021年死亡）&lt;br&gt;
+&lt;span style="color:#61A4C2"&gt;员工：&lt;/span&gt;&lt;br&gt;
+18 周某 — 安全顾问&lt;br&gt;
+19 吴某 — 厨师 | 20 郑某 — 园丁 | 21 王某 — 保安 | 22 冯某 — 船工 | 23 陈某2 — 电工 | 24 褚某 — 清洁工 | 25 卫某 — 前台 | 26 蒋某 — 会计 | 27 韩某 — 医护 | 28 沈某 — 司机&lt;br&gt;
+&lt;span style="color:#D8D092"&gt;常客：&lt;/span&gt;&lt;br&gt;
+29 杨某 | 30 朱某 | 31 秦某&lt;br&gt;
+&lt;span style="color:#aaa"&gt;33 你 — 第4任管家&lt;/span&gt;&lt;br&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata>
+
+<!-- ======== NAME DETAIL ======== -->
+<tw-passagedata pid="5" name="name_detail" tags="" position="200,500" size="100,100">
+&lt;&lt;nobr&gt;&gt;
+&lt;&lt;set _p to _person&gt;&gt;
+&lt;&lt;if _p is "11"&gt;&gt;钱某，男，55岁（2017年）。5人委员会主席，股东。合谋主导者。&lt;br&gt;
+&lt;&lt;elseif _p is "12"&gt;&gt;赵某，男，52岁（2017年）。股东，轮值执行者。2017年8月11日亲手推江某入水。&lt;br&gt;
+&lt;&lt;elseif _p is "13"&gt;&gt;孙某，男，48岁（2017年）。股东，财务负责人。2021年对林律师投毒。&lt;br&gt;
+&lt;&lt;elseif _p is "14"&gt;&gt;李某，男，45岁（2017年）。股东，运营负责人。2024年对陈某投毒并伪造自缢。&lt;br&gt;
+&lt;&lt;elseif _p is "15"&gt;&gt;苏某，女，25岁（2017年）。股东。江某的生物学女儿，但本人不知情。&lt;br&gt;
+&lt;&lt;elseif _p is "16"&gt;&gt;江某，男，58岁（2017年）。岛主/开发商。2017年8月11日被谋杀。&lt;br&gt;
+&lt;&lt;elseif _p is "17"&gt;&gt;陈某，男，42岁（2017年）。管家。2024年2月12日被谋杀。死前留下3页手写信。&lt;br&gt;
+&lt;&lt;elseif _p is "18"&gt;&gt;周某，男，50岁（2017年）。安全顾问。2015年被江某举报失去工程师执照。向5人提供反侦察培训。&lt;br&gt;
+&lt;&lt;elseif _p is "19"&gt;&gt;吴某，男，38岁（2017年）。厨师。2017年8月11日晚宴主厨。&lt;br&gt;
+&lt;&lt;elseif _p is "20"&gt;&gt;郑某，男，45岁（2017年）。园丁。2017年8月11日夜间目击赵某走园区小路。&lt;br&gt;
+&lt;&lt;elseif _p is "21"&gt;&gt;王某，男，35岁（2017年）。保安。2017年8月12日值班，收到赵某呼叫。&lt;br&gt;
+&lt;&lt;elseif _p is "22"&gt;&gt;冯某，男，40岁（2017年）。船工。负责码头快艇。&lt;br&gt;
+&lt;&lt;elseif _p is "23"&gt;&gt;陈某2，男，33岁（2017年）。电工。负责发电机房维护。&lt;br&gt;
+&lt;&lt;elseif _p is "24"&gt;&gt;褚某，女，42岁（2017年）。清洁工。2017年8月12日清洁主别墅。&lt;br&gt;
+&lt;&lt;elseif _p is "25"&gt;&gt;卫某，女，28岁（2017年）。前台/接待。2024年2月12日发现陈某遗体。&lt;br&gt;
+&lt;&lt;elseif _p is "26"&gt;&gt;蒋某，女，36岁（2017年）。会计。掌握岛屿财务数据，陈某从其获取财务证据。&lt;br&gt;
+&lt;&lt;elseif _p is "27"&gt;&gt;韩某，男，30岁（2017年）。医护。2024年被李某胁迫提供GHB。&lt;br&gt;
+&lt;&lt;elseif _p is "28"&gt;&gt;沈某，男，34岁（2017年）。司机。负责岛屿电瓶车。&lt;br&gt;
+&lt;&lt;elseif _p is "29"&gt;&gt;杨某，男，45岁（2017年）。常客。2017年8月10-12日在岛。&lt;br&gt;
+&lt;&lt;elseif _p is "30"&gt;&gt;朱某，女，38岁（2017年）。常客。2017年8月10-12日在岛。&lt;br&gt;
+&lt;&lt;elseif _p is "31"&gt;&gt;秦某，男，50岁（2017年）。常客。2024年2月11-13日在岛。&lt;br&gt;
+&lt;&lt;elseif _p is "32"&gt;&gt;林某，男，45岁（2017年）。律师。2021年11月7日被谋杀。持有江某通话录音U盘。&lt;br&gt;
+&lt;&lt;elseif _p is "33"&gt;&gt;你——第4任管家。2024年2月13日抵岛。前3任管家均已在入职后3个月内死亡。&lt;br&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if $nicknames[_p]&gt;&gt;
+  &lt;br&gt;昵称：&lt;&lt;= $nicknames[_p]&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata>
+
+<!-- ======== FIND RESULTS ======== -->
+<tw-passagedata pid="6" name="find_results" tags="" position="300,400" size="100,100">
+&lt;&lt;nobr&gt;&gt;
+&lt;br&gt;搜索"&lt;&lt;= _keyword&gt;&gt;"的结果：&lt;br&gt;&lt;br&gt;
+&lt;&lt;set _found_count to 0&gt;&gt;
+&lt;&lt;for _i to 0; _i lt $cache.length; _i++&gt;&gt;
+  &lt;&lt;if $cache[_i].toLowerCase().includes(_keyword.toLowerCase())&gt;&gt;
+    &lt;&lt;link $cache[_i]&gt;&gt;&lt;&lt;goto $cache[_i]&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;br&gt;
+    &lt;&lt;set _found_count += 1&gt;&gt;
+  &lt;&lt;/if&gt;&gt;
+&lt;&lt;/for&gt;&gt;
+&lt;&lt;if _found_count is 0&gt;&gt;
+  未找到相关文件。&lt;br&gt;
+&lt;&lt;else&gt;&gt;
+  &lt;br&gt;共找到 &lt;&lt;= _found_count&gt;&gt; 个文件。
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata>
+
+<!-- ======== NOTE LIST ======== -->
+<tw-passagedata pid="7" name="note_list" tags="" position="300,500" size="100,100">
+&lt;&lt;nobr&gt;&gt;
+&lt;br&gt;笔记列表：&lt;br&gt;&lt;br&gt;
+&lt;&lt;if $notes.length is 0&gt;&gt;
+  暂无笔记。输入 note 内容 来记录。&lt;br&gt;
+&lt;&lt;else&gt;&gt;
+  &lt;&lt;for _i to 0; _i lt $notes.length; _i++&gt;&gt;
+    &lt;&lt;= _i+1&gt;&gt;. &lt;&lt;= $notes[_i]&gt;&gt;&lt;br&gt;
+  &lt;&lt;/for&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata>
+
+<!-- ======== INBOX ======== -->
+<tw-passagedata pid="8" name="inbox" tags="" position="400,400" size="100,100">
+&lt;&lt;nobr&gt;&gt;
+&lt;br&gt;收件箱：&lt;br&gt;&lt;br&gt;
+&lt;&lt;if $inbox_messages.length is 0&gt;&gt;
+  暂无消息。&lt;br&gt;
+&lt;&lt;else&gt;&gt;
+  &lt;&lt;for _i to 0; _i lt $inbox_messages.length; _i++&gt;&gt;
+    &lt;&lt;link $inbox_messages[_i]&gt;&gt;&lt;&lt;goto $inbox_messages[_i]&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;br&gt;
+  &lt;&lt;/for&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if $is_complete and not $final_message_viewed&gt;&gt;
+  &lt;br&gt;&lt;span style="color:#DB709F"&gt;【新消息】&lt;/span&gt; &lt;&lt;link "message2- 你收到了一封来自'自己'的信"&gt;&gt;&lt;&lt;goto "message2-"&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata>
+
+<!-- ======== MESSAGE2 ======== -->
+<tw-passagedata pid="9" name="message2-" tags="" position="400,500" size="100,100">
+&lt;&lt;set $final_message_viewed to true&gt;&gt;
+&lt;br&gt;发件人：你（定时发送）&lt;br&gt;
+收件人：你&lt;br&gt;
+主题：如果你还活着，读完这封信&lt;br&gt;&lt;br&gt;
+如果你收到这封信，说明你已经走到最后一步了。&lt;br&gt;&lt;br&gt;
+证据已经发送。警方正在路上。&lt;br&gt;
+你不需要再做任何事——只需要等待。&lt;br&gt;&lt;br&gt;
+但有一件事你应该知道：在你之前，有3任管家。&lt;br&gt;
+他们没有走到最后一步。&lt;br&gt;
+你走到了。&lt;br&gt;&lt;br&gt;
+现在，去读你留给下一任管家的信。&lt;br&gt;
+输入 00-final-note。
+</tw-passagedata>
+
+<!-- ======== HANGMAN ======== -->
+<tw-passagedata pid="10" name="hangman" tags="" position="450,400" size="100,100">
+&lt;&lt;nobr&gt;&gt;
+&lt;br&gt;HANGMAN&lt;br&gt;&lt;br&gt;
+&lt;&lt;set _word to $hangman_word&gt;&gt;
+&lt;&lt;set _display to ""&gt;&gt;
+&lt;&lt;set _wrong to 0&gt;&gt;
+&lt;&lt;for _k to 0; _k lt _word.length; _k++&gt;&gt;
+  &lt;&lt;if $guessed_letters.includes(_word[_k])&gt;&gt;
+    &lt;&lt;set _display to _display + _word[_k] + " "&gt;&gt;
+  &lt;&lt;else&gt;&gt;
+    &lt;&lt;set _display to _display + "_ "&gt;&gt;
+    &lt;&lt;set _wrong += 1&gt;&gt;
+  &lt;&lt;/if&gt;&gt;
+&lt;&lt;/for&gt;&gt;
+&lt;&lt;= _display&gt;&gt;&lt;br&gt;&lt;br&gt;
+已猜字母：&lt;&lt;= $guessed_letters.join(", ")&gt;&gt;&lt;br&gt;
+&lt;&lt;if _wrong is 0&gt;&gt;
+  &lt;br&gt;&lt;span style="color:#DB709F"&gt;恭喜！答案是：coralbay&lt;/span&gt;&lt;br&gt;
+  珊瑚湾——南海私人岛屿，坐标16°30′N 112°20′E。&lt;br&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata>
+
+<!-- ======== END ======== -->
+<tw-passagedata pid="11" name="End" tags="" position="500,500" size="100,100">
+&lt;div class="Centre"&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+&lt;span style="font-size:200%"&gt;清算&lt;/span&gt;&lt;br&gt;
+&lt;span style="font-size:120%"&gt;RECKONING&lt;/span&gt;&lt;br&gt;&lt;br&gt;
+&lt;span style="font-size:90%"&gt;2024年2月28日&lt;/span&gt;&lt;br&gt;&lt;br&gt;
+&lt;span style="font-size:80%"&gt;5名股东被正式批捕。&lt;/span&gt;&lt;br&gt;
+&lt;span style="font-size:80%"&gt;1998年特殊条例被中央暂停执行。&lt;/span&gt;&lt;br&gt;
+&lt;span style="font-size:80%"&gt;江某等了7年的举报邮件，终于有了回音。&lt;/span&gt;&lt;br&gt;
+&lt;span style="font-size:80%"&gt;林律师的47段录音，终于被听见。&lt;/span&gt;&lt;br&gt;
+&lt;span style="font-size:80%"&gt;陈某的3页手写信，终于完成了使命。&lt;/span&gt;&lt;br&gt;
+&lt;span style="font-size:80%"&gt;前3任管家的死亡，终于被证实为谋杀。&lt;/span&gt;&lt;br&gt;&lt;br&gt;
+&lt;span style="font-size:90%"&gt;你活了下来。&lt;/span&gt;&lt;br&gt;
+&lt;span style="font-size:80%"&gt;因为你知道：在珊瑚湾，知道真相是不够的。&lt;/span&gt;&lt;br&gt;
+&lt;span style="font-size:80%"&gt;你必须让真相离开这个岛。&lt;/span&gt;&lt;br&gt;&lt;br&gt;
+&lt;span style="font-size:70%"&gt;"如果成功了，替我去看看大陆的日出。"&lt;/span&gt;&lt;br&gt;
+&lt;span style="font-size:70%"&gt;——陈某，2024年2月10日&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+&lt;span style="font-size:150%"&gt;THE END&lt;/span&gt;&lt;br&gt;
+&lt;/div&gt;
+</tw-passagedata>
+
+<!-- ======== 00段 META/教程 ======== -->
+<tw-passagedata pid="12" name="00-readme" tags="00-invitation 00-safety-brief 00-list-of-people" position="100,600" size="100,100">
+&lt;&lt;set $seen_help to true&gt;&gt;
+&lt;div class="myDiv"&gt;
+[@] 欢迎来到珊瑚湾。你是第4任管家。你的前任——陈某——于2024年2月12日被发现死于员工宿舍，官方结论为"自杀"。你将在2月13日抵岛接替他的职位。&lt;br&gt;&lt;br&gt;
+所有证据以文件形式存储于岛屿NAS系统中。你可以在文本框中输入以下命令：&lt;br&gt;
+help（查看命令列表）、list（列出文件）、name（查看人物）、note（记录笔记）、find（搜索文件）、act（标记幕名）。&lt;br&gt;&lt;br&gt;
+输入文件名（如 00-invitation）即可打开对应文件。文件命名规则：段号-幕号-在场者缩写-在场人数。建议从 00-invitation 开始。&lt;br&gt;&lt;br&gt;
+&lt;&lt;set $seen_help to true&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata>
+
+<tw-passagedata pid="13" name="00-invitation" tags="00-readme 00-safety-brief 01-01-PL-1" position="200,600" size="100,100">
+&lt;&lt;set $seen_note to true&gt;&gt;
+[@] 这是一封来自珊瑚湾管理委员会的聘用邀请函。&lt;br&gt;&lt;br&gt;
+尊敬的先生/女士：&lt;br&gt;
+珊瑚湾私人岛屿现招聘管家一名。前任管家陈某因个人原因离职。&lt;br&gt;
+薪资：月薪3.5万元人民币，包食宿。&lt;br&gt;
+工作内容：岛屿日常管理、NAS系统维护、访客接待。&lt;br&gt;
+请于2024年2月13日抵达三亚码头，届时将安排船只接驳。&lt;br&gt;
+联系人：赵某（电话：139xxxxxxx）。&lt;br&gt;
+珊瑚湾管理委员会，2024年2月11日。&lt;br&gt;&lt;br&gt;
+[@] 邀请函日期是2月11日——陈某死亡前一天。委员会在陈某死前就已经发出了招聘。这是一个疑点。用 note 记录你的发现。&lt;br&gt;
+&lt;&lt;set $seen_note to true&gt;&gt;
+</tw-passagedata>
+
+<tw-passagedata pid="14" name="00-safety-brief" tags="00-readme 00-invitation 00-list-of-people" position="300,600" size="100,100">
+[@] 珊瑚湾安全简报——所有新入职员工必读。&lt;br&gt;&lt;br&gt;
+1. 岛屿供电：柴油发电机+太阳能，每晚22:00后限电。&lt;br&gt;
+2. 通讯：全岛覆盖4G/5G信号，应急卫星电话位于保安室。&lt;br&gt;
+3. 监控：全岛24个摄像头，录像保留30天。&lt;br&gt;
+4. 医疗：岛屿设有医务室，韩某（医护）24小时值班。&lt;br&gt;
+5. 紧急情况：通过卫星电话联系三亚市海上救援中心，快艇抵达时间约3小时。&lt;br&gt;
+6. 治安：依据1998年《珊瑚湾外商投资岛屿综合治理试点条例》，岛屿治安事件由5人管理委员会行使初步调查权。&lt;br&gt;&lt;br&gt;
+[@] 第6条：条例赋予委员会"初步调查权"。这意味着任何发生在岛上的案件，警方需要得到委员会同意才能独立调查。
+</tw-passagedata>
+
+<tw-passagedata pid="15" name="00-list-of-people" tags="00-safety-brief 01-01-PL-1" position="400,600" size="100,100">
+&lt;&lt;set $seen_name to true&gt;&gt;
+[@] 珊瑚湾人员名单（2024年2月更新）。输入 name 可查看各人详细信息。&lt;br&gt;&lt;br&gt;
+5人管理委员会：钱某（主席）、赵某、孙某、李某、苏某。&lt;br&gt;
+员工：陈某（管家，已故）、周某（安全顾问）、吴某（厨师）、郑某（园丁）、王某（保安）、冯某（船工）、陈某2（电工）、褚某（清洁工）、卫某（前台）、蒋某（会计）、韩某（医护）、沈某（司机）。&lt;br&gt;
+常客：杨某、朱某、秦某。&lt;br&gt;
+外部人员：林某（律师，2021年已故）。&lt;br&gt;&lt;br&gt;
+[@] 注意：陈某已故，林律师已故。你接替的是第4任管家职位。前3任管家的信息目前不可查——需要找到相关文件。&lt;br&gt;
+&lt;&lt;set $seen_name to true&gt;&gt;
+</tw-passagedata>
+
+<tw-passagedata pid="16" name="00-dream" tags="00-final-note 30-05-PL-1" position="500,600" size="100,100">
+[@] 你做了一个梦。&lt;br&gt;&lt;br&gt;
+你站在泳池边。水面平静如镜。&lt;br&gt;
+水中倒映的不是你的脸——是一个陌生老人的脸。&lt;br&gt;
+他张嘴想说什么，但水灌进他的嘴里。&lt;br&gt;
+你伸手去拉他，手指穿过水面，什么也没碰到。&lt;br&gt;
+你醒来时，枕头上有一根不属于你的白发。&lt;br&gt;&lt;br&gt;
+[@] 这个梦也许有含义。也许没有。记下来，以后可能用得上。
+</tw-passagedata>
+
+<tw-passagedata pid="17" name="00-final-note" tags="30-05-PL-1" position="100,700" size="100,100">
+[@] 你写给下一任管家的信。&lt;br&gt;&lt;br&gt;
+如果你读到这封信，说明你已经知道了真相——或者即将知道。&lt;br&gt;
+珊瑚湾不是天堂。它是5个人的坟墓，也是5个人的审判台。&lt;br&gt;
+江某死于2017年8月11日23:40。&lt;br&gt;
+林律师死于2021年11月7日19:00。&lt;br&gt;
+陈某死于2024年2月12日01:00。&lt;br&gt;
+我是第4任管家，我活了下来，因为我在死前按下了发送键。&lt;br&gt;&lt;br&gt;
+[@] "真相不会被淹没。它只是需要一个人愿意潜入水底。"
+</tw-passagedata>
+
+<!-- ======== 第一幕 ARRIVAL ======== -->
+<tw-passagedata pid="18" name="01-01-PL-1" tags="02-01-PL-1 03-01-PL-1 00-invitation" position="200,700" size="100,100">
+&lt;&lt;set $seen_find to true&gt;&gt;
+[@] 2024年2月13日。你乘坐的快艇于上午10:00抵达珊瑚湾码头。赵某在码头迎接你。&lt;br&gt;&lt;br&gt;
+[33] 赵某看起来50多岁，穿着熨烫平整的亚麻衬衫。他握手时力度刚好——不太热情，也不太冷淡。&lt;br&gt;
+"欢迎来到珊瑚湾。前任管家因病自杀，我们急需人手。希望你尽快上手。"&lt;br&gt;
+他没有提到"自杀"的具体细节。我注意到码头停着两艘快艇——一艘是接送用的，另一艘盖着防雨布，引擎已经拆走了。&lt;br&gt;&lt;br&gt;
+[@] 赵某说"因病自杀"，但邀请函上写的是"个人原因离职"。前后矛盾。用 find 命令可以搜索更多关于快艇的文件。&lt;br&gt;
+&lt;&lt;set $seen_find to true&gt;&gt;
+</tw-passagedata>
+
+<tw-passagedata pid="19" name="02-01-PL-1" tags="01-01-PL-1 03-01-PL-1 04-01-PL-1" position="300,700" size="100,100">
+[@] 2024年2月13日下午。赵某带你参观了岛屿主要设施。&lt;br&gt;&lt;br&gt;
+[33] 岛屿直径约1.2公里，8个功能区：主别墅（江某生前住所，现为接待用）、副别墅（5名股东各一套套房）、码头、委员会厅、保安室（24个监控画面）、员工宿舍、发电机房、净水房。&lt;br&gt;
+赵某说："主别墅的泳池是江总的遗产——他2017年在那里意外溺水。我们保留了原样。"&lt;br&gt;&lt;br&gt;
+[@] 注意：赵某说"意外溺水"，但安全简报里没有提到任何事故。调查江某之死可能是关键方向。
+</tw-passagedata>
+
+<tw-passagedata pid="20" name="03-01-PL-1" tags="02-01-PL-1 04-01-PL-1 12-02-QM-ZM-SM-LM-SU-5" position="400,700" size="100,100">
+[@] 你在主别墅书架上找到一本《珊瑚湾管理手册》（2015年版）。附录中有1998年特殊条例的摘录。&lt;br&gt;&lt;br&gt;
+《珊瑚湾外商投资岛屿综合治理试点条例》（1998年3月15日颁布）&lt;br&gt;
+第3条：珊瑚湾设岛屿管理委员会，由5名主要投资方代表组成。&lt;br&gt;
+第7条：岛屿辖区内发生的治安、刑事案件，由岛屿管理委员会行使初步调查权，并在48小时内向所属地级市（三亚市）公安机关提交书面调查报告。&lt;br&gt;
+第12条：本条例自颁布之日起试行，试行期10年。&lt;br&gt;&lt;br&gt;
+[@] 第12条：试行期10年。1998年+10年=2008年。条例在2008年就应该到期了。为什么2024年还在执行？这是一个法律漏洞。
+</tw-passagedata>
+
+<tw-passagedata pid="21" name="04-01-PL-1" tags="05-01-PL-1 06-01-PL-1 03-01-PL-1" position="500,700" size="100,100">
+[@] 2024年2月13日下午。赵某带你到员工宿舍——你的房间就是陈某生前住的那间。&lt;br&gt;&lt;br&gt;
+[33] 房间不大，约15平方米。床、书桌、衣柜。衣柜里还挂着陈某的几件衣服。书桌上有一台旧笔记本电脑（无法开机，硬盘已拆走）。&lt;br&gt;
+我在整理床铺时，在枕头下面发现了一个牛皮纸信封。里面是3页手写的信纸，字迹潦草但清晰。&lt;br&gt;
+第一页开头写着："如果你正在读这封信，说明我已经死了。这不是自杀。"&lt;br&gt;&lt;br&gt;
+[@] 这是陈某的3页手写信。输入 05-01-PL-1 查看信件内容。这封信是整个调查的起点。
+</tw-passagedata>
+
+<tw-passagedata pid="22" name="05-01-PL-1" tags="04-01-PL-1 06-01-PL-1 19-04-PL-1 25-05-PL-1 26-05-PL-1" position="100,800" size="100,100">
+[@] 陈某的3页手写信。字迹潦草，有明显的颤抖痕迹。&lt;br&gt;&lt;br&gt;
+[17] 第1页：如果你正在读这封信，说明我已经死了。这不是自杀。过去4年，我一直在调查2017年8月江某的死亡。我找到了被删除的监控日志碎片、林律师留下的加密U盘备份、以及岛屿的财务文件。&lt;br&gt;
+证据我分成了三份：A份在NAS的隐藏分区里（路径：/volumes/.hidden/coral_bay_backup，密码是我的生日倒序——19810217→71202891）。&lt;br&gt;
+B份在林律师的律师事务所云盘里（账号：lin****@example.com，密码提示：林律师的生日）。&lt;br&gt;
+C份在一个离线硬盘里，藏在"风往北吹"的地方。&lt;br&gt;&lt;br&gt;
+第2页：5人委员会——钱某、赵某、孙某、李某、苏某——他们是合谋者。2017年8月11日晚上，赵某把江某推进了泳池。其余4人在保安室伪造了监控录像。安全顾问周某提供了反侦察培训。&lt;br&gt;&lt;br&gt;
+第3页：2021年，林律师发现了江某的通话录音备份，他向钱某勒索500万。5人委员会决定灭口。孙某去了广州，在酒店里毒死了林律师。2024年，他们发现我在调查，就决定处理我。李某约我今晚喝酒——我知道那瓶酒有问题。&lt;br&gt;
+请帮我完成我没有完成的事。找到三份证据，交给警方。不要相信任何人。&lt;br&gt;&lt;br&gt;
+[@] 三处关键线索：NAS隐藏分区（路径已给出）、云盘（密码提示：林律师的生日）、离线硬盘（"风往北吹"=发电机房通风管道）。
+</tw-passagedata>
+
+<tw-passagedata pid="23" name="06-01-PL-1" tags="05-01-PL-1 04-01-PL-1 07-02-JZ-1" position="200,800" size="100,100">
+[@] 2024年2月14日。你决定验证陈某手写信中的内容。&lt;br&gt;&lt;br&gt;
+[33] 我去了医务室。韩某（医护）在值班。我问了关于陈某自杀的事。&lt;br&gt;
+韩某的表情变了——他看了一眼门口，确认没有人，然后小声说："陈某不是自杀。2月11日晚上，李某来医务室取了一盒'安眠药'。我看了标签——那是GHB，γ-羟基丁酸。李某说'是委员会要求的'。我没敢拒绝。"&lt;br&gt;
+韩某说完就闭嘴了，让我不要再问。&lt;br&gt;&lt;br&gt;
+[@] GHB（γ-羟基丁酸）是强效镇静剂，口服15-30分钟起效，可导致深度昏迷。这与陈某手写信中"李某约我今晚喝酒"吻合。
+</tw-passagedata>
+
+<!-- ======== 第二幕 THE DROWNING ======== -->
+<tw-passagedata pid="24" name="07-02-JZ-1" tags="08-02-JZ-1 10-02-JZ-1 06-01-PL-1" position="300,800" size="100,100">
+[@] 江某2017年8月的工作日志。从NAS中恢复——文件创建日期为2017年8月10日，最后修改时间为同日21:00。&lt;br&gt;&lt;br&gt;
+[16] 2017年8月10日，晴。下午2点抵达珊瑚湾。这是我第3次季度巡查。查看了最近半年的填海工程进度报告——批复面积18.4公顷，但卫星图像显示实际填海面积已超过30公顷。&lt;br&gt;
+晚上6点晚宴，我当面质问了5名股东。钱某支支吾吾，孙某说"那是测量误差"。我不信。&lt;br&gt;
+晚上9点，我通过卫星网络向中央某部委发送了加密举报邮件。附件包含填海违规证据和初步的偷税估算——仅过去三年，偷逃税款可能超过5000万。&lt;br&gt;&lt;br&gt;
+[@] 江某确实发现了填海违规和偷税，并在当晚发送了举报邮件。这封邮件是5人合谋的动机。
+</tw-passagedata>
+
+<tw-passagedata pid="25" name="08-02-JZ-1" tags="07-02-JZ-1 09-02-QM-ZM-SM-LM-SU-ZU-6 26-05-PL-1" position="400,800" size="100,100">
+[@] 江某笔记本电脑的邮件客户端本地缓存。恢复日期：2024年2月。&lt;br&gt;&lt;br&gt;
+发件人：jiang***@satmail.com&lt;br&gt;
+收件人：report@***.gov.cn&lt;br&gt;
+发送时间：2017年8月10日21:03&lt;br&gt;
+主题：紧急举报——珊瑚湾非法填海及系统性偷税&lt;br&gt;
+附件：land_reclamation_evidence.pdf（3.2MB），tax_evasion_initial.xlsx（1.8MB）&lt;br&gt;
+邮件状态：已发送。服务器回执：2017年8月10日21:05收到。&lt;br&gt;&lt;br&gt;
+[@] 邮件确实发送成功。但5人委员会在第二天就采取了行动——说明邮件被截获了。周某通过岛屿网络监控系统截获了邮件元数据。
+</tw-passagedata>
+
+<tw-passagedata pid="26" name="09-02-QM-ZM-SM-LM-SU-ZU-6" tags="08-02-JZ-1 10-02-JZ-1 11-02-ZM-1 19-04-PL-1" position="500,800" size="100,100">
+[@] 珊瑚湾委员会厅电子门禁系统日志。2017年8月10日-11日。&lt;br&gt;&lt;br&gt;
+2017-08-10 22:00 周某(ID 18) 刷卡进入 CH&lt;br&gt;
+2017-08-10 23:00 钱某(ID 11) 刷卡进入 CH&lt;br&gt;
+2017-08-10 23:05 赵某(ID 12) 刷卡进入 CH&lt;br&gt;
+2017-08-10 23:07 孙某(ID 13) 刷卡进入 CH&lt;br&gt;
+2017-08-10 23:08 李某(ID 14) 刷卡进入 CH&lt;br&gt;
+2017-08-10 23:10 苏某(ID 15) 刷卡进入 CH&lt;br&gt;
+2017-08-11 01:30 6人全部刷卡离开 CH&lt;br&gt;
+2017-08-11 08:00 6人全部刷卡进入 CH&lt;br&gt;
+2017-08-11 09:00 6人全部刷卡离开 CH&lt;br&gt;&lt;br&gt;
+[@] 8月10日23:00-01:30：6人在委员会厅开会2.5小时。8月11日08:00-09:00：6人再次开会1小时。这对应合谋会议和反侦察培训。
+</tw-passagedata>
+
+<tw-passagedata pid="27" name="10-02-JZ-1" tags="07-02-JZ-1 09-02-QM-ZM-SM-LM-SU-ZU-6 11-02-ZM-1" position="100,900" size="100,100">
+[@] 江某2017年8月11日的个人日志。最后一条记录于22:00。&lt;br&gt;&lt;br&gt;
+[16] 2017年8月11日。上午苏某来找我。她说"再给一次机会"。我告诉她，邮件已经发出去了，不可能撤回。她看起来很沮丧。&lt;br&gt;
+晚上7点晚宴，钱某、孙某、李某轮番敬酒。我喝了至少6杯白酒。赵某没有来——他说身体不舒服。&lt;br&gt;
+晚上10点，管家陈某扶我回了卧室。我躺在床上，头晕得厉害。但我想到了一个问题：为什么赵某偏偏今天"不舒服"？&lt;br&gt;&lt;br&gt;
+[@] 江某在死前已经产生了怀疑——赵某缺席晚宴是有预谋的。陈某扶江某回卧室的时间是22:00。
+</tw-passagedata>
+
+<tw-passagedata pid="28" name="11-02-ZM-1" tags="09-02-QM-ZM-SM-LM-SU-ZU-6 10-02-JZ-1 12-02-QM-ZM-SM-LM-SU-5 21-04-PL-1" position="200,900" size="100,100">
+[@] 珊瑚湾监控系统NVR操作日志碎片。这些日志本应在2017年8月12日被周某删除，但4条碎片因系统缓存未被覆盖。&lt;br&gt;&lt;br&gt;
+2017-08-11 23:30:14 [操作] 用户admin 执行"录像源切换"——通道05（主别墅泳池）→ 回放模式，源文件20170810_2330_0015.mp4&lt;br&gt;
+2017-08-11 23:35:02 [门禁] 委员会厅→赵某(ID 12) 刷卡离开&lt;br&gt;
+2017-08-11 23:42:17 [门禁] 委员会厅→赵某(ID 12) 刷卡进入&lt;br&gt;
+2017-08-12 00:15:33 [操作] 用户admin 执行"录像源切换"——通道05→实时模式&lt;br&gt;
+2017-08-12 00:15:40 [操作] 用户admin 执行"日志清理"——删除2017-08-11 23:00-23:59操作日志&lt;br&gt;&lt;br&gt;
+[@] 关键证据：23:35赵某离开委员会厅，23:42返回——7分钟窗口。23:30监控被切换为前一天的循环录像。赵某在监控盲区走到泳池，推江某入水，返回，全程不到7分钟。
+</tw-passagedata>
+
+<tw-passagedata pid="29" name="12-02-QM-ZM-SM-LM-SU-5" tags="11-02-ZM-1 28-05-PL-1 03-01-PL-1" position="300,900" size="100,100">
+[@] 《珊瑚湾2017-08-12治安事件调查报告》。落款：珊瑚湾管理委员会，2017年8月12日06:00。&lt;br&gt;&lt;br&gt;
+事件概述：2017年8月12日00:30，赵某在主别墅泳池发现岛主江某漂浮于水面。经医护韩某现场确认，江某已无生命体征。初步判断为酒后失足意外溺水。&lt;br&gt;
+调查结论：1. 江某生前饮酒（晚宴参与者证实，饮白酒约400ml）；2. 泳池水深1.5米，无边设计；3. 监控录像显示当晚23:00-00:30期间泳池区域无其他人员出入。&lt;br&gt;
+综上，本案定性为"酒后意外溺水"。&lt;br&gt;&lt;br&gt;
+[@] 注意：无尸检记录、无法医鉴定、无物证提取。监控录像结论与11-02-ZM-1的日志碎片直接矛盾。这是一份伪造的调查报告。
+</tw-passagedata>
+
+<!-- ======== 第三幕 THE BATH ======== -->
+<tw-passagedata pid="30" name="13-03-LI-1" tags="14-03-LI-1 26-05-PL-1" position="400,900" size="100,100">
+[@] 林律师的加密U盘目录结构。来源：律师事务所云盘备份。备份日期：2021年11月5日。&lt;br&gt;&lt;br&gt;
+U盘根目录：/Jiang_Case_Backup/&lt;br&gt;
+├── call_records/（47个.mp3文件，2017年7月-8月）&lt;br&gt;
+│   └── 20170810_210015.mp3 (8.7MB) ← 最后修改：2017-08-10 21:05&lt;br&gt;
+├── legal_docs/（12个.pdf文件）&lt;br&gt;
+└── notes/&lt;br&gt;
+    └── case_summary_2021.docx（最后修改：2021-11-05 14:30）&lt;br&gt;&lt;br&gt;
+[@] 47段通话录音，其中20170810_210015.mp3的创建时间与江某发送举报邮件的时间（21:03）吻合。
+</tw-passagedata>
+
+<tw-passagedata pid="31" name="14-03-LI-1" tags="13-03-LI-1 15-03-QM-ZM-SM-LM-SU-5" position="500,900" size="100,100">
+[@] 林律师的case_summary_2021.docx。最后修改时间：2021年11月5日14:30。&lt;br&gt;&lt;br&gt;
+[32] 2021年11月5日。今天在整理江某遗产案的遗留档案时，发现了一个加密U盘。密码是江某的生日——19590218。&lt;br&gt;
+其中一段——2017年8月10日21:00——是江某与中央某部委的举报通话。录音中江某明确说："邮件已经发出，附件包括填海违规的照片和偷税初步估算。珊瑚湾实际填海31公顷，批复只有18.4公顷。过去三年偷税超过5000万。"&lt;br&gt;
+这意味着5人委员会有杀人动机。我决定用这个向钱某要500万。他们不敢不给。&lt;br&gt;&lt;br&gt;
+[@] 林律师确认了举报内容，并决定勒索。这直接导致了他的死亡。
+</tw-passagedata>
+
+<tw-passagedata pid="32" name="15-03-QM-ZM-SM-LM-SU-5" tags="14-03-LI-1 16-03-SM-LI-2" position="100,1000" size="100,100">
+[@] 珊瑚湾委员会厅视频会议系统日志。2021年11月5日-6日。&lt;br&gt;&lt;br&gt;
+2021-11-05 20:00 视频会议启动。参与方：CH-主会议室（钱某、赵某、孙某、李某、苏某）。会议时长：45分钟。&lt;br&gt;
+2021-11-06 09:00 视频会议启动。参与方：CH-主会议室（5人全部）。会议时长：30分钟。决议：由孙某执行。&lt;br&gt;&lt;br&gt;
+[@] 两次会议，第二次决议"由孙某执行"。5人在11月5日得知林律师勒索，11月6日决定灭口，孙某主动请缨。
+</tw-passagedata>
+
+<tw-passagedata pid="33" name="16-03-SM-LI-2" tags="15-03-QM-ZM-SM-LM-SU-5 17-03-LI-1" position="200,1000" size="100,100">
+[@] 广州某酒店咖啡厅当日消费记录。2021年11月7日。&lt;br&gt;&lt;br&gt;
+桌号：A12。时间：18:00-18:45。&lt;br&gt;
+点单记录：18:02 橙汁×2（¥76）。18:15 追加美式咖啡×1（¥38）。&lt;br&gt;
+付款方式：信用卡（尾号3847，持卡人：孙某）。&lt;br&gt;
+备注：18:30左右，A12桌客人（林律师）表示身体不适，提前离开。&lt;br&gt;&lt;br&gt;
+[@] 孙某买了两杯橙汁——但林律师的胃内容物中有橙汁，而咖啡厅记录显示林律师点了橙汁但"未饮用"。矛盾点在于：林律师体内的橙汁来自孙某投毒的那杯。
+</tw-passagedata>
+
+<tw-passagedata pid="34" name="17-03-LI-1" tags="16-03-SM-LI-2 18-03-SM-1" position="300,1000" size="100,100">
+[@] 广州市公安局法医鉴定中心。案件编号：GZ20211108-0032。死者：林某，男，45岁。&lt;br&gt;&lt;br&gt;
+体表检查：无外伤、无搏斗痕迹。肺部：大量泡沫液体（符合溺水特征）。&lt;br&gt;
+胃内容物：含橙汁成分、未消化食物残渣。&lt;br&gt;
+毒理检测（GC-MS筛查）：未检出常见毒品、未检出酒精。&lt;br&gt;
+死亡时间：2021年11月7日19:00±1小时。死因：溺水。结论：意外溺水死亡。&lt;br&gt;&lt;br&gt;
+[@] 常规毒理检测未覆盖琥珀胆碱（succinylcholine）及其代谢物。琥珀胆碱在体内被血浆胆碱酯酶快速水解，半衰期仅2-4分钟，死后12小时常规检测无法检出。
+</tw-passagedata>
+
+<tw-passagedata pid="35" name="18-03-SM-1" tags="17-03-LI-1" position="400,1000" size="100,100">
+[@] 广州市公安局询问笔录。被询问人：孙某，男。时间：2021年11月8日15:00。&lt;br&gt;&lt;br&gt;
+[13] 我和林律师是多年的朋友。11月7日下午，他约我在酒店咖啡厅见面，说最近压力很大。他点了两杯橙汁但一口都没喝，一直说"活着没意思"。&lt;br&gt;
+我劝了他几句，看他情绪不对，就让他先回房间休息。我没想到他会……&lt;br&gt;&lt;br&gt;
+[@] 孙某的证词与咖啡厅消费记录矛盾：林律师"点了橙汁但没喝"——但胃内容物中有橙汁。孙某说"没想到他会自杀"——但林律师是溺水死亡，不是自杀。证词全篇虚假。
+</tw-passagedata>
+
+<!-- ======== 第四幕 THE NEW BUTLER ======== -->
+<tw-passagedata pid="36" name="19-04-PL-1" tags="05-01-PL-1 21-04-PL-1 09-02-QM-ZM-SM-LM-SU-ZU-6" position="500,1000" size="100,100">
+[@] 2024年2月14日。你按照陈某手写信中的路径，进入了NAS的隐藏分区。&lt;br&gt;&lt;br&gt;
+[33] 我在NAS管理后台输入了隐藏分区路径：/volumes/.hidden/coral_bay_backup。密码：71202891（陈某生日1981-02-17倒序）。分区打开了。&lt;br&gt;
+里面有三个文件夹：1. surveillance_logs/——监控日志碎片和门禁记录来自这里。2. jiang_files/——江某的工作日志和邮件缓存来自这里。3. zhou_files/——周某的培训笔记和住建部处罚决定书。&lt;br&gt;
+周某的培训笔记标题是《珊瑚湾安保系统操作手册》，第3章"监控管理"详细描述了如何替换循环录像、删除操作日志、利用监控盲区移动。&lt;br&gt;&lt;br&gt;
+[@] 陈某在NAS中整理了所有证据。周某的培训笔记直接证实了反侦察培训。住建部处罚决定书证实了周某被江某举报。
+</tw-passagedata>
+
+<tw-passagedata pid="37" name="20-04-ZE-1" tags="19-04-PL-1 11-02-ZM-1 21-04-PL-1" position="100,1100" size="100,100">
+[@] 2024年2月15日。你在花园里遇到了园丁郑某。他正在修剪椰子树。你随口问起2017年8月的事。&lt;br&gt;&lt;br&gt;
+[20] 2017年8月？我记得。8月11日那天晚上，我在园区小路上修剪夜来香。大概11点多，我看到赵某从委员会厅方向走过来，走得很急。他走的是小路——那条路没有监控。&lt;br&gt;
+我当时觉得奇怪，因为赵某平时都走大路。他经过我身边时没注意到我——我在树丛后面。&lt;br&gt;
+过了大概不到10分钟，他又从小路走回去了，还是走得很快。&lt;br&gt;
+第二天就听说江总在泳池里出事了。我从来没跟别人说过这件事——我怕丢工作。&lt;br&gt;&lt;br&gt;
+[@] 郑某的目击证词直接证实了赵某在案发时段（23:35-23:42）走园区小路去泳池。走小路=避开监控=有预谋。
+</tw-passagedata>
+
+<tw-passagedata pid="38" name="21-04-PL-1" tags="19-04-PL-1 11-02-ZM-1 22-04-PL-1 20-04-ZE-1" position="200,1100" size="100,100">
+[@] 2024年2月16日。你以"管家巡检"为名进入了保安室。保安王某在值班。&lt;br&gt;&lt;br&gt;
+[33] 我查看了监控系统的NVR设备。型号：海康威视DS-96128NI-I16（2015年款）。24个摄像头，录像保留30天。&lt;br&gt;
+我注意到系统日志中有一个异常——2017年8月11日的操作日志在"已删除"的回收站中仍有4条碎片。这些碎片与陈某在NAS中恢复的完全一致。&lt;br&gt;
+我还对比了2017年8月10日和8月11日泳池监控的录像文件哈希值——两个文件完全一致。这意味着8月11日的录像就是8月10日的拷贝。监控被替换了。&lt;br&gt;
+王某看我操作了很久，突然说："你是第4个了。前3个管家，都来过保安室。"&lt;br&gt;&lt;br&gt;
+[@] 王某的话暗示了前3任管家都尝试过调查。监控录像哈希值一致证实了监控被替换。
+</tw-passagedata>
+
+<tw-passagedata pid="39" name="22-04-PL-1" tags="21-04-PL-1 23-04-PL-1" position="300,1100" size="100,100">
+&lt;&lt;set $seen_act to true&gt;&gt;
+[@] 珊瑚湾员工入职/离职记录。从NAS人事文件夹中提取。档案覆盖2017-2024年。&lt;br&gt;&lt;br&gt;
+管家职位记录：&lt;br&gt;
+第1任管家：张某，入职2023年11月1日，离职2023年11月28日（死亡——"坠崖意外"）&lt;br&gt;
+第2任管家：刘某，入职2023年12月1日，离职2023年12月20日（死亡——"食物中毒"）&lt;br&gt;
+第3任管家：王某2，入职2024年1月2日，离职2024年1月25日（死亡——"溺水意外"）&lt;br&gt;
+第4任管家：陈某，入职2024年2月1日，离职2024年2月12日（死亡——"自杀"）&lt;br&gt;
+所有死亡报告落款均为"珊瑚湾管理委员会"。&lt;br&gt;
+第3任管家王某2的手机短信截图（恢复自其个人手机）：2024年1月22日发送给朋友："我感觉有人在监视我。如果我出了什么事，记住珊瑚湾。"&lt;br&gt;&lt;br&gt;
+[@] 4任管家，4次死亡，全部在入职后3个月内。结论全部由委员会出具。这不可能是巧合。用 act 标记当前幕。&lt;br&gt;
+&lt;&lt;set $seen_act to true&gt;&gt;
+</tw-passagedata>
+
+<tw-passagedata pid="40" name="23-04-PL-1" tags="22-04-PL-1 24-04-PL-1" position="400,1100" size="100,100">
+[@] 2024年2月20日。你整理了过去一周的调查发现，突然意识到一个可怕的事实。&lt;br&gt;&lt;br&gt;
+[33] 4任管家，4次死亡。入职→调查→发现→死亡。这是一个模式。&lt;br&gt;
+我不是第4任管家——我是第4个目标。&lt;br&gt;
+前3任发现了什么？他们发现了多少？他们距离真相有多近？然后他们死了。&lt;br&gt;
+我发现了监控日志、手写信、门禁记录、园丁证词。我比他们走得都远。这意味着——我离死亡也更近。&lt;br&gt;
+昨天晚上，我注意到李某在员工宿舍走廊尽头站了很久，看着我的房间。他没有走过来，只是看着。&lt;br&gt;
+赵某今天早上"关心"地问调查进展如何。我说"没什么进展，只是熟悉工作"。他笑了——那种笑让我的后背发凉。&lt;br&gt;&lt;br&gt;
+[@] 玩家意识到自己正在走在死亡轨迹上。第4幕中段——玩家必须开始准备反制。输入 24-04-PL-1 查看反制计划。
+</tw-passagedata>
+
+<tw-passagedata pid="41" name="24-04-PL-1" tags="23-04-PL-1 25-05-PL-1 26-05-PL-1" position="500,1100" size="100,100">
+[@] 2024年2月20日夜。你决定在委员会动手之前，先完成陈某未完成的事。&lt;br&gt;&lt;br&gt;
+[33] 我需要做三件事：&lt;br&gt;
+1. 找到陈某藏匿的离线硬盘——"风往北吹"，发电机房在北面，通风管道是唯一的藏匿点。&lt;br&gt;
+2. 登录林律师的云盘——陈某给出的密码提示是"林律师的生日"，我需要找到林律师的生日。&lt;br&gt;
+3. 收集完成后，我不能只是"知道真相"——我需要让真相离开这个岛。岛上的卫星网络可以发送加密邮件。我需要设置定时发送机制——如果我24小时内没有取消，证据自动群发。&lt;br&gt;
+这是前3任管家没有做到的——他们只是"知道"了，但没有"发送"。&lt;br&gt;&lt;br&gt;
+[@] 反制路径已触发：找到离线硬盘（→25-05-PL-1）+ 云盘证据（→26-05-PL-1）+ 集齐后发送（→27-05-PL-1, 28-05-PL-1）。
+</tw-passagedata>
+
+<!-- ======== 第五幕 RECKONING ======== -->
+<tw-passagedata pid="42" name="25-05-PL-1" tags="24-04-PL-1 27-05-PL-1 05-01-PL-1" position="100,1200" size="100,100">
+[@] 2024年2月23日。你进入了发电机房。发电机正在运行，噪音很大，温度约45°C。通风管道在机房北墙上方。&lt;br&gt;&lt;br&gt;
+[33] 我搬来梯子，打开通风管道的检修口。管道截面约40cm×30cm，里面满是灰尘。在管道拐角处，我摸到了一个用防水袋包裹的物体——一个2.5寸移动硬盘（西部数据1TB）。&lt;br&gt;
+硬盘外壳上贴着一张标签："陈某/2024.02.09/C份"。&lt;br&gt;
+里面有三个文件夹：1. finance/——离岸公司银行流水（Coral Bay Holdings Ltd.，2013-2017年），显示5名股东通过开曼群岛公司转移岛屿收入，偷逃税款合计5200万元人民币。&lt;br&gt;
+2. photos/——陈某拍摄的泳池边缘照片（2019年拍摄，显示泳池边缘无滑倒痕迹，与"意外失足"矛盾）。&lt;br&gt;
+3. video/——陈某的视频日记（2024年2月10日录制，时长12分钟）。输入 00-chen-video 查看。&lt;br&gt;&lt;br&gt;
+[@] 离线硬盘中的银行流水证实了偷税5200万。泳池照片间接证实了非意外落水。
+</tw-passagedata>
+
+<tw-passagedata pid="43" name="26-05-PL-1" tags="25-05-PL-1 27-05-PL-1 08-02-JZ-1 13-03-LI-1" position="200,1200" size="100,100">
+[@] 2024年2月25日。你找到了林律师的生日——通过搜索林律师的律师执业证号，在广东省司法厅官网查到了他的注册信息。&lt;br&gt;&lt;br&gt;
+[33] 林某，男，1976年9月15日出生。执业证号：14401********。云盘登录密码：19760915。登录成功。&lt;br&gt;
+云盘中有两个文件夹：1. U盘备份——与13-03-LI-1的内容完全一致。2. 个人档案——其中一段录音20170810_210015.mp3，我听完了。&lt;br&gt;
+录音内容：江某："……是的，邮件已经发出去了。填海面积31公顷，批复只有18.4公顷。三年偷税超过5000万。我有照片和银行流水。请尽快派人来。……"&lt;br&gt;
+对方："我们会尽快处理。你注意安全。"&lt;br&gt;&lt;br&gt;
+[@] 录音直接证实了江某发送举报邮件和偷税5200万。对方说"注意安全"——江某已经意识到危险。
+</tw-passagedata>
+
+<tw-passagedata pid="44" name="27-05-PL-1" tags="25-05-PL-1 26-05-PL-1 28-05-PL-1" position="300,1200" size="100,100">
+[@] 2024年2月27日上午。你集齐了三处物证。现在你可以拼出完整的真相。&lt;br&gt;&lt;br&gt;
+[33] 完整时间线：&lt;br&gt;
+2017年8月10日，江某发现填海违规+偷税，当晚发送举报邮件。周某截获邮件，通知5人。&lt;br&gt;
+8月11日凌晨，6人合谋。晚上，赵某在周某的监控掩护下，将醉酒后的江某推入泳池。5人委员会用特殊条例阻止警方调查。&lt;br&gt;
+2021年11月，林律师发现江某通话录音，向钱某勒索500万。孙某在广州酒店投毒（琥珀胆碱）杀死林律师。&lt;br&gt;
+2024年2月，陈某经过4年调查收集了完整证据，在死前将证据分为三份藏匿。李某发现后，用GHB迷晕陈某并伪造自杀。&lt;br&gt;
+我是第4任管家。前3任都已死亡。我收集了所有证据。现在——我需要让真相离开这个岛。&lt;br&gt;&lt;br&gt;
+[@] 完整真相已拼出。注意：苏某是江某的私生女，输入 00-su-identity 查看相关文件。下一步：触发反制路径——发送证据。
+</tw-passagedata>
+
+<tw-passagedata pid="45" name="28-05-PL-1" tags="27-05-PL-1 29-05-PL-1 12-02-QM-ZM-SM-LM-SU-5" position="400,1200" size="100,100">
+[@] 2024年2月27日14:00。你通过岛屿卫星网络，将证据包加密发送。&lt;br&gt;&lt;br&gt;
+[33] 发送清单：&lt;br&gt;
+1. 收件人：中央纪委举报平台（report@***.gov.cn）+ 广东省公安厅刑事侦查局（gdga@***.gov.cn）&lt;br&gt;
+2. 附件：证据包.zip（加密），包含：监控日志碎片、门禁记录、江某邮件缓存、通话录音、银行流水、红酒杯指纹报告、医务室取药记录、手写信扫描件、陈某视频日记。&lt;br&gt;
+3. 定时机制：设定24小时倒计时。若24小时内我不取消发送，证据包将自动群发至5家主流媒体（南方周末、新京报、澎湃新闻、财新、央视新闻调查）。&lt;br&gt;
+4. 取消条件：输入密码（只有我知道）。&lt;br&gt;&lt;br&gt;
+[@] 反制路径已执行。如果委员会在接下来的24小时内对你动手，证据会自动公开。你已经把自己的命运和真相绑在了一起。
+</tw-passagedata>
+
+<tw-passagedata pid="46" name="29-05-PL-1" tags="28-05-PL-1 30-05-PL-1" position="500,1200" size="100,100">
+[@] 2024年2月28日08:00。广东省公安厅快艇抵达珊瑚湾码头。&lt;br&gt;&lt;br&gt;
+执法记录：依据《中华人民共和国刑事诉讼法》第232条，对珊瑚湾管理委员会5名成员（钱某、赵某、孙某、李某、苏某）实施抓捕。&lt;br&gt;
+抓捕理由：涉嫌故意杀人罪（被害人：江某、林某、陈某）。&lt;br&gt;
+同步行动：三亚市人民检察院派员到场，对岛屿NAS系统、保安室监控设备、员工宿舍进行证据固定。&lt;br&gt;
+附加通知：国务院办公厅于2024年2月28日发布《关于暂停珊瑚湾外商投资岛屿综合治理试点条例执行的通知》，依据条例第15条（系统性滥用）和第12条（试行期届满），自即日起暂停该条例在珊瑚湾的一切效力。&lt;br&gt;&lt;br&gt;
+[@] 5人全部被捕。特殊条例被暂停。1998年的法律漏洞终于在2024年被堵上。
+</tw-passagedata>
+
+<tw-passagedata pid="47" name="30-05-PL-1" tags="29-05-PL-1 00-final-note" position="100,1300" size="100,100">
+&lt;&lt;set $is_complete to true&gt;&gt;
+[@] 2024年2月28日12:00。珊瑚湾委员会厅。5人戴着手铐，被带上快艇。你站在码头，目送他们离开。&lt;br&gt;&lt;br&gt;
+[33] 陈某的手写信还放在我口袋里。我完成了他的遗愿。&lt;br&gt;
+江某的举报邮件，等了7年，终于有了回音。&lt;br&gt;
+林律师的47段录音，等了3年，终于被听见。&lt;br&gt;
+前3任管家的死亡，不是意外，也不是自杀——他们只是比我先走了一步。&lt;br&gt;
+我活了下来，因为我学会了最关键的教训：在珊瑚湾，知道真相是不够的。你必须让真相离开这个岛。&lt;br&gt;
+沙滩上，阳光很好。远处有海鸥。&lt;br&gt;
+我掏出陈某的手写信，翻到最后一页。他在最后写了一行小字："如果成功了，替我去看看大陆的日出。"&lt;br&gt;&lt;br&gt;
+[@] 真结局——清算。玩家存活，真相公开，5人被捕。输入 inbox 查看收件箱，然后输入 00-final-note。&lt;br&gt;
+&lt;&lt;set $is_complete to true&gt;&gt;
+&lt;&lt;set $inbox_messages.push("message2-")&gt;&gt;
+</tw-passagedata>
+
+<!-- ======== 隐藏文件 ======== -->
+<tw-passagedata pid="48" name="00-chen-video" tags="25-05-PL-1 05-01-PL-1" position="200,1300" size="100,100">
+[@] 陈某生前录制的最后一段视频。2024年2月10日。&lt;br&gt;&lt;br&gt;
+[17]（画面：陈某坐在员工宿舍书桌前，神情疲惫但镇定）我叫陈某，珊瑚湾第4任管家。如果你看到这段视频，说明我已经死了。这不是自杀。&lt;br&gt;
+我花了4年时间，收集了5个人谋杀的证据。2017年，他们杀了江某。2021年，他们杀了林律师。2024年，他们杀了我。&lt;br&gt;
+但我不会让他们赢。证据我已经分成了三份。A份在NAS里，B份在云盘里，C份在发电机的风里。&lt;br&gt;
+找到它们。拼起来。然后——（陈某靠近镜头，压低声音）——发送。不要只是"知道"。前3任管家都"知道"了，然后他们都死了。你要"发送"。让真相离开这个岛。这是唯一的活路。&lt;br&gt;
+（视频结束，时长12分03秒）&lt;br&gt;&lt;br&gt;
+[@] 陈某在视频中明确提到了"发送"的重要性——这是玩家反制路径的核心。
+</tw-passagedata>
+
+<tw-passagedata pid="49" name="00-su-identity" tags="27-05-PL-1" position="300,1300" size="100,100">
+[@] 苏某的DNA亲子鉴定报告。来源：海南某医院基因检测数据库（2020年）。&lt;br&gt;&lt;br&gt;
+广州某医院出生记录：1992年3月14日，产妇：李某（江某前秘书），婴儿：女，体重3.2kg。父亲栏：空白。&lt;br&gt;
+DNA亲子鉴定报告（2020年）：苏某（ID 15）与江某（ID 16）的DNA比对结果：亲子关系概率99.9997%。结论：江某是苏某的生物学父亲。&lt;br&gt;
+苏某2017年个人日记摘录（NAS恢复）：&lt;br&gt;
+2017年8月10日："江总今天又发火了。他发现了填海的事。钱某让我们都去开会。我不知道该怎么办。"&lt;br&gt;
+2017年8月11日："我去找江总求情了。他说邮件已经发出去了。如果他不是这么固执……"&lt;br&gt;
+日记中从未出现"父亲"一词，称呼始终为"江总"。&lt;br&gt;&lt;br&gt;
+[@] 苏某是江某的生物学女儿，但她本人不知道。日记中称江某为"江总"而非"父亲"，证实她不知情。
+</tw-passagedata>
+
+<tw-passagedata pid="50" name="00-meta-warning" tags="23-04-PL-1 24-04-PL-1" position="400,1300" size="100,100">
+[@] 系统警告：你已触发关键认知节点。&lt;br&gt;&lt;br&gt;
+4任管家。4次死亡。入职→调查→发现→死亡。模式确认。&lt;br&gt;
+你现在是第4个目标。前3任管家在发现监控日志后，都在48小时内死亡。&lt;br&gt;
+你已发现监控日志。计时钟开始。倒计时：48小时。&lt;br&gt;
+建议：不要停止调查。不要相信任何人。不要让任何人知道你知道。&lt;br&gt;
+找到离线硬盘。找到云盘。发送。发送。发送。&lt;br&gt;&lt;br&gt;
+[@] meta元素：游戏系统直接向玩家发出警告。玩家意识到自己处于危险中，游戏节奏从"悠闲调查"变为"紧急逃生"。
+</tw-passagedata>
+
+</tw-storydata>
+</body></html>
