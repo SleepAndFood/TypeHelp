@@ -22,7 +22,7 @@
 
 ## 如何运行
 
-1. 下载 `home.html` 文件
+1. 下载 `TypeHelp.html` 文件
 2. 用任意现代浏览器（Chrome / Firefox / Edge / Safari）直接打开
 3. 在文本框中输入命令，按回车执行
 
