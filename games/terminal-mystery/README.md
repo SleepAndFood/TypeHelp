@@ -84,7 +84,7 @@
 1. 撰写 `charter.md`（Director）
 2. 撰写 `truth.md` + `timeline.json`（Truth Designer）
 3. 按 9 阶段逐步产出其余 7 类文档
-4. 翻译为 `TypeHelp.html`（Twine Implementer）
+4. 翻译为 `<game>.html`（Twine Implementer，产物名与剧本内容相符）
 5. 黑盒试玩（Playtester）
 
 如果决定不重做，建议将本目录归档为 `games/terminal-mystery/`（保留现状）。
