@@ -1,0 +1,25 @@
+# ---------- IDE 私有配置（屏蔽） ----------
+.trae/
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ---------- 系统垃圾 ----------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------- 通用产物 / 缓存 ----------
+__pycache__/
+*.pyc
+*.pyo
+node_modules/
+*.log
+*.tmp
+*.bak
+.commit-msg.tmp
+
+# ---------- 多剧本产物约定 ----------
+# TypeHelp 引擎生成的大文件已在仓内追踪（*.html），不需 ignore
+# 设计文档（*.md / *.json）一律追踪
