@@ -2,7 +2,7 @@
 
 > 2017–2024 南海私人岛屿 / 社会派 + 法律推理 + meta 悬疑
 > **状态**：设计完成，8 阶段全过 Verifier
-> **可玩文件**：[`TypeHelp_NewGame.html`](TypeHelp_NewGame.html)
+> **可玩文件**：[`TypeHelp.html`](TypeHelp.html)
 
 ---
 
@@ -22,7 +22,7 @@
 
 ## 如何运行
 
-1. 下载 [`TypeHelp_NewGame.html`](TypeHelp_NewGame.html)
+1. 下载 [`TypeHelp.html`](TypeHelp.html)
 2. 用任意现代浏览器（Chrome / Firefox / Edge / Safari）直接打开
 3. 在文本框中输入命令，按回车执行
 
@@ -53,7 +53,7 @@
 | 4 | [`tag_graph.md`](tag_graph.md) | 标签互引图 |
 | 5 | [`tutorial_design.md`](tutorial_design.md) + [`hidden_files.md`](hidden_files.md) + [`ending_design.md`](ending_design.md) | 教程与 meta |
 | 6 | [`verification_report.md`](verification_report.md) | 三性检查（PASS） |
-| 7 | [`TypeHelp_NewGame.html`](TypeHelp_NewGame.html) | Twine 实现 |
+| 7 | [`TypeHelp.html`](TypeHelp.html) | Twine 实现 |
 | 8 | （待 Playtester） | 黑盒试玩 |
 
 辅助约束文档：
@@ -109,7 +109,7 @@
 ## 致谢
 
 - 全部设计基于 **TypeHelp 文字推理游戏剧本设计方法论**（9 阶段 + 8 Agent）
-- 由 Solo Agent 跑完全部 8 阶段（从 charter 到 TypeHelp_NewGame.html）
+- 由 Solo Agent 跑完全部 8 阶段（从 charter 到 TypeHelp.html）
 - Formal Verifier 三性检查：PASS
 
 ---

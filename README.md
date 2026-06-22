@@ -10,7 +10,7 @@
 | 剧本 | 题材 | 基调 | 文件 | 状态 |
 |------|------|------|------|------|
 | [嘉利别墅 (Galley Villa)](games/galley-villa/) | 1936 英国古堡暴风雪山庄 | meta 心理恐怖 | `TypeHelp.html` | 完整可玩（原版） |
-| [岛主之死 (Coral Bay)](games/island-death/) | 2017–2024 南海私人岛屿 | 社会派 + 法律推理 + meta | `TypeHelp_NewGame.html` | 设计完成，8 阶段全过 |
+| [岛主之死 (Coral Bay)](games/island-death/) | 2017–2024 南海私人岛屿 | 社会派 + 法律推理 + meta | `TypeHelp.html` | 设计完成，8 阶段全过 |
 | [沈家山庄事件](games/terminal-mystery/) | 暴风雪山庄 | 早期探索 | 仅 4 段文件 | **不完整**，仅作参考 |
 
 > **剧透警告**：剧情细节请进入单剧本 README 查看（含 ⛔ 剧透区）。
@@ -86,7 +86,7 @@ SS-AA-X-Y
 5. `tag_graph.md` —— Tag Graph Designer 标签图
 6. `tutorial_design.md` + `hidden_files.md` + `ending_design.md` —— Meta & Tutorial Designer
 7. `verification_report.md` —— Formal Verifier 三性检查
-8. `TypeHelp_NewGame.html` —— Twine Implementer 翻译
+8. `TypeHelp.html` —— Twine Implementer 翻译
 9. `playtest_log.md` —— Playtester 试玩
 
 辅助文档：`physics_constraints.md` / `legal_constraints.md` / `cast_id_map.md`（按需）。
@@ -119,7 +119,7 @@ TxtGame/
 │   │   ├── physics_constraints.md
 │   │   ├── legal_constraints.md
 │   │   ├── cast_id_map.md
-│   │   └── TypeHelp_NewGame.html
+│   │   └── TypeHelp.html
 │   └── terminal-mystery/            ← 沈家山庄（早期探索）
 │       ├── README.md
 │       └── 00-04 段文件
@@ -132,7 +132,7 @@ TxtGame/
 
 1. 在 `games/<your-game-codename>/` 下创建目录
 2. 按 9 阶段方法论顺序产出对应文档（从 `charter.md` 开始）
-3. 使用 `TypeHelp.html` 引擎作为基础生成 `TypeHelp_NewGame.html`
+3. 使用 `TypeHelp.html` 引擎作为基础生成 `TypeHelp.html`
 4. 在本 README 的"剧本索引"表添加新行
 5. 在该剧本目录下添加 `README.md`，遵循其他剧本的 README 模板
 
