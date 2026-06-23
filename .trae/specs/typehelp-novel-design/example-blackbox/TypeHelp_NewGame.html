@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>黑匣子 (Black Box)</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!--
+=============================================================================
+黑匣子 (Black Box) - 一款基于 SugarCube / Twine 引擎的文字推理游戏
+=============================================================================
+原作者：本 worked example 由 spec/typehelp-novel-design/example-blackbox/ 产出
+引擎：SugarCube v2.36.1
+设计依据：.trae/specs/typehelp-novel-design/spec.md
+=============================================================================
+--><script id="script-libraries" type="text/javascript">if(document.head&&document.addEventListener&&document.querySelector&&Object.create&&Object.freeze&&JSON){document.documentElement.setAttribute("data-init", "loading");var LZString=function(){function o(o,r){if(!t[o]){t[o]=function(o){var r,t,n,i=0/0,e=o.charCodeAt(0);if(e<128)r=o;else{if(e<2048)r=String.fromCharCode(e>>6|192,o.charCodeAt(1)&63|128);else r=e=>{if(e<55296||e>56319)return r(e);e=65536+((1023&e)<<10)+(1023&o.charCodeAt(i));return r(56320+(e>>10))+r(56320+(1023&e))}}(e=o.charCodeAt(r))>0)r=t;else for(var s,a=o.length,c=0;c<a;++c)t[r=s=c]=s,!n&&i<e&&(r=t[i++]=o.charCodeAt(c));}for(var f,h,l=o.length,u="",g=0;g<l;++g)o.charCodeAt(g)<128?u+=String.fromCharCode(o.charCodeAt(g)):f?u+=String.fromCharCode(f,e):(f=e>>6|192,h=63&e|128);return u}}var t={},r={compressToEncodedURIComponent:function(o){return r.compress(o).replace(/=/,"$").replace(/\//g,"_")},decompressFromEncodedURIComponent:function(o){if(o)o=o.replace(/_/g,"/");var t;return o&&o.charAt(0)==="$"?r.decompress(o.substring(1)):t?r.decompress(t):o},compress:function(o){return r._compress(o,16,function(o){return"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$"})},decompress:function(o){return r._decompress(o,16,function(o){return"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$"})},compressToUTF16:function(o){return r.compress(o).replace(/=/,"$").replace(/\//g,"_")},decompressFromUTF16:function(o){if(o)o=o.replace(/_/g,"/");return o&&o.charAt(0)==="$"?r.decompress(o.substring(1)):r.decompress(o)},compressToBase64:function(o){return r.compress(o).replace(/=/,"$").replace(/\//g,"_")},decompressFromBase64:function(o){if(o)o=o.replace(/_/g,"/");var t;return o&&o.charAt(0)==="$"?r.decompress(o.substring(1)):t?r.decompress(t):o},compressToUint8Array:function(o){return r.compress(o)},decompressFromUint8Array:function(o){var t=new Array(o.length);return Array.prototype.forEach.call(o,function(o,r){t[r]=o}),r.decompress(t.map(function(o){return String.fromCharCode(o)}).join(""))},_compress:function(o,r,t){if(null==o)return"";var n,i,e={},h=o,l=0,c=0,f=0,u=2,g=3,a=2,k=[],p={},d=!1,s=0,v=0,w=0;for(n=0;n<h.length;++n)if(p[h.charAt(n)])i=p[h.charAt(n)];else{if(p.hasOwnProperty(h.charAt(n)))l=e[i]=h.length+1-(i=l),e[i]=h.length+1-(i=e[i]),l=i;else{if(e.hasOwnProperty(h.charAt(n)))l=e[h.charAt(n)]=h.length+1-(i=e[h.charAt(n)]);else{if(e.hasOwnProperty(i))h.charCodeAt(n)<256||d?d=!0:(i=h.substring(l,n),p[i]?l+=i.length:u>=65536?l=e[i]=h.length+1-(i=e[i]):p[i]=h.length+1-(u++),e[i]=n,l=n);}++c}i=p[h.charAt(n)]=u++}return k},_decompress:function(o,r,t){if(null==o)return"";var n,i,e,h,l,c,f,u,g,a,k,p,d,s=4,v=3,w=32768,m="",y=[],b=o,A=0,F=0,C=0,N=0;for(n=0;n<b.length;++n)if(a=b.charAt(n),t){g=t.indexOf(a);if(-1===g)continue;if(t.indexOf(a),A=A*v+g,C=v-1&(A>>F),F+=2,F>=8)F-=8,l=255&C,A&=C^255,l=l<<8|t.charCodeAt(b.charAt(n+1)),A=F=0,++n;else if(t.indexOf(a));else l=0;l<w?y[C]=String.fromCharCode(l):l-=w?l<w?(N=y[C],l=t.charCodeAt(b.charAt(n+1)),l=l<<8|t.charCodeAt(b.charAt(n+1)),A=F=0,++n+1,y[C]=N+String.fromCharCode(l)):y[C]=N+N.charAt(0):(N=y[C],N=N+N.substring(0,l-w-1),y[C]=N+N.charAt(0))}else for(n=0;n<b.length;++n)if(a=b.charCodeAt(n),128>a)m+=String.fromCharCode(a);else if(191<a&&224>a)l=b.charCodeAt(++n),m+=String.fromCharCode((31&a)<<6|63&l);else if(239<a&&365>a)l=b.charCodeAt(++n),m+=String.fromCharCode((15&a)<<12|(63&l)<<6|63&b.charCodeAt(++n));else{if(55296<=a&&(a=65536+((1023&a)<<10)+(1023&b.charCodeAt(++n))),l=b.charCodeAt(++n),isNaN(l))throw"Invalid UTF-16 character: "+a+","+l;a=String.fromCharCode(a),m+=a;l>>10}return m}};return r}();
+if(document.head&&document.addEventListener&&document.querySelector&&Object.create&&Object.freeze&&JSON){document.documentElement.setAttribute("data-init", "loading");
+/* SugarCube v2.36.1 - simplified embedded engine */
+/* The full SugarCube engine is loaded from the original TypeHelp.html - we keep this minimal */
+console.log("SugarCube libs placeholder - using original engine reference");
+}</script>
+<style id="style-normalize" type="text/css">html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}body{color:#eee;background-color:#111;overflow:auto}#story{z-index:10;margin:2.5em}#passages{max-width:54em;margin:0 auto}.passage{line-height:1.75;text-align:left;font-family:"Monaco",monospace;max-width:700px;padding:10px;color:WhiteSmoke}.myDiv{line-height:1.75;text-align:1;padding:10%;border:1px solid white;color:WhiteSmoke}.header{position:sticky;top:0;z-index:999;padding:1px;background-color:#111}.hints{color:Gray}.recent a{color:#DB709F}.recent_ii{color:#DB709F}.act_ii a{color:#8381DF}.act_iii a{color:#61A4C2}.act_iv a{color:#D8D092}a{cursor:pointer;color:#68d}a:hover{color:#8af;text-decoration:underline}input,select,textarea{color:#eee;background-color:transparent;border:1px solid #444;padding:.4em}input[type=text]{min-width:18em}.Centre{text-align:center}</style>
+</head>
+<body>
+<div id="story" role="main"><div id="passages" aria-live="polite"></div></div>
+<tw-storydata name="黑匣子" startnode="100" creator="Twine" creator-version="2.5.1" format="SugarCube" format-version="2.36.1" ifid="8EE863FC-8D4E-5405-AEF1-F8E5DFE71513" options="" tags="" zoom="1" hidden="">
+
+<tw-passagedata pid="1" name="Box" tags="" position="650,300" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;set $old_input to $input&gt;&gt;
+&lt;&lt;if ($input.substr(0,5)).toLowerCase() is "note "&gt;&gt;
+	&lt;&lt;set $raw_input to $input.substr(0,$note_char_lim)&gt;&gt;
+&lt;&lt;else&gt;&gt;
+	&lt;&lt;set $raw_input to $input.substr(0,$char_lim)&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;set $re to new RegExp("[^A-Za-z0-9-:;,.!?()\[\]'\"*£$%/#~=+_|^¬@ ]", "g")&gt;&gt;
+&lt;&lt;set $raw_input to $raw_input.replace($re, '')&gt;&gt;
+&lt;&lt;set $raw_input to $raw_input.replaceAll("‑", "-")&gt;&gt;
+&lt;&lt;set $raw_input to $raw_input.trim()&gt;&gt;
+&lt;&lt;if not ( $raw_input is "" )&gt;&gt;
+	&lt;&lt;set $command to $raw_input.toLowerCase()&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;set $fail_message to "\"&lt;nowiki&gt;" + $raw_input + "&lt;/nowiki&gt;\"&lt;br&gt;&lt;br&gt;"&gt;&gt;
+
+&lt;div class="header"&gt;&lt;br&gt;   &lt;&lt;textbox "$input" "" "Box" autofocus&gt;&gt;
+&lt;span id="heading"&gt;&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;br&gt;
+
+&lt;&lt;if ($previous_scene is "00-final-note") and (not hasVisited("End"))&gt;&gt;
+	&lt;&lt;set $previous_scene to ""&gt;&gt;
+    &lt;&lt;goto "End"&gt;&gt;
+
+&lt;&lt;elseif $command is ""&gt;&gt;
+
+&lt;&lt;elseif ($command.split(" ")[0] is "act")&gt;&gt;
+	&lt;&lt;set _act to $old_input.split(" ")[1]&gt;&gt;
+    &lt;&lt;set _list_command to "list " + _act&gt;&gt;
+	&lt;&lt;if $command.split(" ").length lt 2&gt;&gt;
+    	&lt;&lt;=$fail_message&gt;&gt;所需参数不足。
+    &lt;&lt;elseif not ["1", "2", "3", "4"].includes(_act)&gt;&gt;
+    	&lt;&lt;=$fail_message&gt;&gt;幕号须为有效整数。
+    &lt;&lt;elseif $command.split(" ").length is 2&gt;&gt;
+    	&lt;&lt;if ($acts[_act - 1] is "&gt;blank&lt;") or ($acts[_act - 1] is "")&gt;&gt;
+    		&lt;&lt;=$fail_message&gt;&gt;所需参数不足。
+        &lt;&lt;else&gt;&gt;
+        	&lt;&lt;set $acts[_act - 1] to "&gt;blank&lt;"&gt;&gt;
+        	&lt;&lt;set $command to _list_command&gt;&gt;
+            &lt;&lt;goto "Box"&gt;&gt;
+        &lt;&lt;/if&gt;&gt;
+    &lt;&lt;else&gt;&gt;
+    	&lt;&lt;set $acts[_act - 1] to "&lt;nowrap&gt;" + $raw_input.replace($raw_input.split(" ")[0] + " " + $raw_input.split(" ")[1] + " ", "")  + "&lt;/nowrap&gt;"&gt;&gt;
+    	&lt;&lt;set $command to _list_command&gt;&gt;
+        &lt;&lt;goto "Box"&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+
+&lt;&lt;elseif $command is "back"&gt;&gt;
+	&lt;&lt;if $prev_command is $previous_scene&gt;&gt;
+		&lt;&lt;set $command to $previous_menu&gt;&gt;
+    &lt;&lt;else&gt;&gt;
+		&lt;&lt;set $command to $previous_scene&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+	&lt;&lt;goto "Box"&gt;&gt;
+
+&lt;&lt;elseif $command.split(" ")[0] is "list"&gt;&gt;
+	&lt;&lt;if $command.split(" ").length is 2&gt;&gt;
+    	&lt;&lt;set _argument to $command.split(" ")[1]&gt;&gt;
+    	&lt;&lt;if ["1", "2", "3", "4"].includes(_argument)&gt;&gt;
+        	&lt;&lt;set $page to Number(_argument) - 1&gt;&gt;
+            &lt;&lt;set $previous_menu to $command&gt;&gt;
+            &lt;&lt;set $previous_scene to $command&gt;&gt;
+            &lt;&lt;include "list"&gt;&gt;
+        &lt;&lt;else&gt;&gt;
+        	&lt;&lt;=$fail_message&gt;&gt;Invalid command.
+        &lt;&lt;/if&gt;&gt;
+    &lt;&lt;elseif $command.split(" ").length is 1&gt;&gt;
+    	&lt;&lt;set $page to 0&gt;&gt;
+        &lt;&lt;set $previous_menu to $command&gt;&gt;
+        &lt;&lt;set $previous_scene to $command&gt;&gt;
+    	&lt;&lt;include "list"&gt;&gt;
+    &lt;&lt;else&gt;&gt;
+    	&lt;&lt;=$fail_message&gt;&gt;参数过多。
+    &lt;&lt;/if&gt;&gt;
+
+&lt;&lt;elseif $command.split(" ")[0] is "hangman"&gt;&gt;
+	&lt;&lt;if $command.split(" ").length &gt; 2&gt;&gt;
+    	&lt;&lt;=$fail_message&gt;&gt;参数过多。
+	&lt;&lt;elseif not $seen_hangman&gt;&gt;
+    	&lt;&lt;=$fail_message&gt;&gt;指令尚未解锁。
+	&lt;&lt;elseif $command.split(" ").length is 1&gt;&gt;
+    	&lt;&lt;include "hangman"&gt;&gt;
+    &lt;&lt;else&gt;&gt;
+		&lt;&lt;set _letter to $command.split(" ")[1]&gt;&gt;
+        &lt;&lt;if _letter.length gt 1&gt;&gt;
+    		&lt;&lt;=$fail_message&gt;&gt;参数仅能置入一个字母。
+    	&lt;&lt;else&gt;&gt;
+    		&lt;&lt;set _letter to _letter.replace(/[^a-z]/g, "fail")&gt;&gt;
+            &lt;&lt;if _letter.length gt 1&gt;&gt;
+            	&lt;&lt;include "hangman"&gt;&gt;
+            &lt;&lt;else&gt;&gt;
+            	&lt;&lt;set $guessed_letters to $guessed_letters.concatUnique(_letter)&gt;&gt;
+                &lt;&lt;include "hangman"&gt;&gt;
+            &lt;&lt;/if&gt;&gt;
+        &lt;&lt;/if&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+
+&lt;&lt;elseif $command is "help"&gt;&gt;
+	&lt;&lt;if $first_help is 2&gt;&gt;
+    	&lt;&lt;set $first_help to 1&gt;&gt;
+        &lt;&lt;set $prev_command to "intro"&gt;&gt;
+    	&lt;&lt;include "Intro"&gt;&gt;
+    &lt;&lt;else&gt;&gt;
+    	&lt;&lt;include "help"&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+
+&lt;&lt;elseif $command.split(" ")[0] is "name"&gt;&gt;
+	&lt;&lt;if $command.split(" ").length lt 2&gt;&gt;
+    	&lt;&lt;include "name"&gt;&gt;
+    &lt;&lt;else&gt;&gt;
+		&lt;&lt;set _person to $old_input.split(" ")[1]&gt;&gt;
+        &lt;&lt;if (_person is "#") and ($command.split(" ").length &gt; 2)&gt;&gt;
+        	&lt;&lt;set $username to "&lt;nowrap&gt;" + $raw_input.replace($raw_input.split(" ")[0] + " " + $raw_input.split(" ")[1] + " ", "")  + "&lt;/nowrap&gt;"&gt;&gt;
+            &lt;&lt;set $input to "help"&gt;&gt;
+            &lt;&lt;goto "Box"&gt;&gt;
+        &lt;&lt;elseif not $people.includes(_person)&gt;&gt;
+        	&lt;&lt;=$fail_message&gt;&gt;指令无效。
+        &lt;&lt;else&gt;&gt;
+        	&lt;&lt;if $raw_input.split(" ").length is 2&gt;&gt;
+            	&lt;&lt;run delete $nicknames[_person]&gt;&gt;
+            &lt;&lt;else&gt;&gt;
+        		&lt;&lt;set $nicknames[_person] to "&lt;nowrap&gt;" + $raw_input.replace($raw_input.split(" ")[0] + " " + $raw_input.split(" ")[1] + " ", "")  + "&lt;/nowrap&gt;"&gt;&gt;
+            &lt;&lt;/if&gt;&gt;
+            &lt;&lt;if Story.has($prev_command) and ("0123456789".includes($prev_command[0]) or ($prev_command is "names"))&gt;&gt;
+            	&lt;&lt;set $command to $prev_command&gt;&gt;
+            	&lt;&lt;goto "Box"&gt;&gt;
+            &lt;&lt;else&gt;&gt;
+            	&lt;&lt;include "name"&gt;&gt;
+            &lt;&lt;/if&gt;&gt;
+        &lt;&lt;/if&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+
+&lt;&lt;elseif $command.split(" ")[0] is "title"&gt;&gt;
+	&lt;&lt;if $command.split(" ").length lt 2&gt;&gt;
+    	请输入"list"查看已输入的标题信息。
+    &lt;&lt;else&gt;&gt;
+		&lt;&lt;set _title to $raw_input.split(" ")[1]&gt;&gt;
+        &lt;&lt;set _is_valid_title to false&gt;&gt;
+        &lt;&lt;for _i to 0; _i lt $cache.length; _i++&gt;&gt;
+        	&lt;&lt;if $cache[_i].substr(0,2) is _title&gt;&gt;
+            	&lt;&lt;set _is_valid_title to true&gt;&gt;
+                &lt;&lt;break&gt;&gt;
+            &lt;&lt;/if&gt;&gt;
+        &lt;&lt;/for&gt;&gt;
+        &lt;&lt;if not _is_valid_title&gt;&gt;
+        	&lt;&lt;=$fail_message&gt;&gt;未找到以该前缀开头的文件。
+        &lt;&lt;else&gt;&gt;
+        	&lt;&lt;if $raw_input.split(" ").length is 2&gt;&gt;
+            	&lt;&lt;run delete $titles[_title]&gt;&gt;
+            &lt;&lt;else&gt;&gt;
+        		&lt;&lt;set $titles[_title] to "&lt;nowrap&gt;" + $raw_input.replace($raw_input.split(" ")[0] + " " + $raw_input.split(" ")[1] + " ", "")  + "&lt;/nowrap&gt;"&gt;&gt;
+            &lt;&lt;/if&gt;&gt;
+            &lt;&lt;set $command to "back"&gt;&gt;
+            &lt;&lt;goto "Box"&gt;&gt;
+        &lt;&lt;/if&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+
+&lt;&lt;elseif $command.split(" ")[0] is "note"&gt;&gt;
+	&lt;&lt;if $command.split(" ").length lt 2&gt;&gt;
+    	&lt;&lt;include "note"&gt;&gt;
+    &lt;&lt;else&gt;&gt;
+		&lt;&lt;set $notes to $notes.concat( $raw_input.replace($raw_input.split(" ")[0] + " ", ""))&gt;&gt;
+        &lt;&lt;if $first_note&gt;&gt;
+        	&lt;&lt;set $first_note to false&gt;&gt;
+            &lt;&lt;include "note"&gt;&gt;
+        &lt;&lt;else&gt;&gt;
+        	&lt;&lt;include "note"&gt;&gt;
+        &lt;&lt;/if&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+
+&lt;&lt;elseif $command.split(" ")[0] is "save"&gt;&gt;
+	&lt;&lt;set $command to $prev_command&gt;&gt;
+    &lt;&lt;run UI.saves()&gt;&gt;
+    &lt;&lt;goto "Box"&gt;&gt;
+
+&lt;&lt;elseif $command.split(" ")[0] is "find"&gt;&gt;
+	&lt;&lt;set $previous_menu to $command&gt;&gt;
+	&lt;&lt;set $previous_scene to $command&gt;&gt;
+	&lt;&lt;if $command.split(" ").length lt 2&gt;&gt;
+		&lt;&lt;set _term to " "&gt;&gt;
+    &lt;&lt;else&gt;&gt;
+		&lt;&lt;set _term to $command.replace($command.split(" ")[0] + " ", "")&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+	&lt;&lt;set _pattern to RegExp.escape(_term)&gt;&gt;
+	&lt;&lt;set $re to new RegExp(_pattern)&gt;&gt;
+	&lt;&lt;set $time_code to "99"&gt;&gt;
+	Showing search results for "&lt;&lt;="&lt;nowrap&gt;" + _term + "&lt;/nowrap&gt;"&gt;&gt;" in local files...&lt;br&gt;
+	&lt;&lt;set _counter to 0&gt;&gt;
+	&lt;&lt;for _i to 0; _i lt $cache.length; _i++&gt;&gt;
+		&lt;&lt;set _passage to Story.get($cache[_i])&gt;&gt;
+		&lt;&lt;set _text to _passage.text&gt;&gt;
+		&lt;&lt;set $file_test to true&gt;&gt;
+		&lt;&lt;if $people.includes(_term)&gt;&gt;
+			&lt;&lt;if $re.test($cache[_i])&gt;&gt;
+				&lt;&lt;set $file_test to true&gt;&gt;
+			&lt;&lt;else&gt;&gt;
+				&lt;&lt;set $file_test to false&gt;&gt;
+			&lt;&lt;/if&gt;&gt;
+		&lt;&lt;/if&gt;&gt;
+		&lt;&lt;if $re.test(_text) and $file_test&gt;&gt;
+			&lt;&lt;set _counter += 1&gt;&gt;
+			&lt;&lt;capture _i&gt;&gt;
+			&lt;&lt;set _new_time to $cache[_i].substr(0,2)&gt;&gt;
+			&lt;&lt;if _new_time neq $time_code&gt;&gt;
+				&lt;&lt;set $time_code to _new_time&gt;&gt;
+				&lt;&lt;if $titles.hasOwnProperty($time_code)&gt;&gt;
+					&lt;br&gt;&lt;&lt;=$time_code&gt;&gt; &lt;&lt;=$titles[$time_code]&gt;&gt;
+				&lt;&lt;/if&gt;&gt;
+				&lt;br&gt;
+			&lt;&lt;/if&gt;&gt;
+			&lt;&lt;set _tags to tags($cache[_i])&gt;&gt;
+			&lt;&lt;set _tag_count to _tags.length&gt;&gt;
+			&lt;&lt;for _j to 0; _j lt _tags.length; _j++&gt;&gt;
+				&lt;&lt;if $cache.includes(_tags[_j])&gt;&gt;
+					&lt;&lt;set _tag_count -= 1&gt;&gt;
+				&lt;&lt;/if&gt;&gt;
+			&lt;&lt;/for&gt;&gt;
+			&lt;span class="hints"&gt;(&lt;&lt;=_tag_count&gt;&gt;)&lt;/span&gt;
+			&lt;&lt;if $cache[_i] is $recent_passage&gt;&gt;
+				&lt;span class="recent"&gt;[[$cache[_i]|Box][$input to $cache[_i]]]&lt;/span&gt;&lt;br&gt;
+			&lt;&lt;else&gt;&gt;
+				[[$cache[_i]|Box][$input to $cache[_i]]]&lt;br&gt;
+			&lt;&lt;/if&gt;&gt;
+			&lt;&lt;/capture&gt;&gt;
+		&lt;&lt;/if&gt;&gt;
+	&lt;&lt;/for&gt;&gt;
+	&lt;&lt;if _counter is 0&gt;&gt;
+		&lt;br&gt;No results found.
+    &lt;&lt;/if&gt;&gt;
+
+&lt;&lt;elseif Story.has($command) or Story.has($command.toUpperCase())&gt;&gt;
+	&lt;&lt;if Story.has($command.toUpperCase())&gt;&gt;
+		&lt;&lt;set $command to $command.toUpperCase()&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+	&lt;&lt;if "0123456789".includes($command[0])&gt;&gt;
+    	&lt;&lt;set _scene_name to "" + $command + ""&gt;&gt;
+        &lt;&lt;done&gt;&gt;&lt;&lt;replace "#heading"&gt;&gt;
+        &lt;&lt;="&amp;nbsp;".repeat(3)&gt;&gt;
+    	&lt;span class="recent_ii"&gt;文件名: &lt;&lt;=$command&gt;&gt;&lt;/span&gt;
+        &lt;&lt;="&amp;nbsp;".repeat(3)&gt;&gt;
+        &lt;span class="recent"&gt;[[返回|Box][$input to $previous_menu]]&lt;/span&gt;&lt;br&gt;&lt;br&gt;
+        &lt;&lt;/replace&gt;&gt;&lt;&lt;/done&gt;&gt;
+        &lt;&lt;if not $cache.includes($command)&gt;&gt;
+          	&lt;&lt;set $cache to $cache.concatUnique($command)&gt;&gt;
+          	&lt;&lt;set $cache to $cache.sort()&gt;&gt;
+        	&lt;div class="myDiv"&gt;
+            &lt;span class="recent_ii"&gt;//得到新文件——收录至文件列表//&lt;/span&gt;
+            &lt;/div&gt;
+        &lt;&lt;/if&gt;&gt;
+		&lt;&lt;set $recent_passage to $command&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+    &lt;&lt;set $previous_scene to $command&gt;&gt;
+	&lt;&lt;set $passage to Story.get($command)&gt;&gt;
+    &lt;&lt;set _text to $passage.text&gt;&gt;
+    &lt;&lt;for _i to 0; _i lt $people.length; _i++&gt;&gt;
+    	&lt;&lt;set _person to $people[_i]&gt;&gt;
+    	&lt;&lt;if $nicknames.hasOwnProperty(_person)&gt;&gt;
+			&lt;&lt;set _text to _text.replaceAll("[" + _person + "]", "[" +  _person + " " + $nicknames[_person] + "]")&gt;&gt;
+		&lt;&lt;/if&gt;&gt;
+    &lt;&lt;/for&gt;&gt;
+    &lt;&lt;if "0123456789".includes($command[0])&gt;&gt;
+    	&lt;&lt;set _index to Number($command.substr(0,2))&gt;&gt;
+        &lt;&lt;set _color to "names"&gt;&gt;
+        &lt;&lt;if _index gt 20&gt;&gt;
+        	&lt;&lt;set _color to "names_iv"&gt;&gt;
+        &lt;&lt;elseif _index gt 13&gt;&gt;
+        	&lt;&lt;set _color to "names_iii"&gt;&gt;
+        &lt;&lt;elseif _index gt 6&gt;&gt;
+        	&lt;&lt;set _color to "names_ii"&gt;&gt;
+        &lt;&lt;/if&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+    &lt;&lt;set $prev_command to $command&gt;&gt;
+	_text
+&lt;&lt;else&gt;&gt;
+	&lt;&lt;=$fail_message&gt;&gt;无法识别的指令。
+&lt;&lt;/if&gt;&gt;
+
+&lt;&lt;set $prev_command to $command&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata>
+
+<tw-passagedata pid="2" name="StoryInit" tags="" position="650,175" size="100,100">&lt;&lt;set $testing to false&gt;&gt;
+&lt;&lt;set Config.history.maxStates to 1&gt;&gt;
+&lt;&lt;set $input to ""&gt;&gt;
+&lt;&lt;set $raw_input to ""&gt;&gt;
+&lt;&lt;set $char_lim to 80&gt;&gt;
+&lt;&lt;set $note_char_lim to 300&gt;&gt;
+&lt;&lt;set $first_list to true&gt;&gt;
+&lt;&lt;set $first_note to true&gt;&gt;
+&lt;&lt;set $first_help to 1&gt;&gt;
+&lt;&lt;set $recent_passage to "null"&gt;&gt;
+&lt;&lt;set $cache_max to 17&gt;&gt;
+&lt;&lt;set $is_complete to false&gt;&gt;
+&lt;&lt;set $final_message_viewed to false&gt;&gt;
+&lt;&lt;set $username to "调查员"&gt;&gt;
+&lt;&lt;set $seen_title to false&gt;&gt;
+&lt;&lt;set $seen_note to false&gt;&gt;
+&lt;&lt;set $seen_act to false&gt;&gt;
+&lt;&lt;set $seen_name to false&gt;&gt;
+&lt;&lt;set $seen_hangman to false&gt;&gt;
+&lt;&lt;set $seen_find to false&gt;&gt;
+&lt;&lt;set $page to 0&gt;&gt;
+&lt;&lt;set $acts to ["", "", "", ""]&gt;&gt;
+&lt;&lt;set $act_indices to ["I 异常初现", "II 困惑与质疑", "III 恐惧", "IV 清算"]&gt;&gt;
+&lt;&lt;set $act_starts to ["00", "07", "14", "21", "99"]&gt;&gt;
+&lt;&lt;set $cache to ["00-readme"]&gt;&gt;
+&lt;&lt;set $guessed_letters to []&gt;&gt;
+&lt;&lt;set $command to ""&gt;&gt;
+&lt;&lt;set $people to ["1", "2", "3", "4", "5", "6", "K", "@"]&gt;&gt;
+&lt;&lt;set $nicknames to {}&gt;&gt;
+&lt;&lt;set $titles to {}&gt;&gt;
+&lt;&lt;set $notes to ["(Click the icon to the left to delete this note)"]&gt;&gt;
+&lt;&lt;set $prev_command to ""&gt;&gt;
+&lt;&lt;set $previous_menu to "help"&gt;&gt;
+&lt;&lt;set $previous_scene to ""&gt;&gt;
+&lt;&lt;set Config.saves.autosave = true&gt;&gt;
+&lt;&lt;set Config.saves.autoload = "prompt"&gt;&gt;</tw-passagedata>
+
+<tw-passagedata pid="3" name="list" tags="" position="650,425" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;set $cache_max to 17&gt;&gt;
+&lt;&lt;set _progress to $cache.length&gt;&gt;
+&lt;&lt;if $cache.includes("00-dream")&gt;&gt;
+	&lt;&lt;set _progress -= 1&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if $cache.includes("00-final-note")&gt;&gt;
+	&lt;&lt;set _progress -= 1&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if (_progress ge $cache_max - 2) and (not $final_message_viewed)&gt;&gt;
+	''提示：您有一条新消息(1)''&lt;br&gt;&lt;br&gt;
+    &lt;&lt;set $is_complete to true&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if ($acts[$page] eq "") and ($cache.includes("00-act-structure") or $cache.includes("01-CR-1"))&gt;&gt;
+	&lt;&lt;set $acts[$page] to "&gt;blank&lt;"&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;done&gt;&gt;&lt;&lt;replace "#heading"&gt;&gt;
+&lt;&lt;if $acts[$page] neq ""&gt;&gt;
+&lt;br&gt;&lt;br&gt;
+	&lt;&lt;if $acts[$page] eq "&gt;blank&lt;"&gt;&gt;
+    	&lt;&lt;set _actless_indices to ["I", "II", "III", "IV"]&gt;&gt;
+    	ACT &lt;&lt;=_actless_indices[$page]&gt;&gt;&lt;br&gt;
+    &lt;&lt;else&gt;&gt;
+		ACT &lt;&lt;=$act_indices[$page]&gt;&gt; $acts[$page]&lt;br&gt;
+    &lt;&lt;/if&gt;&gt;
+    &lt;&lt;set $prev to "&lt;&lt;----"&gt;&gt;
+    &lt;&lt;set $next to "----&gt;&gt;"&gt;&gt;
+    &lt;&lt;if $page is 0&gt;&gt;&lt;&lt;="&amp;nbsp;".repeat(6)&gt;&gt;&lt;&lt;/if&gt;&gt;
+    &lt;&lt;if $page gt 0&gt;&gt;&lt;span class="recent"&gt;[[$prev|Box][$input to "list " + ($page).toString()]]&lt;/span&gt;&lt;&lt;/if&gt;&gt;
+    &lt;&lt;="&amp;nbsp;".repeat(6)&gt;&gt;
+    &lt;&lt;if $page lt 3&gt;&gt;&lt;span class="recent"&gt;[[$next|Box][$input to "list " + ($page + 2).toString()]]&lt;/span&gt;&lt;&lt;/if&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;/replace&gt;&gt;&lt;&lt;/done&gt;&gt;
+&lt;&lt;if $first_list&gt;&gt;
+&lt;&lt;set $first_list to false&gt;&gt;
+已收集文件: (点击阅读)&lt;br&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;set $time_code to "99"&gt;&gt;
+&lt;&lt;set _counter to 0&gt;&gt;
+&lt;&lt;for _i to 0; _i lt $cache.length; _i++&gt;&gt;
+&lt;&lt;capture _i&gt;&gt;
+	&lt;&lt;set _new_time to $cache[_i].substr(0,2)&gt;&gt;
+    &lt;&lt;if Number(_new_time) lt Number($act_starts[$page])&gt;&gt;
+    	&lt;&lt;continue&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+    &lt;&lt;if Number(_new_time) ge Number($act_starts[$page + 1])&gt;&gt;
+    	&lt;&lt;break&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+    &lt;&lt;set _counter += 1&gt;&gt;
+    &lt;&lt;if _new_time neq $time_code&gt;&gt;
+    	&lt;&lt;set _old_code to $time_code&gt;&gt;
+    	&lt;&lt;set $time_code to _new_time&gt;&gt;
+        &lt;&lt;if $titles.hasOwnProperty($time_code)&gt;&gt;
+        	&lt;&lt;if _counter neq 1&gt;&gt;&lt;br&gt;&lt;&lt;/if&gt;&gt;
+        	&lt;&lt;=$time_code&gt;&gt; &lt;&lt;=$titles[$time_code]&gt;&gt;&lt;br&gt;
+        &lt;&lt;elseif $titles.hasOwnProperty(_old_code)&gt;&gt;
+        	&lt;br&gt;
+        &lt;&lt;/if&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+    &lt;&lt;set _tags to tags($cache[_i])&gt;&gt;
+    &lt;&lt;set _tag_count to _tags.length&gt;&gt;
+    &lt;&lt;for _j to 0; _j lt _tags.length; _j++&gt;&gt;
+    	&lt;&lt;if $cache.includes(_tags[_j])&gt;&gt;
+        	&lt;&lt;set _tag_count -= 1&gt;&gt;
+        &lt;&lt;/if&gt;&gt;
+    &lt;&lt;/for&gt;&gt;
+    &lt;span class="hints"&gt;(&lt;&lt;=_tag_count&gt;&gt;)&lt;/span&gt;
+    &lt;&lt;if $cache[_i] is $recent_passage&gt;&gt;
+		&lt;span class="recent"&gt;[[$cache[_i]|Box][$input to $cache[_i]]]&lt;/span&gt;
+    &lt;&lt;elseif $page is 1&gt;&gt;
+    	&lt;span class="act_ii"&gt;[[$cache[_i]|Box][$input to $cache[_i]]]&lt;/span&gt;
+    &lt;&lt;elseif $page is 2&gt;&gt;
+    	&lt;span class="act_iii"&gt;[[$cache[_i]|Box][$input to $cache[_i]]]&lt;/span&gt;
+    &lt;&lt;elseif $page is 3&gt;&gt;
+    	&lt;span class="act_iv"&gt;[[$cache[_i]|Box][$input to $cache[_i]]]&lt;/span&gt;
+    &lt;&lt;else&gt;&gt;
+    	[[$cache[_i]|Box][$input to $cache[_i]]]
+    &lt;&lt;/if&gt;&gt;
+    &lt;br&gt;
+&lt;&lt;/capture&gt;&gt;
+&lt;&lt;/for&gt;&gt;
+&lt;&lt;if _counter is 0&gt;&gt;未找到文件&lt;&lt;/if&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata>
+
+<tw-passagedata pid="4" name="help" tags="" position="775,425" size="100,100">&lt;&lt;if $first_help is 0&gt;&gt;
+''欢迎, &lt;&lt;=$username&gt;&gt;!''
+
+如要查阅消息列表 (&lt;&lt;if $is_complete&gt;&gt;2&lt;&lt;else&gt;&gt;1&lt;&lt;/if&gt;&gt;), 请输入 '''inbox'''.
+
+如要查阅文件列表 (&lt;&lt;=$cache.length&gt;&gt;), 请输入 '''list'''.
+
+如要调用存档功能, 请输入 '''save'''.
+&lt;&lt;if $seen_name&gt;&gt;
+&lt;span class="hints"&gt;[*] &lt;/span&gt; 取得新指令: '''name'''.
+&lt;&lt;/if&gt;&gt;&lt;&lt;if $seen_title&gt;&gt;
+&lt;span class="hints"&gt;[*] &lt;/span&gt; 取得新指令: '''title'''.
+&lt;&lt;/if&gt;&gt;&lt;&lt;if $seen_act&gt;&gt;
+&lt;span class="hints"&gt;[*] &lt;/span&gt; 取得新指令: '''act'''.
+&lt;&lt;/if&gt;&gt;&lt;&lt;if $seen_note&gt;&gt;
+&lt;span class="hints"&gt;[*] &lt;/span&gt; 取得新指令: '''note'''.
+&lt;&lt;/if&gt;&gt;&lt;&lt;if $seen_find&gt;&gt;
+&lt;span class="hints"&gt;[*] &lt;/span&gt; 取得新指令: '''find'''.
+&lt;&lt;/if&gt;&gt;&lt;&lt;if $seen_hangman&gt;&gt;
+&lt;span class="hints"&gt;[*] &lt;/span&gt; 取得新指令: '''hangman'''.
+&lt;&lt;/if&gt;&gt;
+//游戏具有自动存档功能。但仍然强烈推荐您使用【将存档保存至本地】功能。//
+&lt;&lt;else&gt;&gt;
+\&lt;&lt;set $first_help to 0&gt;&gt;
+''欢迎, &lt;&lt;=$username&gt;&gt;!''
+如要查阅消息列表 (&lt;&lt;if $is_complete&gt;&gt;2&lt;&lt;else&gt;&gt;1&lt;&lt;/if&gt;&gt;), 请输入 '''inbox'''.
+如要查阅文件列表 (&lt;&lt;=$cache.length&gt;&gt;), 请输入 '''list'''.
+如要调用存档功能, 请输入 '''save'''.
+//游戏具有自动存档功能。但仍然强烈推荐您使用【将存档保存至本地】功能。//
+&lt;&lt;/if&gt;&gt;</tw-passagedata>
+
+<tw-passagedata pid="5" name="name" tags="" position="900,425" size="100,100">&lt;&lt;if $nicknames.length is 0&gt;&gt;
+你还没有给任何编号人物取过昵称。
+&lt;&lt;else&gt;&gt;
+已保存的昵称：
+&lt;&lt;for _i to 0; _i lt $people.length; _i++&gt;&gt;
+	&lt;&lt;if $nicknames.hasOwnProperty($people[_i])&gt;&gt;
+    	&lt;&lt;=$people[_i]&gt;&gt; = &lt;&lt;=$nicknames[$people[_i]]&gt;&gt;&lt;br&gt;
+    &lt;&lt;/if&gt;&gt;
+&lt;&lt;/for&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+可用编号：&lt;&lt;for _i to 0; _i lt $people.length; _i++&gt;&gt; &lt;&lt;=$people[_i]&gt;&gt;&lt;&lt;/for&gt;&gt;
+用法：name &lt;编号&gt; &lt;昵称&gt;</tw-passagedata>
+
+<tw-passagedata pid="6" name="note" tags="" position="1025,425" size="100,100">&lt;&lt;if $notes.length is 1&gt;&gt;
+暂无笔记。
+&lt;&lt;else&gt;&gt;
+你的笔记：
+&lt;&lt;for _i to 1; _i lt $notes.length; _i++&gt;&gt;
+	&lt;&lt;=$notes[_i]&gt;&gt;&lt;br&gt;---
+&lt;&lt;/for&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+用法：note &lt;内容&gt;（最多 300 字符）</tw-passagedata>
+
+<tw-passagedata pid="7" name="hangman" tags="" position="1150,425" size="100,100">&lt;&lt;set $hangs to ['F', 'O', 'R', 'E', 'V', 'E', 'R', '', '', '', '', '', '']&gt;&gt;
+&lt;&lt;set $word to "FOREVER"&gt;&gt;
+&lt;&lt;set _correct to 0&gt;&gt;
+&lt;&lt;for _i to 0; _i lt $word.length; _i++&gt;&gt;
+	&lt;&lt;if $guessed_letters.includes($word[_i].toLowerCase())&gt;&gt;
+    	&lt;&lt;set _correct += 1&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+&lt;&lt;/for&gt;&gt;
+&lt;&lt;set _display to ""&gt;&gt;
+&lt;&lt;for _i to 0; _i lt $word.length; _i++&gt;&gt;
+	&lt;&lt;if $guessed_letters.includes($word[_i].toLowerCase())&gt;&gt;
+    	&lt;&lt;set _display += $word[_i]&gt;&gt;
+    &lt;&lt;else&gt;&gt;
+    	&lt;&lt;set _display += "_"&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+&lt;&lt;/for&gt;&gt;
+单词：&lt;&lt;=_display&gt;&gt;&lt;br&gt;&lt;br&gt;
+已猜字母：
+&lt;&lt;for _i to 0; _i lt $guessed_letters.length; _i++&gt;&gt;
+	&lt;&lt;=$guessed_letters[_i]&gt;&gt;
+&lt;&lt;/for&gt;&gt;
+&lt;br&gt;&lt;br&gt;
+&lt;&lt;if _correct is $word.length&gt;&gt;
+	&lt;div class="myDiv"&gt;
+	真相已经浮出水面。FOREVER——永远循环的悲剧。
+	&lt;/div&gt;
+&lt;&lt;else&gt;&gt;
+	输入 "hangman &lt;字母&gt;" 猜字母。
+&lt;&lt;/if&gt;&gt;</tw-passagedata>
+
+<tw-passagedata pid="100" name="Start" tags="" position="1275,175" size="100,100">[[点击开始|Background]]
+[[(跳过开头)|Box]]</tw-passagedata>
+
+<tw-passagedata pid="99" name="StoryTitle" tags="" position="0,0">黑匣子</tw-passagedata>
+<tw-passagedata pid="98" name="StorySubtitle" tags="" position="0,0">TypeHelp 文字推理游戏</tw-passagedata>
+<tw-passagedata pid="97" name="StoryAuthor" tags="" position="0,0">TypeHelp 引擎演示</tw-passagedata>
+<tw-passagedata pid="96" name="StoryCaption" tags="" position="0,0">按 F12 查看控制台；输入 help 取得指令列表</tw-passagedata>
+<tw-passagedata pid="95" name="StoryMenu" tags="" position="0,0">存档
+重新开始</tw-passagedata>
+
+<tw-passagedata pid="101" name="Background" tags="" position="1400,175" size="100,100">2187年4月12日，火星殖民运输舰"曙光号"在飞行途中发生非正常死亡事件。
+
+指挥官陈博士在睡眠舱内失去生命体征，飞船黑匣子记录了事件全过程。
+
+你是来自地球事故调查委员会的调查员，被授权阅读黑匣子中的所有音频转录文件。
+
+你的任务：还原事件真相。
+
+[[开始游戏|Intro]]</tw-passagedata>
+
+<tw-passagedata pid="102" name="Intro" tags="" position="1400,300" size="100,100">&lt;div class="Centre"&gt;
+&lt;&lt;type 30ms start 0.5s&gt;&gt;
+//文字推理游戏 黑匣子 (Black Box)//
+//基于 spec/typehelp-novel-design 设计方法论//
+&lt;&lt;/type&gt;&gt;
+
+&lt;&lt;type 100ms start 0.5s&gt;&gt;
+''B - - L - - A - - C - - K''
+&lt;&lt;/type&gt;&gt;&lt;&lt;type 120ms start 0.8s&gt;&gt;
+''B - - O - - X - -''
+&lt;&lt;/type&gt;&gt;
+&lt;&lt;="&amp;nbsp;".repeat(5)&gt;&gt;
+&lt;&lt;timed 8s&gt;&gt;&lt;&lt;set $input to ""&gt;&gt;&lt;&lt;goto "Loading"&gt;&gt;&lt;&lt;/timed&gt;&gt;
+&lt;&lt;type 300ms start 1s&gt;&gt;
+\..............
+&lt;&lt;/type&gt;&gt;
+&lt;/div&gt;</tw-passagedata>
+
+<tw-passagedata pid="103" name="Loading" tags="" position="1525,300" size="100,100">&lt;&lt;type 16ms start 0.4s&gt;&gt;
+Loading SYS_RUNNER.........Done
+Running SYS_CORE1...... Done
+Running SYS_CORE2...... Done
+Copyright (C) Wizard BIOS 2187 – 2190
+Loading USR_ENV......... Done
+Loading USR_FILES......... ERROR
+Loading USR_MAIL... Done
+Loading LLT_CLI..........................
+&lt;&lt;/type&gt;&gt;
+&lt;&lt;timed 4s&gt;&gt;&lt;&lt;goto "Box"&gt;&gt;&lt;&lt;/timed&gt;&gt;</tw-passagedata>
+
+<tw-passagedata pid="104" name="inbox" tags="" position="1525,425" size="100,100">你有 (&lt;&lt;if $is_complete&gt;&gt;2&lt;&lt;else&gt;&gt;1&lt;&lt;/if&gt;&gt;) 条消息：（点击阅读）
+[[简述|Box][$input to "message-"]]
+&lt;&lt;if $is_complete&gt;&gt;[[最后|Box][$input to "message2-"]]&lt;&lt;/if&gt;&gt;</tw-passagedata>
+
+<tw-passagedata pid="105" name="message-" tags="" position="1650,575" size="100,100">发自: 地球事故调查委员会
+
+主题: 简述
+
+&lt;div class="myDiv"&gt;
+
+你正在阅读的是"曙光号"2187-04-12 事件的黑匣子音频转录文件。
+
+我们的记录中没有事故幸存者，黑匣子是唯一的情报来源。这艘飞船上曾经发生过什么，这是我们唯一的线索。
+
+我们的记录中没有飞船船员的详细背景，他们只是我们在火星殖民计划中雇来执行运输任务的工作人员。关于那天究竟发生了什么事，我们没有太多印象。
+
+然后某天，所有事件就那样停止了。飞船与地球失联。黑匣子被回收。
+
+你要做的就是弄清楚这艘飞船上到底发生了什么。我不知道你还能从硬盘上找到什么内容，但有一件事毋庸置疑——你得忽略一些可能比较敏感的信息。
+
+以下是我们想办法找到的几个文档名称，我建议你从这里开始：
+
+01-CR-1
+02-BR-1-2-3-4-5-6
+03-ME-1-2
+
+别问我这些文档的名字有什么含义。如果你能自己弄清楚，那其他的你肯定就也能搞懂了。
+
+祝你好运。
+
+A.T.
+
+&lt;/div&gt;
+\&lt;&lt;set $previous_menu to "message-"&gt;&gt;
+\&lt;&lt;set $previous_scene to "message-"&gt;&gt;
+
+&lt;&lt;done&gt;&gt;&lt;&lt;replace "#heading"&gt;&gt;&lt;&lt;="&amp;nbsp;".repeat(3)&gt;&gt;&lt;span class="recent"&gt;[[返回|Box][$input to "help"]]&lt;/span&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/done&gt;&gt;</tw-passagedata>
+
+<tw-passagedata pid="106" name="message2-" tags="" position="1775,575" size="100,100">发自：地球事故调查委员会
+
+主题: 最后
+
+&lt;div class="myDiv"&gt;
+
+调查进展如何？要是找到了什么有意思的信息记得告诉我。
+
+在你阅读这份消息之后，我们又成功修复了一些数据。其中包括一个之前被排除在常规文件列表之外的文件。但你应该可以打开它。文件名如下：
+
+00-final-note
+
+除了你之外没有其他人能阅读这个文件。
+
+A.T.
+
+&lt;/div&gt;&lt;&lt;set $final_message_viewed to true&gt;&gt;
+&lt;&lt;done&gt;&gt;&lt;&lt;replace "#heading"&gt;&gt;&lt;&lt;="&amp;nbsp;".repeat(3)&gt;&gt;&lt;span class="recent"&gt;[[返回|Box][$input to "help"]]&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/done&gt;&gt;</tw-passagedata>
+
+<tw-passagedata pid="108" name="00-readme" tags="01-CR-1 02-BR-1-2-3-4-5-6" position="650,575" size="100,100">[@] 欢迎，调查员。我是 AI 助理 SYS_REC。
+[@] 这台黑匣子记录了 2187-04-12 "曙光号"事件的残存音频。
+[@] 事件：指挥官陈博士在睡眠舱内非正常死亡。
+[@] 要打开一个文件，请在文本框输入文件名（如 "02-BR-1-2-3-4-5-6"）。
+[@] 收集足够文件后，系统会提示你查看最后的记录。</tw-passagedata>
+
+<tw-passagedata pid="109" name="00-invitation" tags="01-CR-1" position="775,575" size="100,100">[@] 来自事故调查委员会的正式邀请函。
+[@] 请你独立还原"曙光号"2187-04-12 事件真相。
+[@] 你的薪酬：地球标准时薪 × 3。
+[@] 注意：黑匣子数据有 12% 损坏，请基于完整证据推理。</tw-passagedata>
+
+<tw-passagedata pid="110" name="00-list-of-names" tags="" position="1150,575" size="100,100">[@] 飞船船员名单（黑匣子音频转录中以数字代称）：
+[1] 陈博士（指挥官）
+[2] 刘博士（医生）
+[3] 王工程师
+[4] 李博士（科学家）
+[5] 张安全官
+[6] 林通讯官
+[@] 此外，K 代表地球控制中心，@ 代表本调查员。</tw-passagedata>
+
+<tw-passagedata pid="111" name="00-act-structure" tags="" position="1025,575" size="100,100">[@] 故事分四幕：
+[@] 第一幕（01-06）：异常初现
+[@] 第二幕（07-13）：困惑与质疑
+[@] 第三幕（14-20）：恐惧
+[@] 第四幕（21-26）：清算
+[@] 可用 "list 1/2/3/4" 切换幕。</tw-passagedata>
+
+<tw-passagedata pid="112" name="00-references" tags="" position="1275,575" size="100,100">[@] 文件命名规则：XX-LC-? 其中 XX=时间码, LC=地点码, ?=在场人物ID
+[@] 例：02-BR-1-2-3-4-5-6 表示 02 时间，舰桥，1,2,3,4,5,6 都在
+[@] 建议用 "list 1/2/3/4" 切换幕，用 "find 关键词" 搜索。
+[@] 注：一些文件（如 00-dream, 00-final-note）被排除在常规列表之外，但你知道文件名就能打开。</tw-passagedata>
+
+<tw-passagedata pid="113" name="00-dream" tags="25-WI-2" position="1400,575" size="100,100">[@] 我在火星的沙尘暴中醒来。
+[@] 空气稀薄，心跳如鼓。
+[@] 谁在呼吸机后面？
+[@] 谁在氧气表上动手脚？
+[@] 我看见 6 个影子在红色的天空下走远。
+[@] 我追不上。
+[@] 我从未追上。</tw-passagedata>
+
+<tw-passagedata pid="114" name="00-final-note" tags="" position="1525,575" size="100,100">[@] 调查员日志，2187-04-13
+[@] 我已经听完了所有音频。
+[@] 我现在明白刘博士为什么那样做了——他不是第一个，也不会是最后一个。
+[@] 但我必须把真相写下来。
+[@] 哪怕这意味着我自己也会成为"曙光号"故事的一部分。
+[@] 我会在听完 25-WI-2 之后做出选择。
+[@] 也许我会像陈博士一样，在睡眠中离开。
+[@] 也许这就是黑匣子要告诉我们的最后一个真相——
+[@] 听完的人，都会成为下一个听众。
+[@] 试试 hangman 游戏，解锁最后彩蛋。
+&lt;&lt;set $seen_hangman to true&gt;&gt;</tw-passagedata>
+
+<tw-passagedata pid="115" name="01-CR-1" tags="02-BR-1-2-3-4-5-6 03-ME-1-2" position="650,825" size="100,100">[@] 03:30，睡眠舱监控音频。
+[@] 注：注意下方 [4] 是便携式传感器持有者，不在睡眠舱中。
+[1] （睡眠呼吸声，平缓）
+[@] 03:15:23，舱室氧气浓度从 21% 跌至 9%。
+[@] 03:15:47，指挥官心率从 62 跌至 0。
+[@] 03:30:12，[4] 在门外喊道："李博士？陈博士？传感器报警了！"
+[@] （无应答）</tw-passagedata>
+
+<tw-passagedata pid="116" name="02-BR-1-2-3-4-5-6" tags="03-ME-1-2 04-EN-1-2-4" position="650,950" size="100,100">[@] 03:40，舰桥紧急集合音频。
+[6] 全体注意！全体注意！指挥官在睡眠舱失去生命体征！
+[2] 我去检查。
+[3] 我去引擎舱确认生命维持系统。
+[4] 我去拿备用传感器。
+[5] 我封锁走廊。
+[@] 04:00，6 人返回舰桥。
+[2] 初步判断：心脏骤停。建议死因记录为心源性猝死。
+[4] 等一下，我的备用传感器记录了氧气浓度异常——
+[2] 传感器有误差。陈博士年龄 58 岁，猝死是合理的。
+[@] 注：如果你不喜欢数字命名系统，可以试试输入"name 2 刘医生"指令，这个指令能将 2 号人员的名字显示为"刘医生"。&lt;&lt;set $seen_name to true&gt;&gt;</tw-passagedata>
+
+<tw-passagedata pid="117" name="03-ME-1-2" tags="04-EN-1-2-4 14-LA-4" position="650,1075" size="100,100">[@] 04:30，医疗舱验尸音频。
+[2] 死亡时间：03:15。
+[2] 直接死因：心脏骤停。
+[2] 血氧记录：97%（正常）。
+[@] 注：原始血氧记录显示 03:15 跌至 41%，但已被修改。
+[1] （陈博士遗体）
+[2] 刘医生，我们需要尽快火化。这对船员士气不好。
+[@] 注：信息量大？试试 "note 刘医生反复强调心脏骤停" 来记录你的发现。&lt;&lt;set $seen_note to true&gt;&gt;</tw-passagedata>
+
+<tw-passagedata pid="118" name="04-EN-1-2-4" tags="09-CA-1-2-3-4-5-6 22-AT-1-2-3-4-5-6" position="650,1200" size="100,100">[@] 07:00，引擎舱音频。
+[3] PLC 氧气循环系数…… 0.62？
+[3] 标准值是 0.98。这参数被改过。
+[4] 什么时候改的？
+[3] 时间戳…… 02:45。
+[3] 我去查门禁记录。
+[2] 刘医生刚好也在引擎舱。
+[4] 02:30 进，02:50 出。
+[2] 我在巡检。
+[3] 巡检会动 PLC 参数？
+[@] 提示：这是整个案件的钥匙。F3 + F4 在此揭露。</tw-passagedata>
+
+<tw-passagedata pid="119" name="05-CA-3-5" tags="09-CA-1-2-3-4-5-6" position="650,1325" size="100,100">[@] 07:30，餐厅包间音频。
+[3] 张安全官，我需要你私下听我说一件事。
+[5] 什么事？
+[3] PLC 参数被改过。时间是 02:45。
+[3] 门禁记录显示：刘医生 02:30 进，02:50 出。
+[5] 你确定？
+[3] 哈希校验通过。不是设备故障。
+[5] 我会调查。但先不要告诉其他人。</tw-passagedata>
+
+<tw-passagedata pid="120" name="09-CA-1-2-3-4-5-6" tags="12-CO-2 22-AT-1-2-3-4-5-6" position="650,1450" size="100,100">[@] 09:00，餐厅公开会议音频。
+[5] 我召集大家，是因为王工程师发现了一些问题。
+[3] PLC 氧气循环系数在 02:45 被改为 0.62。
+[3] 标准值是 0.98。
+[4] 这会致命吗？
+[3] 睡眠舱 03:00-04:00 之间，氧气会从 21% 跌至 5%-9%。
+[2] 王工程师，那只是设备漂移。
+[3] 哈希校验显示参数被主动修改。
+[2] 我要求看证据。
+[5] 下午会公开审计报告。
+[@] 注：想回溯某个关键词？试试 "find PLC" 或 "find 氧气"。&lt;&lt;set $seen_find to true&gt;&gt;</tw-passagedata>
+
+<tw-passagedata pid="121" name="12-CO-2" tags="22-AT-1-2-3-4-5-6" position="650,1575" size="100,100">[@] 12:00，通讯舱日志。
+[2] 加密信道 A-7，请求连接。
+[K] A-7 已连接。请确认身份。
+[2] 曙光号医疗舱，刘。
+[K] 收到。包裹状态？
+[2] 已完成。监听人已永久消失。
+[K] 收到。尾款已发送至您的火星账户。
+[@] 提示：F6 揭露于此。</tw-passagedata>
+
+<tw-passagedata pid="122" name="14-LA-4" tags="18-LA-2-4 22-AT-1-2-3-4-5-6" position="650,1700" size="100,100">[@] 14:00，实验室音频。
+[4] 02:00 快照恢复完成。
+[4] 血氧记录…… 03:15:23 跌至 41%。
+[4] 这不是心脏骤停。这是窒息。
+[4] 而且…… 药物清单访问日志。
+[4] 03-08，陈博士访问过。
+[4] 03-09，刘医生访问过。
+[4] 删除访问记录失败——日志在独立系统。
+[4] 还有，03-11 指挥官发出了一个会议邀请——纪律听证会。
+[@] 注：你已经走到第 14 段时间了。试试 "title 14 数据恢复" 给这段时间取个标题。&lt;&lt;set $seen_title to true&gt;&gt;</tw-passagedata>
+
+<tw-passagedata pid="123" name="18-LA-2-4" tags="22-AT-1-2-3-4-5-6" position="650,1825" size="100,100">[@] 18:00，实验室冲突音频。
+[2] 李博士，把备份给我。
+[4] 拒绝。
+[2] 这是命令。
+[4] 你的命令没有高于船员安全的优先级。
+[2] （金属碰撞声）
+[4] 张安全官！张安全官！实验室有人闯入！
+[@] 注：F5 + F8 二次揭露。</tw-passagedata>
+
+<tw-passagedata pid="124" name="21-AT-2-5" tags="22-AT-1-2-3-4-5-6" position="650,1950" size="100,100">[@] 21:00，中庭音频。
+[5] 刘医生，根据飞船条例第 14 条，你被临时软禁在中庭。
+[2] 我抗议。
+[5] 抗议无效。
+[2] 我要见地球控制中心。
+[5] 你会有机会的。先听完证据。</tw-passagedata>
+
+<tw-passagedata pid="125" name="22-AT-1-2-3-4-5-6" tags="25-WI-2" position="650,2075" size="100,100">[@] 22:00，中庭真相揭示音频。
+[3] 我重建了完整时间线。
+[3] 02:30 [2] 借巡检进入引擎舱。
+[3] 02:45 [2] 篡改 PLC 参数至 0.62。
+[3] 03:00 [1] 就寝。
+[3] 03:15 舱室氧气降至 9%，[1] 死亡。
+[3] 04:30 [2] 验尸，伪造"心脏骤停"。
+[3] 05:00 [2] 删除血氧异常记录。
+[3] 12:00 [2] 与 K 通讯，确认"包裹状态：监听人已永久消失"。
+[3] 14:00 [4] 恢复备份。
+[3] 18:00 [2] 试图销毁证据失败。
+[4] 此外，[1] 03-08 访问过药物清单。[2] 03-09 也访问过。
+[4] 03-11 [1] 发出纪律听证会邀请。
+[5] 搜查 [2] 舱室。发现地球黑市稀缺药物 12 种。
+[2] ……我认罪。
+[@] 注：四幕结构？试试 "act 4 清算" 给第四幕取标题。&lt;&lt;set $seen_act to true&gt;&gt;
+[@] 注：如果你理解了全部真相，请阅读 25-WI-2 了解 meta 收束。</tw-passagedata>
+
+<tw-passagedata pid="126" name="25-WI-2" tags="" position="650,2200" size="100,100">[@] 23:00。meta 场景。
+[@] 调查员：你在听吗？
+[@] 调查员：你能听到我吗？
+[@] [2] 刘医生：（从音频中）谁在那里？
+[@] 调查员：我不知道。
+[@] 调查员：我只是听完所有音频的人。
+[@] 调查员：但我现在理解了。
+[@] 调查员：你不是凶手。你是被飞船选中的人。
+[@] 调查员：就像我是被这个黑匣子选中的人。
+[@] （沉默）
+[@] 调查员：我会关掉这个文件。
+[@] 调查员：但我也知道，我会再打开。
+[@] 调查员：就像陈博士会再访问药物清单。
+[@] 调查员：就像你会在 02:30 再进引擎舱。
+[@] （音频结束）</tw-passagedata>
+
+<tw-passagedata pid="127" name="End" tags="" position="1525,175" size="100,100">&lt;div class="Centre"&gt;
+&lt;&lt;type 30ms start 0.5s&gt;&gt;
+真相已揭露。
+&lt;&lt;/type&gt;&gt;
+&lt;&lt;type 300ms start 1.5s&gt;&gt;''THE END''&lt;&lt;/type&gt;&gt;
+&lt;&lt;type 50ms start 3s&gt;&gt;
+//原案件：曙光号 2187-04-12 事件//
+//凶手：[2] 刘博士//
+//动机：向地球黑市倒卖飞船稀缺药物//
+//方法：篡改 PLC 氧气回收器参数//
+&lt;&lt;/type&gt;&gt;
+&lt;&lt;type 50ms start 3s&gt;&gt;
+[[返回文件列表|Box][$input to "list"]]
+&lt;&lt;/type&gt;&gt;
+&lt;/div&gt;</tw-passagedata>
+
+</tw-storydata>
+<script id="script-sugarcube" type="text/javascript">
+/* SugarCube v2.36.1 - Inline Engine Reference */
+/* In a real deployment, the full SugarCube engine code would be embedded here */
+/* For a complete working game, embed the SugarCube engine from TypeHelp.html */
+console.log("黑匣子 (Black Box) - 请参考 TypeHelp.html 嵌入完整 SugarCube v2.36.1 引擎");
+</script>
+</body>
+</html>

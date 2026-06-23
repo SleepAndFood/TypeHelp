@@ -1,5 +1,11 @@
 # ---------- IDE 私有配置（屏蔽） ----------
-.trae/
+# 注意：不能直接 .trae/ 整体屏蔽，因为 .trae/skills/、.trae/specs/、.trae/scripts/
+# 是仓内共享方法论，需要被 git 追踪；下面使用反项以保留这些子目录的可见性。
+# 由于 git 规则"无法重包含父目录被排除的文件"，这里改为仅屏蔽 .trae/documents/ 私有目录。
+.trae/documents/
+!.trae/skills/
+!.trae/specs/
+!.trae/scripts/
 .vscode/
 .idea/
 *.swp
