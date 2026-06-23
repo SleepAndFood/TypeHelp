@@ -29,6 +29,33 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
+      - name: Gate A · HTML 实体污染检查（SKILL.md §6）
+        if: hashFiles('games/${{ matrix.game }}/*.html') != ''
+        env:
+          GXT_GAME: ${{ matrix.game }}
+        run: |
+          python .trae/scripts/check_twine_escape.py games/${{ matrix.game }}/*.html
+
+      - name: Gate B · 引擎装填校验（SKILL.md §6）
+        if: hashFiles('games/${{ matrix.game }}/*.html') != ''
+        env:
+          GXT_GAME: ${{ matrix.game }}
+        run: |
+          python .trae/scripts/verify_embed.py games/${{ matrix.game }}/*.html
+
+      - name: Gate C · wikifier 嵌套栈检查（SKILL.md §6）
+        if: hashFiles('games/${{ matrix.game }}/*.html') != ''
+        env:
+          GXT_GAME: ${{ matrix.game }}
+        run: |
+          python .trae/scripts/check_twine_macro_stack.py games/${{ matrix.game }}/*.html
+
+      - name: Gate D · 防御性 e2e（SKILL.md §8.7/8/9）
+        env:
+          GXT_GAME: ${{ matrix.game }}
+        run: |
+          npx playwright test test/e2e/l10n-sanitize.test.js test/e2e/stale-state.test.js test/e2e/feedback-audit.test.js
+
       - name: L1 静态分析
         env:
           GXT_GAME: ${{ matrix.game }}
