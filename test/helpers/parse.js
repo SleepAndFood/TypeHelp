@@ -18,16 +18,33 @@ export async function parsePassages(htmlPath) {
 }
 
 /**
- * 从分片文件构造 passages（无 HTML 编译产物的剧本）
- * @param {Array<{name:string,content:string}>} files
+ * 从分片文件构造 passages
+ *
+ * 支持两种格式（按文件内容自动识别）：
+ * 1) SugarCube 分片：内容含 <tw-passagedata name="..."> 包装 → 用 cheerio 提取
+ * 2) 纯文本分片：文件名 → passage.name，文件内容 → passage.text（用于早期无 HTML 的剧本）
  */
 export async function parsePassagesFromFiles(files) {
   const out = [];
   for (const f of files) {
-    const ps = extractFromHtml(f.content);
-    for (const p of ps) {
-      // 分片文件没有 HTML 包裹，让 name 来自内容但保留文件名作为备注
-      out.push({ ...p, sourceFile: f.name });
+    if (/<tw-passagedata\b/i.test(f.content)) {
+      // SugarCube 分片
+      const ps = extractFromHtml(f.content);
+      for (const p of ps) out.push({ ...p, sourceFile: f.name });
+    } else {
+      // 纯文本分片：文件名作为 passage 名，去掉后缀与路径
+      const name = f.name
+        .replace(/\\/g, '/')
+        .split('/')
+        .pop()
+        .replace(/\.[^.]+$/, '');
+      out.push({
+        pid: String(out.length),
+        name,
+        tags: [],
+        text: f.content,
+        sourceFile: f.name,
+      });
     }
   }
   return out;

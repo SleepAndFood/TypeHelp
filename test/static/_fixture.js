@@ -1,12 +1,15 @@
 /**
- * 加载 L1 静态分析测试 fixture + 配置
- * 用法：import { loadL1 } from './_fixture.js';
- *  - loadL1() 默认使用 tests-fixtures/minimal.html
- *  - loadL1('tests-fixtures/xx.html') 指定文件
+ * L1 静态分析统一 fixture
+ * - loadL1: 用 minimal fixture 测 helper 本身
+ * - loadL1FromConfig: 按 gameKey 加载指定剧本的 config + passages
+ *   （含 terminal-mystery 的 passageFiles fallback）
  */
 import { loadConfig } from '../helpers/config.js';
 import { parsePassages, parsePassagesFromFiles } from '../helpers/parse.js';
 import { readFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
+import path from 'node:path';
 
 export async function loadL1(htmlPath = 'tests-fixtures/minimal.html') {
   const config = await loadConfig();
@@ -15,28 +18,28 @@ export async function loadL1(htmlPath = 'tests-fixtures/minimal.html') {
 }
 
 export async function loadL1FromConfig(gameKey) {
-  // 通过覆盖 env 让 loadConfig 选指定剧本
-  const prev = process.env.GXT_GAME;
-  process.env.GXT_GAME = gameKey;
-  try {
-    const config = await loadConfig();
-    let passages;
-    if (config.htmlFile) {
+  const cfgPath = `games/${gameKey}/test.config.js`;
+  if (!existsSync(cfgPath)) throw new Error(`Missing ${cfgPath}`);
+  const mod = await import(pathToFileURL(path.resolve(cfgPath)).href);
+  const config = mod.default;
+  let passages;
+  if (config.htmlFile) {
+    if (!existsSync(config.htmlFile)) {
+      // HTML 缺失但 config 存在：仍尝试解析（parsePassages 会抛），让上层 catch
       passages = await parsePassages(config.htmlFile);
-    } else if (config.passageFiles?.length) {
-      const files = await Promise.all(
-        config.passageFiles.map(async (p) => ({
-          name: p,
-          content: await readFile(p, 'utf-8'),
-        }))
-      );
-      passages = await parsePassagesFromFiles(files);
     } else {
-      passages = [];
+      passages = await parsePassages(config.htmlFile);
     }
-    return { config, passages };
-  } finally {
-    if (prev === undefined) delete process.env.GXT_GAME;
-    else process.env.GXT_GAME = prev;
+  } else if (config.passageFiles?.length) {
+    const files = await Promise.all(
+      config.passageFiles.map(async (p) => ({
+        name: p,
+        content: await readFile(p, 'utf-8'),
+      }))
+    );
+    passages = await parsePassagesFromFiles(files);
+  } else {
+    passages = [];
   }
+  return { config, passages };
 }
