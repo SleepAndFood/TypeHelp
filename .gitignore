@@ -10,15 +10,17 @@
 Thumbs.db
 desktop.ini
 
-# ---------- 通用产物 / 缓存 ----------
-__pycache__/
-*.pyc
-*.pyo
+# ---------- 测试产物 ----------
 node_modules/
+.playwright-browsers/
+playwright-report/
+test-results/
 *.log
 *.tmp
 *.bak
 .commit-msg.tmp
+# 测试产物（如 vitest 生成）
+coverage/
 
 # ---------- 多剧本产物约定 ----------
 # TypeHelp 引擎生成的大文件已在仓内追踪（*.html），不需 ignore

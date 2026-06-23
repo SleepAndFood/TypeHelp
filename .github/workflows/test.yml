@@ -1,0 +1,65 @@
+name: Game Tests
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        game: [galley-villa, island-death, terminal-mystery]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: L1 静态分析
+        env:
+          GXT_GAME: ${{ matrix.game }}
+        run: npm run test:static
+
+      - name: L2 单元
+        env:
+          GXT_GAME: ${{ matrix.game }}
+        run: npm run test:unit
+
+      - name: L3 叙事
+        env:
+          GXT_GAME: ${{ matrix.game }}
+        run: npm run test:narrative
+
+      - name: L4 渲染（有 HTML 时执行）
+        env:
+          GXT_GAME: ${{ matrix.game }}
+        run: |
+          if node -e "import('./games/${{ matrix.game }}/test.config.js').then(m=>process.exit(m.default.htmlFile ? 0 : 1))"; then
+            npm run test:render
+          else
+            echo "::notice::${{ matrix.game }} 无 HTML，L4 跳过"
+          fi
+
+      - name: L5 E2E（有 HTML 时执行）
+        env:
+          GXT_GAME: ${{ matrix.game }}
+        run: |
+          if node -e "import('./games/${{ matrix.game }}/test.config.js').then(m=>process.exit(m.default.htmlFile ? 0 : 1))"; then
+            npm run test:e2e
+          else
+            echo "::notice::${{ matrix.game }} 无 HTML，L5 跳过"
+          fi

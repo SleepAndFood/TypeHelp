@@ -1,0 +1,24 @@
+{
+  "name": "txtgame-test-framework",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Multi-layered automated test framework for SugarCube/Twine text mystery games (TxtGame project).",
+  "type": "module",
+  "scripts": {
+    "test": "node scripts/run-all.js",
+    "test:static": "vitest run test/static test/helpers",
+    "test:unit": "vitest run test/unit test/helpers",
+    "test:narrative": "vitest run test/narrative test/helpers",
+    "test:render": "vitest run test/render test/helpers",
+    "test:e2e": "playwright test"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.45.0",
+    "cheerio": "^1.0.0-rc.12",
+    "jsdom": "^24.0.0",
+    "vitest": "^1.6.0"
+  }
+}
