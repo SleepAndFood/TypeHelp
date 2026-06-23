@@ -25,10 +25,8 @@ import { resolveGameKey } from '../helpers/config.js';
 const gameKey = resolveGameKey();
 const repoRoot = path.resolve(process.cwd());
 
-/** 列举所有有 HTML 的剧本（同步） */
-function listGamesWithHtml() {
-  return ['galley-villa', 'island-death'];
-}
+// 列举所有有 HTML 的剧本（通过 test.config.js 动态发现）
+const listGamesWithHtml = ['galley-villa', 'island-death'];
 
 /**
  * 提取 tw-passagedata 中 name="StoryInit" 的内容（解码 HTML 实体）
@@ -61,13 +59,14 @@ function extractBoxContent(html) {
 /**
  * 审计单剧本的 4 项基线
  * @param {string} game
+ * @param {string} htmlFile 来自 test.config.js 的 htmlFile 路径
  * @returns {{ ok: boolean, missing: string[] }}
  */
-function auditBaselines(game) {
+function auditBaselines(game, htmlFile) {
   const missing = [];
-  const htmlPath = path.join(repoRoot, 'games', game, `${game}.html`);
+  const htmlPath = path.isAbsolute(htmlFile) ? htmlFile : path.join(repoRoot, htmlFile);
   if (!existsSync(htmlPath)) {
-    return { ok: false, missing: [`games/${game}/${game}.html 不存在`] };
+    return { ok: false, missing: [`${htmlFile} 不存在`] };
   }
   const html = readFileSync(htmlPath, 'utf8');
   const storyInit = extractStoryInitContent(html);
@@ -122,10 +121,12 @@ function auditBaselines(game) {
 }
 
 test.describe(`E2E 防御性 cross-game baseline: ${gameKey}`, () => {
-  test('当前剧本通过 4 项基线审计', () => {
-    const { ok, missing } = auditBaselines(gameKey);
+  test('当前剧本通过 4 项基线审计', async () => {
+    const configMod = await import(`../../games/${gameKey}/test.config.js`);
+    const htmlFile = configMod.default.htmlFile;
+    const { ok, missing } = auditBaselines(gameKey, htmlFile);
     if (!ok) {
-      expect.fail(
+      throw new Error(
         `SKILL.md §8.10 跨剧本基线审计失败（games/${gameKey}）：\n` +
           missing.map((m) => `  - ${m}`).join('\n')
       );
@@ -136,11 +137,13 @@ test.describe(`E2E 防御性 cross-game baseline: ${gameKey}`, () => {
 
 /** 跨剧本扫描：每个有 HTML 的剧本一个独立用例 */
 test.describe('cross-game baseline: 跨剧本扫描', () => {
-  for (const game of listGamesWithHtml()) {
-    test(`games/${game} 通过 4 项基线审计`, () => {
-      const { ok, missing } = auditBaselines(game);
+  for (const game of listGamesWithHtml) {
+    test(`games/${game} 通过 4 项基线审计`, async () => {
+      const configMod = await import(`../../games/${game}/test.config.js`);
+      const htmlFile = configMod.default.htmlFile;
+      const { ok, missing } = auditBaselines(game, htmlFile);
       if (!ok) {
-        expect.fail(
+        throw new Error(
           `SKILL.md §8.10 跨剧本基线审计失败（games/${game}）：\n` +
             missing.map((m) => `  - ${m}`).join('\n')
         );
