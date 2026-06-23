@@ -5,6 +5,22 @@
 
 ---
 
+## AI 协作入口
+
+> 本项目的 AI Agent 协作通过仓根 [AGENTS.md](AGENTS.md) + 设计方法论 [SKILL.md](.trae/skills/typehelp-novel-design/SKILL.md) 进行。
+
+**AI 协作者必读顺序**：
+
+1. [AGENTS.md](AGENTS.md) — 仓级入口（5 个章节：C1–C9 / 5 层 / 4 步门禁 / 多剧本基线 / 禁止行为）
+2. [README.md](README.md) — 本文件
+3. [SKILL.md](.trae/skills/typehelp-novel-design/SKILL.md) — 9 阶段方法论 + 8 Agent 提示词
+4. [typehelp-novel-design spec.md](.trae/specs/typehelp-novel-design/spec.md) — 完整方法论推导
+5. `games/<target>/README.md` — 目标剧本说明
+
+> **人类贡献者**也可参照 AGENTS.md 第 §3 节的规范速查。
+
+---
+
 ## 剧本索引
 
 | 剧本 | 题材 | 基调 | 文件 | 状态 |
