@@ -38,6 +38,11 @@ function listGamesWithHtml() {
 }
 
 test.describe(`E2E 防御性 framework drift: ${gameKey}`, () => {
+  test.beforeAll(async () => {
+    if (!(await browsersAvailable())) {
+      test.skip(true, 'Playwright 浏览器未安装（运行 `npx playwright install` 启用）');
+    }
+  });
   test('当前剧本 framework_diff.md 存在且包含 5 个章节', () => {
     const target = path.join(repoRoot, 'games', gameKey, 'framework_diff.md');
     if (!existsSync(target)) {
@@ -61,6 +66,11 @@ test.describe(`E2E 防御性 framework drift: ${gameKey}`, () => {
  * 使用 test() 而非 test.describe() 因为这些是独立检查（每个剧本一个用例）
  */
 test.describe('framework drift: 跨剧本扫描', () => {
+  test.beforeAll(async () => {
+    if (!(await browsersAvailable())) {
+      test.skip(true, 'Playwright 浏览器未安装（运行 `npx playwright install` 启用）');
+    }
+  });
   for (const game of listGamesWithHtml()) {
     test(`games/${game}/framework_diff.md 存在且完整`, () => {
       const target = path.join(repoRoot, 'games', game, 'framework_diff.md');
