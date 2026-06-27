@@ -26,13 +26,19 @@ import sys
 from pathlib import Path
 
 # SugarCube v2 body-tag 宏（含 elseif/else/case/default）
+# 关键：<<link>> 和 <<script>> 是合法的单行+close 形式 body-tag 宏
+# (例: <<link "text">>code<</link>>, <<script>>code<</script>>)
+# 不在白名单会误报 "<</link>> 关闭无对应"
 BODY_TAG_OPEN = ('if', 'for', 'capture', 'nobr', 'timed', 'replace',
-                 'switch', 'silent', 'type', 'widget')
-# <<done>> 是 <<for>> <<capture>> <<nobr>> <<silent>> <<timed>> <<widget>> 的
-# 关闭符（SugarCube 文档化的 close 形式）
-DONE_ALIASES = ('for', 'capture', 'nobr', 'silent', 'timed', 'widget', 'replace')
+                 'switch', 'silent', 'type', 'widget', 'link', 'script')
+# <<done>> 是 <<for>> <<capture>> <<silent>> <<timed>> <<widget>> 的关闭符
+# (SugarCube v2 文档化的 close 形式)
+# 注意: <<nobr>> 和 <<replace>> 不用 <<done>> 关闭, 各自有 <</nobr>> / <</replace>>
+# 之前的版本把 nobr/replace 误列进 DONE_ALIASES, 导致"<<done>> 错误关闭最外层 nobr",
+# 进而触发连锁误报 "<</nobr>> close-without-open" (galley-villa Box:601, list:754 等)
+DONE_ALIASES = ('for', 'capture', 'silent', 'timed', 'widget')
 BODY_TAG_CLOSE = ('if', 'for', 'capture', 'nobr', 'timed', 'replace',
-                  'switch', 'silent', 'type', 'widget')
+                  'switch', 'silent', 'type', 'widget', 'link', 'script', 'done')
 # elseif/else/case/default 是子标签，无 close
 SUB_TAGS = ('elseif', 'else', 'case', 'default')
 
@@ -61,6 +67,28 @@ def line_num_in(haystack, idx):
 def get_context(body, idx, width=80):
     s = max(0, idx - 30)
     return body[s:s + width].replace('\n', '\\n')
+
+
+def _find_js_comments(body):
+    """找出 body 中所有 JS 块注释 /* ... */ 的字符范围 (start, end)。
+    这些范围内的宏是注释里的伪代码，不应被当作真实宏解析。
+    关键场景: PassageFooter 用 /*<<run ...>>*/ 包裹宏调用做"看似注释"的运行代码。
+    """
+    ranges = []
+    pos = 0
+    while pos < len(body):
+        start = body.find('/*', pos)
+        if start < 0:
+            break
+        end = body.find('*/', start + 2)
+        if end < 0:
+            # 未闭合的注释：保守地取到 body 结尾
+            end = len(body)
+        else:
+            end += 2  # 包含 */
+        ranges.append((start, end))
+        pos = end
+    return ranges
 
 
 def split_passages(content):
@@ -97,10 +125,21 @@ def check_passage(passage):
     name = passage['name']
     base_line = passage['line']
 
+    # 预处理: 找出所有 JS 块注释 /* ... */ 的范围
+    # 这些注释里的 <<script>><</script>> 不是真宏,不能误判为嵌套错位
+    # 关键: PassageFooter 中经常用 /*<<run ...>>*/ 包裹宏调用
+    js_comment_ranges = _find_js_comments(body)
+
+    def in_js_comment(idx):
+        for s, e in js_comment_ranges:
+            if s <= idx < e:
+                return True
+        return False
+
     stack = []  # list of dicts: {tag, open_idx, open_line}
 
     # <<nobr>> <<silent>> <<capture>> <<timed>> <<replace>> <<type>> <<widget>> <<for>>
-    # 都不是"严格闭包"——它们内部可以嵌套任何宏，没有强制 close
+    # 都不是"严格闭包"——它们内部可以嵌套任何宏,没有强制 close
     # 只有 <<if>> <<switch>> 才是真正的"分支闭包"——要求 else/elseif 配对
     STRICT_CLOSERS = ('if', 'switch')
 
@@ -111,7 +150,29 @@ def check_passage(passage):
                 return stack[i]
         return None
 
+    # <<done>> 关闭策略:
+    #   1. 优先找栈中名为 'done' 的 frame
+    #   2. 否则从栈顶往下找最近的 DONE_ALIASES 帧
+    #      (允许跳过中间的 <<if>> 等"非严格闭包"——这正是 galley-villa Box:523 的场景)
+    def find_done_target():
+        for i in range(len(stack) - 1, -1, -1):
+            if stack[i]['tag'] == 'done':
+                return i
+            if stack[i]['tag'] in DONE_ALIASES:
+                return i
+        return None
+
+    # DEBUG: 跟踪 done 关闭行为
+    DEBUG_DONE = False  # set True to trace
+    if DEBUG_DONE:
+        def _dbg(msg):
+            if 'done' in msg.lower() or 520 <= line <= 545:
+                print(f"  DBG L{line} {msg}  stack={[s['tag'] for s in stack]}")
+
     for m in MACRO_PATTERN.finditer(body):
+        # 跳过 JS 注释内的伪宏
+        if in_js_comment(m.start()):
+            continue
         token = m.group(1)
         raw = m.group(0)
         is_close_form = raw.startswith(LT_ESC + LT_ESC + '/') or \
@@ -121,36 +182,51 @@ def check_passage(passage):
         ctx = get_context(body, m.start())
 
         if is_close_form:
-            # <</name>> / <<endname>> / <<done>>：pop 最近的同名 frame
-            # <<done>> 是 <<for>> <<capture>> <<nobr>> <<silent>> <<timed>>
-            #  <<widget>> <<replace>> 的 close 形式
+            # <</name>> / <<endname>>: pop 最近的同名 frame
+            # <<done>> 是 <<for>>/<<capture>>/<<silent>>/<<timed>>/<<widget>> 的 close 形式
+            # (SugarCube v2 文档化)
             if not stack:
-                add_error(name, passage['pid'], line, 'close-without-open',
-                          f'<</{token}>> 出现但无对应 <<{token}>> 打开', ctx)
+                # <<done>> 在没有打开的块时 SugarCube 视为 no-op (TypeHelp 引擎用法:
+                # <<if>> 内放 <<done>><<replace>>...<</replace>><</done>> 是合法风格)
+                # 仅对其他 close 形式报错
+                if token != 'done':
+                    add_error(name, passage['pid'], line, 'close-without-open',
+                              f'<</{token}>> 出现但无对应 <<{token}>> 打开', ctx)
                 continue
-            # 找最近的同名 frame（可能中间有非严格闭包的 frame）
+            # 找最近的同名 frame (可能中间有非严格闭包的 frame)
             idx = None
             for i in range(len(stack) - 1, -1, -1):
                 if stack[i]['tag'] == token:
                     idx = i
                     break
                 # <<done>> 也匹配所有 DONE_ALIASES
-                if token == 'done' and stack[i]['tag'] in DONE_ALIASES:
-                    idx = i
-                    break
+                if token == 'done':
+                    idx = find_done_target()
+                    if idx is not None:
+                        break
             if idx is None:
-                add_error(name, passage['pid'], line, 'close-without-open',
-                          f'<</{token}>> 出现但无对应 <<{token}>> 打开', ctx)
+                # <<done>> 找不到对应 frame 时 silent 忽略 (SugarCube no-op)
+                if token != 'done':
+                    add_error(name, passage['pid'], line, 'close-without-open',
+                              f'<</{token}>> 出现但无对应 <<{token}>> 打开', ctx)
                 continue
             if idx < len(stack) - 1:
                 # 关闭了嵌套的外层 frame —— 报告非严格嵌套关闭
-                add_error(name, passage['pid'], line, 'nested-close',
-                          f'<</{token}>> 关闭了嵌套在 '
-                          f'<<{stack[-1]["tag"]}>> 内的 <<{token}>> '
-                          f'(<<{stack[-1]["tag"]}>> 在 {stack[-1]["open_line"]} 行打开)',
-                          ctx)
-            # 弹到该层（包含）
-            del stack[idx:]
+                # 例外: <<done>> 是 SugarCube 合法行为，可以跨 <<if>> 关闭外层
+                # <<for>> / <<capture>> / <<silent>> / <<timed>> / <<widget>> 等
+                if token != 'done':
+                    add_error(name, passage['pid'], line, 'nested-close',
+                              f'<</{token}>> 关闭了嵌套在 '
+                              f'<<{stack[-1]["tag"]}>> 内的 <<{token}>> '
+                              f'(<<{stack[-1]["tag"]}>> 在 {stack[-1]["open_line"]} 行打开)',
+                              ctx)
+            # 弹掉该 frame
+            # 关键: <<done>> 关闭外层 for/capture 后, 中间的 <<if>> 等严格闭包
+            # frame 必须保留 (否则后续 <</if>> 找不到配对)
+            if token == 'done':
+                del stack[idx]
+            else:
+                del stack[idx:]
         elif token in SUB_TAGS:
             if token in ('elseif', 'else'):
                 # 必须是最近的 <<if>> / <<switch>> / <<case>> 的子分支
