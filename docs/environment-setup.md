@@ -1,7 +1,7 @@
 # 环境配置说明
 
-本文档说明 TxtGame 项目在国内网络环境下的 npm / Playwright 代理配置，
-以及 Chromium 1223 → 1228 的"伪版本复制"方案。
+本文文档说明 TxtGame 项目在国内网络环境下的 npm / Playwright 代理配置，
+以及 Chromium 伪版本兼容方案（自动从最接近的源版本复制到目标版本）。
 
 ## 1. 一次性环境变量（PowerShell）
 
@@ -45,13 +45,20 @@ Copy-Item -Path "$src\chromium_headless_shell-1223" -Destination "$src\chromium_
 ```json
 {
   "scripts": {
-    "postinstall": "node scripts/copy-playwright-1223-to-1228.js"
+    "postinstall": "node scripts/copy-playwright-fallback.js"
   }
 }
 ```
 
-> **当前状态**：本仓库尚未封装进 `postinstall`（属于"修复 E2E 框架"的下一步）。
-> 跨机器时需手动执行，或由新机器的开发者自行复制。
+脚本行为：
+- 读 `playwright-core/browsers.json` 拿目标版本（自动适配未来 1229/1230/...）
+- 目标版本已存在 → 跳过
+- 选最接近且 ≤ 目标的源版本 → 复制为 `chromium-<目标>` 和 `chromium_headless_shell-<目标>`
+- 无合适源 → 打 warning 但**不阻塞 `npm install`**
+- 跨平台：纯 Node.js（不依赖 PowerShell）
+- 调试：`TXT_GAME_FALLBACK_DRY_RUN=1` 只打印不写；`TXT_GAME_SKIP_FALLBACK_COPY=1` 整个跳过
+
+详见 [`scripts/copy-playwright-fallback.js`](../scripts/copy-playwright-fallback.js)。
 
 ## 3. 沙箱限制（TRAE IDE）
 

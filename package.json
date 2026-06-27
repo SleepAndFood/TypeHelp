@@ -7,6 +7,7 @@
   "scripts": {
     "test": "node scripts/run-all.js",
     "diagnose": "node scripts/diagnose.js",
+    "postinstall": "node scripts/copy-playwright-fallback.js",
     "test:static": "vitest run test/static test/helpers",
     "test:unit": "vitest run test/unit test/helpers",
     "test:narrative": "vitest run test/narrative test/helpers",
