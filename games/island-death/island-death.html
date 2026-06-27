@@ -225,7 +225,7 @@ var LZString={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234
 &lt;&lt;type 100ms&gt;&gt;用户身份验证：第4任管家&lt;&lt;/type&gt;&gt;
 &lt;&lt;type 100ms&gt;&gt;警告：NAS硬盘已被格式化3次。部分数据可能不完整。&lt;&lt;/type&gt;&gt;
 &lt;&lt;type 100ms&gt;&gt;加载完成。输入 help 开始。&lt;br&gt;&lt;br&gt;&lt;&lt;/type&gt;&gt;
-&lt;&lt;timed 3s&gt;&gt;&lt;&lt;goto "Intro"&gt;&gt;&lt;&lt;/timed&gt;&gt;
+&lt;&lt;timed 5s&gt;&gt;&lt;&lt;goto "Intro"&gt;&gt;&lt;&lt;/timed&gt;&gt;
 </tw-passagedata>
 
 <!-- ======== INTRO ======== -->
@@ -239,9 +239,6 @@ var LZString={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234
 &lt;span style="font-size:70%"&gt;输入 help 开始调查&lt;/span&gt;&lt;br&gt;
 &lt;/div&gt;
 &lt;br&gt;&lt;br&gt;&lt;br&gt;
-&lt;&lt;if $first_help is 2&gt;&gt;
-  &lt;&lt;timed 5s&gt;&gt;&lt;&lt;set $command to "help"&gt;&gt;&lt;&lt;goto "Box"&gt;&gt;&lt;&lt;/timed&gt;&gt;
-&lt;&lt;/if&gt;&gt;
 </tw-passagedata>
 
 <!-- ======== BOX (命令分发器) ======== -->
