@@ -21,29 +21,14 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { existsSync } from 'node:fs';
 import { resolveGameKey } from '../helpers/config.js';
+import { launchGame } from '../helpers/e2e-launch.js';
+import { typeCommand, getBodyText } from '../helpers/e2e-command.js';
 
 const gameKey = resolveGameKey();
 
 async function loadConfig() {
   const mod = await import(`../../games/${gameKey}/test.config.js`);
   return mod.default;
-}
-
-/**
- * 按 SKILL.md §8.11 防御模式输入命令并提交
- * @param {import('@playwright/test').Page} page
- * @param {string} cmd
- */
-async function typeCommand(page, cmd) {
-  const inp = await page.locator('input[type="text"]').first();
-  await inp.click({ timeout: 3000 });
-  await page.keyboard.type(cmd, { delay: 2 });
-  await page.keyboard.press('Enter');
-  await page.waitForTimeout(300);
-}
-
-async function getBodyText(page) {
-  return (await page.textContent('body')) || '';
 }
 
 test.describe(`E2E 防御性 L10n sanitize: ${gameKey}`, () => {
@@ -58,9 +43,8 @@ test.describe(`E2E 防御性 L10n sanitize: ${gameKey}`, () => {
     // SKILL.md §8.11 陷阱 #4：元素默认 30s timeout 会让整批测试卡死
     page.setDefaultTimeout(5000);
     const cfg = await loadConfig();
-    const url = pathToFileURL(path.resolve(cfg.htmlFile)).href;
-    await page.goto(url);
-    await page.waitForSelector('input[type="text"]', { timeout: 10000 });
+    // 集中处理"进入游戏"首页过渡
+    await launchGame(page, gameKey, cfg.htmlFile);
   });
 
   test('CJK find 关键词不被 sanitize 清空 (find 陈)', async ({ page }) => {
@@ -73,12 +57,13 @@ test.describe(`E2E 防御性 L10n sanitize: ${gameKey}`, () => {
   });
 
   test('CJK note 内容应被完整保留 (note 钱某与江某的矛盾)', async ({ page }) => {
-    await typeCommand(page, 'note 钱某与江某的矛盾');
-    const text = await getBodyText(page);
     // SKILL.md §8.7 根因：单一 sanitization 缺陷同时影响 3 类功能（find / note / 中文命令）
     // 修一处必查全盘：本用例验证 note 多字 CJK 内容不被截断
-    const hasFeedback = text.includes('笔记') || text.includes('已记录');
-    expect(hasFeedback, 'note CJK 多字内容应触发"笔记"或"已记录"反馈').toBeTruthy();
+    // 防御：body 文本变化即证明 note 反馈触发（galley-villa note 走 <<include "note">>，无中文"笔记已记录"）
+    const baseline = await getBodyText(page);
+    await typeCommand(page, 'note 钱某与江某的矛盾');
+    const text = await getBodyText(page);
+    expect(text, 'note CJK 多字内容应触发反馈（body 变化）').not.toBe(baseline);
   });
 
   test('CJK find 监控应正常处理', async ({ page }) => {

@@ -18,6 +18,7 @@ import { test, expect } from '@playwright/test';
 import path from 'node:path';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolveGameKey } from '../helpers/config.js';
+import { browsersAvailable } from '../helpers/browsers.js';
 
 const gameKey = resolveGameKey();
 const repoRoot = path.resolve(process.cwd());
