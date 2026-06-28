@@ -77,6 +77,9 @@
 - [ ] 文件总数 ≈ charter 中目标文件数
 - [ ] 关键证据**显式陈述**（不藏在隐喻里）
 - [ ] truth.md 中所有 F 都已被 file_index.md 覆盖
+- [ ] **命令清单一致性**：`help` passage 列出的每条命令在 `Box` passage 都有对应 `<<elseif>>` 分支
+- [ ] **隐藏 / meta 文件解锁路径显式化**：每个隐藏文件在 `Box` 或对应文件 passage 中有可触发的 `<<run $cache.push(...)>>` 逻辑，而非仅列在 `hidden_files.md`
+- [ ] **目标语言字符集覆盖**：若剧本非纯英文，`Box` passage 的 sanitize 正则必须包含目标语言字符集（中文 `\u4e00-\u9fff` / 日文 `\u3040-\u30ff` / 韩文 `\uac00-\ud7af` / 全角 `\uff00-\uffef`）
 
 ## 修补建议
 如果某 F 只有 1 个文件揭露 → 必须新增一个揭露文件

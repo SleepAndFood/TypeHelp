@@ -166,6 +166,29 @@ python .trae/scripts/embed_sugarcube_engine.py \
 - inbox / messages 存在
 - 启动流存在
 
+## 自检 6: 命令路由完整性（防止 help 承诺的命令实际不可用）
+
+> **背景**：`island-death` 曾出现 `act`/`title`/`hangman` 在 help 中有、Box 中无分支，输入后返回"文件未找到"；`$titles` 未初始化导致 `title` 命令报错。本自检防止同类遗漏。
+
+从 `help` passage 提取完整命令清单，在 `Box` passage 逐条核对 `<<elseif $command.split(" ")[0] is "<命令>">>` 分支：
+
+```
+help / list / back / save / load / inbox / name / title / note / find / act / hangman
+```
+
+- [ ] 每条命令都有独立分支
+- [ ] 每条命令依赖的变量在 `StoryInit` 已初始化：`$acts` / `$titles` / `$guessed_letters` / `$notes` / `$nicknames`
+- [ ] 每条命令至少跑 3 种输入：无参数、合法参数、非法参数
+- [ ] 非法参数返回统一风格的中文提示（非中英混用 / 非英文残留）
+
+## 自检 7: 隐藏 / meta 文件解锁路径
+
+> **背景**：`island-death` 的 `00-meta-warning` 只列在 `hidden_files.md`，玩家读完关键文件后仍无法获知该文件名。本自检要求每个隐藏 / meta 文件都有显式触发路径。
+
+- [ ] 每个隐藏 / meta 文件在 `Box` passage 或对应文件 passage 中有自动解锁逻辑
+- [ ] 解锁条件与 `hidden_files.md` 中设计的触发路径一致
+- [ ] 解锁后 `$cache` 正确排序并给出可见反馈（如"//得到新文件——XX 已解锁//"）
+
 ## 自检 4: HTML 实体完整性（防止 SugarCube "cannot find a closing tag for macro <<X>>" 报错）
 
 > **背景**：Twine 2.x 将 passage body 内的 `<<` / `>>` 转义为 `&lt;&lt;` / `&gt;&gt;` 写入 `<tw-passagedata>`。任何 `&` 丢失（变成 `lt;<<` / `lt;>>`）都会让 SugarCube 的 `Wikifier.Parser.parseBody` 错位消费相邻宏，最终在**另一个** body-tag 宏上抛出 `cannot find a closing tag for macro <<X>>`。这是 worked example「黑匣子 (Black Box)」反复踩过的坑。
