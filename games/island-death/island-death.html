@@ -187,6 +187,7 @@ var LZString={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234
 &lt;&lt;set $nicknames to {}&gt;&gt;
 &lt;&lt;set $act_starts to ["00","07","13","19","25","99"]&gt;&gt;
 &lt;&lt;set $acts to ["","","","",""]&gt;&gt;
+&lt;&lt;set $titles to {}&gt;&gt;
 &lt;&lt;set $cache to ["00-readme"]&gt;&gt;
 &lt;&lt;set $is_complete to false&gt;&gt;
 &lt;&lt;set $final_message_viewed to false&gt;&gt;
@@ -310,6 +311,67 @@ var LZString={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234
     &lt;&lt;=$fail_message&gt;&gt;参数过多。
   &lt;&lt;/if&gt;&gt;
 
+&lt;&lt;elseif $command.split(" ")[0] is "act"&gt;&gt;
+  &lt;&lt;if $command.split(" ").length lt 2&gt;&gt;
+    &lt;&lt;=$fail_message&gt;&gt;用法：act 幕号 [幕名]
+  &lt;&lt;else&gt;&gt;
+    &lt;&lt;set _act to $old_input.split(" ")[1]&gt;&gt;
+    &lt;&lt;if not ["1","2","3","4","5"].includes(_act)&gt;&gt;
+      &lt;&lt;=$fail_message&gt;&gt;幕号须为 1-5 的整数。
+    &lt;&lt;elseif $command.split(" ").length is 2&gt;&gt;
+      &lt;&lt;set $acts[Number(_act)-1] to ""&gt;&gt;
+      &lt;br&gt;已清除第 &lt;&lt;= _act&gt;&gt; 幕的标记。
+    &lt;&lt;else&gt;&gt;
+      &lt;&lt;set _act_name to $raw_input.replace($raw_input.split(" ")[0] + " " + $raw_input.split(" ")[1] + " ", "")&gt;&gt;
+      &lt;&lt;set $acts[Number(_act)-1] to _act_name&gt;&gt;
+      &lt;br&gt;已设置 ACT &lt;&lt;= _act&gt;&gt;：&lt;&lt;= _act_name&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+  &lt;&lt;/if&gt;&gt;
+
+&lt;&lt;elseif $command.split(" ")[0] is "title"&gt;&gt;
+  &lt;&lt;if $command.split(" ").length lt 2&gt;&gt;
+    &lt;&lt;=$fail_message&gt;&gt;用法：title 前缀 [标题]
+  &lt;&lt;else&gt;&gt;
+    &lt;&lt;set _title to $old_input.split(" ")[1]&gt;&gt;
+    &lt;&lt;set _is_valid_title to false&gt;&gt;
+    &lt;&lt;for _i to 0; _i lt $cache.length; _i++&gt;&gt;
+      &lt;&lt;if $cache[_i].substr(0, _title.length) is _title&gt;&gt;
+        &lt;&lt;set _is_valid_title to true&gt;&gt;
+      &lt;&lt;/if&gt;&gt;
+    &lt;&lt;/for&gt;&gt;
+    &lt;&lt;if not _is_valid_title&gt;&gt;
+      &lt;&lt;=$fail_message&gt;&gt;未找到以该前缀开头的文件。
+    &lt;&lt;else&gt;&gt;
+      &lt;&lt;if $raw_input.split(" ").length is 2&gt;&gt;
+        &lt;&lt;run delete $titles[_title]&gt;&gt;
+        &lt;br&gt;已清除标题 &lt;&lt;= _title&gt;&gt;。
+      &lt;&lt;else&gt;&gt;
+        &lt;&lt;set $titles[_title] to $raw_input.replace($raw_input.split(" ")[0] + " " + $raw_input.split(" ")[1] + " ", "")&gt;&gt;
+        &lt;br&gt;已设置标题 &lt;&lt;= _title&gt;&gt;：&lt;&lt;= $titles[_title]&gt;&gt;
+      &lt;&lt;/if&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+  &lt;&lt;/if&gt;&gt;
+
+&lt;&lt;elseif $command.split(" ")[0] is "hangman"&gt;&gt;
+  &lt;&lt;if $command.split(" ").length gt 2&gt;&gt;
+    &lt;&lt;=$fail_message&gt;&gt;参数过多。
+  &lt;&lt;elseif $command.split(" ").length is 1&gt;&gt;
+    &lt;&lt;include "hangman"&gt;&gt;
+  &lt;&lt;else&gt;&gt;
+    &lt;&lt;set _letter to $command.split(" ")[1]&gt;&gt;
+    &lt;&lt;if _letter.length gt 1&gt;&gt;
+      &lt;&lt;=$fail_message&gt;&gt;“hangman”指令的参数仅能置入一个字母。
+    &lt;&lt;else&gt;&gt;
+      &lt;&lt;set _letter to _letter.replace(/[^a-z]/g, "fail")&gt;&gt;
+      &lt;&lt;if _letter.length gt 1&gt;&gt;
+        &lt;&lt;include "hangman"&gt;&gt;
+      &lt;&lt;else&gt;&gt;
+        &lt;&lt;set $guessed_letters to $guessed_letters.concatUnique(_letter)&gt;&gt;
+        &lt;&lt;include "hangman"&gt;&gt;
+      &lt;&lt;/if&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+  &lt;&lt;/if&gt;&gt;
+
 &lt;&lt;elseif $command.split(" ")[0] is "name"&gt;&gt;
   &lt;&lt;if $command.split(" ").length lt 2&gt;&gt;
     &lt;&lt;include "name"&gt;&gt;
@@ -354,6 +416,26 @@ var LZString={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234
     &lt;&lt;=$fail_message&gt;&gt;没有可加载的存档。请先 save。
   &lt;&lt;/if&gt;&gt;
 
+&lt;&lt;elseif (Story.has($command) or Story.has($command.toUpperCase())) and ("0123456789".includes($command.substr(0,1)))&gt;&gt;
+  &lt;&lt;if Story.has($command.toUpperCase())&gt;&gt;
+    &lt;&lt;set $command to $command.toUpperCase()&gt;&gt;
+  &lt;&lt;/if&gt;&gt;
+  &lt;&lt;if not $cache.includes($command)&gt;&gt;
+    &lt;&lt;run $cache.push($command)&gt;&gt;
+    &lt;&lt;set $cache to $cache.sort()&gt;&gt;
+    &lt;br&gt;&lt;span class="recent_ii"&gt;//得到新文件——收录至文件列表//&lt;/span&gt;&lt;br&gt;
+  &lt;&lt;/if&gt;&gt;
+  &lt;&lt;if ("23-04-PL-1" is $command) or ("24-04-PL-1" is $command)&gt;&gt;
+    &lt;&lt;if not $cache.includes("00-meta-warning")&gt;&gt;
+      &lt;&lt;run $cache.push("00-meta-warning")&gt;&gt;
+      &lt;&lt;set $cache to $cache.sort()&gt;&gt;
+      &lt;br&gt;&lt;span class="recent_ii"&gt;//得到新文件——00-meta-warning 已解锁//&lt;/span&gt;&lt;br&gt;
+    &lt;&lt;/if&gt;&gt;
+  &lt;&lt;/if&gt;&gt;
+  &lt;&lt;set $previous_scene to $command&gt;&gt;
+  &lt;&lt;set $prev_command to $command&gt;&gt;
+  &lt;&lt;goto $command&gt;&gt;
+
 &lt;&lt;elseif $cache.includes($command)&gt;&gt;
   &lt;&lt;set $previous_scene to $command&gt;&gt;
   &lt;&lt;set $prev_command to $command&gt;&gt;
@@ -397,7 +479,8 @@ save / load — 保存/加载进度&lt;br&gt;
 <!-- ======== LIST ======== -->
 <tw-passagedata pid="3" name="list" tags="" position="100,500" size="100,100">
 &lt;&lt;nobr&gt;&gt;
-&lt;br&gt;当前可访问文件：&lt;br&gt;&lt;br&gt;
+&lt;br&gt;第 &lt;&lt;=$page+1&gt;&gt; 幕&lt;&lt;if $acts[$page] neq ""&gt;&gt; — &lt;&lt;=$acts[$page]&gt;&gt;&lt;&lt;/if&gt;&gt;&lt;br&gt;&lt;br&gt;
+当前可访问文件：&lt;br&gt;&lt;br&gt;
 &lt;&lt;set _act_start to $act_starts[$page]&gt;&gt;
 &lt;&lt;set _act_end to $act_starts[$page+1]&gt;&gt;
 &lt;&lt;set _shown to 0&gt;&gt;
@@ -500,10 +583,19 @@ save / load — 保存/加载进度&lt;br&gt;
 &lt;&lt;nobr&gt;&gt;
 &lt;br&gt;搜索"&lt;&lt;= _keyword&gt;&gt;"的结果：&lt;br&gt;&lt;br&gt;
 &lt;&lt;set _found_count to 0&gt;&gt;
+&lt;&lt;set _shown to []&gt;&gt;
 &lt;&lt;for _i to 0; _i lt $cache.length; _i++&gt;&gt;
-  &lt;&lt;if $cache[_i].toLowerCase().includes(_keyword.toLowerCase())&gt;&gt;
-    &lt;&lt;link $cache[_i]&gt;&gt;&lt;&lt;goto $cache[_i]&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;br&gt;
-    &lt;&lt;set _found_count += 1&gt;&gt;
+  &lt;&lt;set _fn to $cache[_i]&gt;&gt;
+  &lt;&lt;set _text to ""&gt;&gt;
+  &lt;&lt;if Story.has(_fn)&gt;&gt;
+    &lt;&lt;set _text to Story.get(_fn).text.toLowerCase()&gt;&gt;
+  &lt;&lt;/if&gt;&gt;
+  &lt;&lt;if _fn.toLowerCase().includes(_keyword.toLowerCase()) or _text.includes(_keyword.toLowerCase())&gt;&gt;
+    &lt;&lt;if not _shown.includes(_fn)&gt;&gt;
+      &lt;&lt;link _fn&gt;&gt;&lt;&lt;goto _fn&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;br&gt;
+      &lt;&lt;run _shown.push(_fn)&gt;&gt;
+      &lt;&lt;set _found_count += 1&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
   &lt;&lt;/if&gt;&gt;
 &lt;&lt;/for&gt;&gt;
 &lt;&lt;if _found_count is 0&gt;&gt;

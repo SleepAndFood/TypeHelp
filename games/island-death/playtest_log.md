@@ -156,3 +156,53 @@
 - `.tmp/regression_a.log`（56 条交互，修复后回归）
 
 > 注：原始日志在 `.tmp/`（已被 `.gitignore` 屏蔽），本目录下仅保留汇总报告。
+
+---
+
+## 8. 后续系统性可玩性验证（2026-06-29）
+
+### 验证目标
+
+以玩家视角黑盒验证 `island-death` 的可玩性与逻辑漏洞，重点检查：命令完整性、隐藏文件解锁、搜索可用性、分页正确性、主线通关。
+
+### 测试产物
+
+- `.tmp/explore_island_death_main.py` — 主线速通（34 个关键文件 + 结局）
+- `.tmp/explore_island_death_extra.py` — 命令/隐藏文件/分页/中文边界
+- `.tmp/explore_island_death_basic.py` — 基础命令与 stale-state 回归
+
+### 关键发现
+
+| # | 现象 | 根因 | 严重度 |
+|---|---|---|---|
+| D-1 | `act 1 抵岛` / `title 01 入职` / `hangman` 均返回 "文件未找到" | `Box` passage 中缺少这三条命令的路由；`$titles` 未初始化 | **高** |
+| D-2 | `find 江` 返回 "未找到相关文件" | `find_results` 仅搜索文件名，未搜索 passage 正文 | **高** |
+| D-3 | 阅读 `23-04-PL-1` 后 `00-meta-warning` 未出现在文件列表 | 隐藏 meta 文件未设计自动解锁，玩家无从得知该文件名 | **中** |
+| D-4 | `list 1` 不显示当前幕名称 | `list` passage 无幕标题头 | 低 |
+| D-5 | 主线 34 步可通关，`is_complete` 正确置为 true | — | OK |
+
+### 修复记录（POST-FIX）
+
+| 编号 | Bug | 修复方式 | 验证结果 |
+|---|---|---|---|
+| D-1 | act/title/hangman 命令缺失 | 在 `Box` passage 新增三条命令路由；`StoryInit` 中初始化 `$titles` | ✓ `act 1 抵岛` / `title 01 入职` / `hangman` / `hangman c` 均正常 |
+| D-2 | find 不搜正文 | `find_results`  passage 同时匹配文件名与 `Story.get(_fn).text` | ✓ `find 江` 返回 4 个相关文件 |
+| D-3 | 00-meta-warning 未解锁 | 读取 `23-04-PL-1` 或 `24-04-PL-1` 后自动 push `00-meta-warning` 到 `$cache` | ✓ cache 中出现 `00-meta-warning` |
+| D-4 | list 无幕名 | `list` passage 顶部显示 "第 N 幕" 及自定义幕名 | ✓ `list 1` 显示 "第 1 幕 — 抵岛" |
+
+### 根因一句话总结
+
+本批次问题源于 **命令路由器实现不完整**：`island-death` 在复制 TypeHelp 框架时遗漏了 `act/title/hangman` 三条命令的分发，同时 `find` 与 meta 文件解锁也采用了最简实现，导致玩家视角下 help 中承诺的功能不可用、关键 meta 文件无法被发现。修复均为 **在单一入口（`Box`）补全路由 + 在对应 passage 扩展行为**，未引入新的外部依赖。
+
+### 修复后回归
+
+- 主线速通：34 文件 + 结局，0 失败
+- 额外探索：14 项检查，0 失败
+- 基础回归：18 项检查，0 失败
+- 官方测试：`node scripts/run-all.js --game=island-death --skip-l5` 通过 A/B/C 门禁 + L1-L4，0 失败
+
+### 仍存注意事项
+
+- `find` 当前搜索范围为**已解锁文件**的 passage 正文；未解锁文件仍无法被搜出，符合设计。
+- `title` 设置的自定义标题目前仅作为内部状态记录，未在 `list` 中逐文件显示；如需显示需进一步扩展 `list` passage。
+- `hangman` 答案固定为 `coralbay`，属于休闲小游戏，不影响主线。
