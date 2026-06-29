@@ -29,6 +29,9 @@ test-results/
 # 测试产物（如 vitest 生成）
 coverage/
 
+# ---------- 视觉头脑风暴产物 ----------
+.superpowers/
+
 # ---------- 多剧本产物约定 ----------
 # TypeHelp 引擎生成的大文件已在仓内追踪（*.html），不需 ignore
 # 设计文档（*.md / *.json）一律追踪
