@@ -83,6 +83,8 @@ SS-AA-X-Y
 
 首页采用终端风暗色样式（与 SugarCube 引擎气质一致），对 `games.json` 中所有动态字段做了 XSS 转义，并对跳转 URL 做白名单校验（仅允许 `games/.../*.html`）。`fetch` 失败时自动回退到内置备用列表，保证即使 `games.json` 损坏也能找到剧本入口。
 
+> ⚠️ **必须用 HTTP 服务打开**（`npx serve .` / `python -m http.server`），**不要**直接双击 `index.html`——浏览器 `file://` 协议会拒绝 ES module 加载，首屏 ES module 报错但 `games.json` fetch 仍会失败，**仅显示备用列表**（看不到真实剧本元数据，且 console 有 CORS 报错）。
+
 ---
 
 ## 设计方法论
