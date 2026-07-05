@@ -12,6 +12,7 @@
 // 输出格式：
 //   { generatedAt: ISO 时间戳, games: [...] }
 
+import { createHash } from 'node:crypto';
 import { readdirSync, readFileSync, statSync, existsSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -20,6 +21,34 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const GAMES_DIR = path.join(ROOT, 'games');
 const OUT_FILE = path.join(ROOT, 'games.json');
+
+/**
+ * 计算稳定 build marker：基于各剧本 README.md + 本脚本自身内容的 SHA256 头 8 位。
+ *
+ * 设计动机（修复 AGENTS.md 心法"全部 CI 化"中"games.json 每次 build 都产生无意义时间戳 diff"问题）：
+ *   - 原实现用 `new Date().toISOString()` —— 每次 build 都变，git diff 充斥时间戳。
+ *   - 改用 README + 脚本自身内容 hash —— 源数据未变 → hash 不变 → diff 干净；
+ *     源数据变化 → hash 变化 → diff 体现真实变化。
+ *   - 8 位 hex = 32 bit 碰撞空间，对 10 个以内剧本的仓级 metadata 足够。
+ *
+ * @param {string[]} codenames 已发现的剧本 codename 列表
+ * @returns {string} 形如 "build-<8hex>"
+ */
+function buildMarker(codenames) {
+  const hash = createHash('sha256');
+  // 1) 把本脚本自身纳入 hash —— 脚本逻辑改了 hash 也变
+  hash.update(readFileSync(fileURLToPath(import.meta.url), 'utf-8'));
+  // 2) 按 codename 排序后逐个读 README 加入 hash
+  //    排序保证遍历顺序无关（readdirSync 在 Windows / Linux 可能不同）
+  for (const codename of [...codenames].sort()) {
+    const readmePath = path.join(GAMES_DIR, codename, 'README.md');
+    hash.update(`\n=== ${codename} ===\n`);
+    if (existsSync(readmePath)) {
+      hash.update(readFileSync(readmePath, 'utf-8'));
+    }
+  }
+  return `build-${hash.digest('hex').slice(0, 8)}`;
+}
 
 export function readReadme(dir) {
   const p = path.join(dir, 'README.md');
@@ -142,13 +171,19 @@ function main() {
       .filter(Boolean);
 
     const games = [];
+    const codenames = [];
     for (const codename of entries) {
       const game = discoverGame(codename);
-      if (game) games.push(game);
+      if (game) {
+        games.push(game);
+        codenames.push(codename);
+      }
     }
 
     const payload = {
-      generatedAt: new Date().toISOString(),
+      // 修复前：generatedAt: new Date().toISOString() —— 每次 build 都变，git diff 污染
+      // 修复后：基于 README + 脚本自身内容 SHA256 → 源数据未变时 build marker 稳定
+      generatedAt: buildMarker(codenames),
       games,
     };
 
