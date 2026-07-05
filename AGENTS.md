@@ -47,10 +47,10 @@ TxtGame = **多剧本文字推理游戏合集**（SugarCube/Twine + TypeHelp 引
 | 层 | 工具 | 入口 | 覆盖目标 |
 |---|---|---|---|
 | L1 静态 | cheerio + Vitest | `test/static/*.test.js` | passage 引用、命名、人物编号、链接 |
-| L2 单元 | Vitest | `test/unit/*.test.js` | 命令路由纯函数 |
+| L2 单元 | Vitest | `test/unit/*.test.js` | 命令路由纯函数 + 首页清洗 / 构建脚本（index-page / generate-games-json） |
 | L3 叙事 | Node + Vitest | `test/narrative/*.test.js` | 时间线、线索、人物代词 |
 | L4 渲染 | jsdom + Vitest | `test/render/*.test.js` | SugarCube 引擎初始化、passage 渲染 |
-| L5 E2E | Playwright | `test/e2e/*.test.js` | 真实浏览器关键路径冒烟 |
+| L5 E2E | Playwright | `test/e2e/*.test.js` | 真实浏览器关键路径冒烟（含 index.html 首页：正常 / XSS / fetch 失败） |
 
 ### 表 3：CI 强制门禁链（来自 SKILL.md §6）
 
@@ -59,7 +59,7 @@ TxtGame = **多剧本文字推理游戏合集**（SugarCube/Twine + TypeHelp 引
 | A | `python .trae/scripts/check_twine_escape.py <html>` | 0 errors |
 | B | `python .trae/scripts/verify_embed.py <html>` | 5/5 PASS |
 | C | `python .trae/scripts/check_twine_macro_stack.py <html>` | 0 errors |
-| D | `npx playwright test test/e2e/{l10n-sanitize,stale-state,feedback-audit}.test.js` | 全 PASS |
+| D | `npx playwright test test/e2e/{l10n-sanitize,stale-state,feedback-audit,index-page}.test.js` | 全 PASS |
 
 > 4 步门禁在 L1 静态分析**之前**执行，任一失败 → 整个 job 失败，后续测试不执行。无 HTML 的剧本（`terminal-mystery`）跳过 A/B/C。
 
