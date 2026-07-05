@@ -73,6 +73,16 @@ SS-AA-X-Y
 
 无需安装任何依赖，无需联网。
 
+### 通过首页启动（推荐）
+
+仓库根目录提供 `index.html` 风格统一的剧本入口：
+
+1. `npm run build:games` — 扫描 `games/` 下的剧本 README，生成 `games.json`
+2. `npx serve .`（或任意静态文件服务器）启动本地服务
+3. 浏览器打开 `http://localhost:3000`，点击任意剧本卡片即可进入
+
+首页采用终端风暗色样式（与 SugarCube 引擎气质一致），对 `games.json` 中所有动态字段做了 XSS 转义，并对跳转 URL 做白名单校验（仅允许 `games/.../*.html`）。`fetch` 失败时自动回退到内置备用列表，保证即使 `games.json` 损坏也能找到剧本入口。
+
 ---
 
 ## 设计方法论
@@ -114,6 +124,12 @@ SS-AA-X-Y
 ```
 TxtGame/
 ├── README.md                        ← 本文件
+├── index.html                       ← 剧本入口首页
+├── games.json                       ← 首页元数据（npm run build:games 生成）
+├── scripts/
+│   └── generate-games-json.js       ← 扫描 games/ 目录生成 games.json
+├── src/
+│   └── index-page.js                ← 首页 XSS 清洗 + 渲染纯函数
 ├── .gitignore                       ← 屏蔽 .trae/ 与 IDE 私有
 ├── games/                           ← 所有剧本
 │   ├── galley-villa/                ← 嘉利别墅（原版）
@@ -149,8 +165,9 @@ TxtGame/
 1. 在 `games/<your-game-codename>/` 下创建目录
 2. 按 9 阶段方法论顺序产出对应文档（从 `charter.md` 开始）
 3. 使用 `TypeHelp.html` 引擎作为基础生成 `<game>.html`（产物名 = 剧本内容名，如 `island-death.html`）
-4. 在本 README 的"剧本索引"表添加新行
-5. 在该剧本目录下添加 `README.md`，遵循其他剧本的 README 模板
+4. 在该剧本目录下添加 `README.md`，遵循其他剧本的 README 模板（首页生成脚本会从中抽取标题、题材、状态、简介）
+5. 运行 `npm run build:games` 重新生成首页元数据
+6. 在本 README 的"剧本索引"表添加新行
 
 新剧本推荐：先在 Solo Agent 中跑完 Director 阶段产出 `charter.md`，再继续。
 
