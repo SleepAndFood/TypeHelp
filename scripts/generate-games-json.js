@@ -41,8 +41,13 @@ function extractDescription(content) {
   const m = content.match(/^##\s+简介\s*\n+([\s\S]+?)(?=^##\s|\z)/m);
   if (!m) return '';
   return m[1]
-    .replace(/^>\s*/gm, '')
-    .replace(/\n+/g, ' ')
+    .replace(/^>\s*/gm, '')              // 剥离 blockquote
+    .replace(/\*{1,2}([^*]+)\*{1,2}/g, '$1') // 剥离加粗/斜体
+    .replace(/^---+\s*$/gm, '')          // 剥离水平分隔符
+    .replace(/^[\s]*[-*]\s+/gm, '')      // 剥离列表项
+    .replace(/\n+/g, ' ')                // 合并换行
+    .replace(/\s+/g, ' ')                // 合并连续空白
+    .replace(/([一-鿿])\s+([一-鿿])/g, '$1$2')  // 合并被切碎的中文（不留双空格）
     .trim()
     .slice(0, 280);
 }
