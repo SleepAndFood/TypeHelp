@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TxtGame · 多剧本文字推理游戏合集</title>
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #141414;
+      --border: #2a2a2a;
+      --text: #e0e0e0;
+      --muted: #888888;
+      --accent: #33ff33;
+      --accent-dim: #1a801a;
+      --warning: #ffb000;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Courier New", Consolas, "SF Mono", monospace;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container { max-width: 960px; margin: 0 auto; padding: 2rem 1rem; }
+    header { border-bottom: 1px dashed var(--border); padding-bottom: 1.5rem; margin-bottom: 2rem; }
+    header h1 { margin: 0 0 0.5rem; font-size: 2rem; color: var(--accent); }
+    header p { margin: 0; color: var(--muted); }
+    .stats { margin-top: 1rem; color: var(--accent); }
+    .section-title { color: var(--accent); margin: 2rem 0 1rem; font-size: 1.1rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+      transition: border-color 0.2s, transform 0.1s;
+    }
+    .card:hover { border-color: var(--accent-dim); }
+    .card h2 { margin: 0 0 0.25rem; font-size: 1.2rem; }
+    .card .subtitle { color: var(--muted); font-size: 0.85rem; margin-bottom: 0.5rem; }
+    .card .genre { color: var(--warning); font-size: 0.85rem; margin-bottom: 0.75rem; }
+    .card .desc { color: var(--muted); font-size: 0.9rem; margin-bottom: 1rem; }
+    .card .status { font-size: 0.8rem; color: var(--accent); }
+    .card a.launch { display: inline-block; margin-top: 0.75rem; padding: 0.35rem 0.75rem; border: 1px solid var(--accent-dim); }
+    .card a.launch:hover { background: var(--accent-dim); color: var(--bg); text-decoration: none; }
+    .card.disabled { opacity: 0.6; }
+    .card.disabled a.launch { pointer-events: none; }
+    .error { color: var(--warning); border: 1px dashed var(--warning); padding: 1rem; margin-bottom: 1rem; grid-column: 1 / -1; }
+    footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px dashed var(--border); color: var(--muted); font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>&gt; TxtGame</h1>
+      <p>基于 SugarCube / Twine 的纯文本交互式推理游戏合集</p>
+      <p class="stats" id="stats">正在连接数据终端...</p>
+    </header>
+
+    <main>
+      <div class="section-title">&gt; 选择剧本</div>
+      <div id="games-grid" class="grid">加载中...</div>
+    </main>
+
+    <footer>
+      <p>[?] 每个剧本独立运行，输入 help 查看游戏内命令。</p>
+      <p><a href="https://github.com/MrSun/txtgame" target="_blank" rel="noopener">GitHub</a> · <a href="README.md">项目说明</a></p>
+    </footer>
+  </div>
+
+  <script type="module">
+    // 渲染逻辑全部位于 src/index-page.js（纯函数 + 单元测试覆盖）。
+    // 这里只负责：取 DOM 容器 → 拉 games.json → 渲染 / 失败回退。
+    import { renderCardHtml, renderStats, sanitizeGamesPayload } from './src/index-page.js';
+
+    // 兜底列表：fetch 失败时使用。保持与 generate-games-json.js 同字段。
+    const FALLBACK_GAMES = [
+      {
+        codename: 'galley-villa',
+        title: '嘉利别墅',
+        subtitle: 'Galley Villa',
+        genre: '1936 英国古堡暴风雪山庄 + meta 心理恐怖',
+        status: '完整可玩',
+        description: '你是一名调查员，面前是一台从已故同僚处回收的旧计算机。',
+        htmlFile: 'games/galley-villa/TypeHelp.html',
+      },
+      {
+        codename: 'island-death',
+        title: '岛主之死',
+        subtitle: 'Coral Bay',
+        genre: '2017-2024 南海私人岛屿 / 法律推理',
+        status: '设计完成',
+        description: '5 幕社会派 + meta 悬疑 + 法律推理。',
+        htmlFile: 'games/island-death/island-death.html',
+      },
+      {
+        codename: 'terminal-mystery',
+        title: '沈家山庄事件',
+        subtitle: 'Case Recovery System',
+        genre: '暴风雪山庄 / 早期探索',
+        status: '早期探索 / 不可启动',
+        description: 'Solo Agent 早期对 TypeHelp 引擎的探索项目。',
+        htmlFile: null,
+      },
+    ];
+
+    function renderAll(games) {
+      const grid = document.getElementById('games-grid');
+      const stats = document.getElementById('stats');
+      grid.innerHTML = games.map(renderCardHtml).join('');
+      stats.textContent = renderStats(games);
+    }
+
+    function renderFallback(error) {
+      const grid = document.getElementById('games-grid');
+      const stats = document.getElementById('stats');
+      // FALLBACK_GAMES 是硬编码常量，但仍走 sanitizeGamesPayload 走一遍清洗逻辑，
+      // 防止后续修改 FALLBACK_GAMES 时引入非法字段（如把 codename 写成空串）。
+      let fbGames;
+      try {
+        fbGames = sanitizeGamesPayload({ games: FALLBACK_GAMES }).games;
+      } catch (sanitizeErr) {
+        console.error('FALLBACK_GAMES 自身异常：', sanitizeErr);
+        grid.innerHTML = `<div class="error" style="grid-column: 1 / -1;">
+          [FATAL] 备用列表也无效：${escapeInline(sanitizeErr.message)}
+        </div>`;
+        stats.textContent = '当前使用备用列表（异常）';
+        return;
+      }
+      grid.innerHTML = `
+        <div class="error" style="grid-column: 1 / -1;">
+          [WARN] 无法加载 games.json，使用本地备用列表。<br>
+          错误：${escapeInline(error.message)}
+        </div>
+        ${fbGames.map(renderCardHtml).join('')}
+      `;
+      stats.textContent = '当前使用备用列表';
+    }
+
+    // 错误提示中的 message 可能含 HTML 元字符（fetch 错误信息含 URL 等），
+    // 单独再 escape 一次以策安全（renderCardHtml 内部已 escape，此处仅针对 error 文案）。
+    function escapeInline(s) {
+      return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    async function load() {
+      try {
+        const res = await fetch('./games.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const raw = await res.json();
+        const data = sanitizeGamesPayload(raw);
+        renderAll(data.games);
+      } catch (err) {
+        console.error('加载 games.json 失败：', err);
+        renderFallback(err);
+      }
+    }
+
+    load();
+  </script>
+</body>
+</html>
