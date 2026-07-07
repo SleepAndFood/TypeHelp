@@ -47,10 +47,12 @@ TxtGame = **多剧本文字推理游戏合集**（SugarCube/Twine + TypeHelp 引
 | 层 | 工具 | 入口 | 覆盖目标 |
 |---|---|---|---|
 | L1 静态 | cheerio + Vitest | `test/static/*.test.js` | passage 引用、命名、人物编号、链接 |
-| L2 单元 | Vitest | `test/unit/*.test.js` | 命令路由纯函数 + 首页清洗 / 构建脚本（index-page / generate-games-json） |
+| L2 单元 | Vitest | `test/unit/*.test.js` | 命令路由纯函数 + 首页清洗 / 构建脚本（index-page / generate-games-json / build-index） |
 | L3 叙事 | Node + Vitest | `test/narrative/*.test.js` | 时间线、线索、人物代词 |
 | L4 渲染 | jsdom + Vitest | `test/render/*.test.js` | SugarCube 引擎初始化、passage 渲染 |
 | L5 E2E | Playwright | `test/e2e/*.test.js` | 真实浏览器关键路径冒烟（含 index.html 首页：正常 / XSS / fetch 失败） |
+
+> **L0 build 阶段**（在门禁 A/B/C 之前）：`run-all.js` 显式跑 `build:games` + `build:index:check`（drift 检测），任何失败立即终止。
 
 ### 表 3：CI 强制门禁链（来自 SKILL.md §6）
 
