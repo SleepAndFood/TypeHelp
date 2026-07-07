@@ -160,9 +160,11 @@ test.beforeAll(async () => {
 });
 
 test.afterAll(async () => {
-  // 1) 关 HTTP 服务
-  if (serverProc && !serverProc.killed) {
-    serverProc.kill();
+  // 1) 关 HTTP 服务（Windows 上 .kill() 调 TerminateProcess，强制结束）
+  if (serverProc && serverProc.exitCode === null && !serverProc.killed) {
+    serverProc.kill('SIGKILL');
+    // 给 OS 一个调度窗口（10ms 足够）防止 playwright worker 在 close stdin 阶段等残留 fd
+    await new Promise((r) => setTimeout(r, 50));
   }
   // 2) 还原 games.json
   if (existsSync(GAMES_JSON_BAK)) {
