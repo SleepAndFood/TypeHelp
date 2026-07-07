@@ -29,6 +29,9 @@ const OUT_FILE = path.join(ROOT, 'games.json');
  *   - 原实现用 `new Date().toISOString()` —— 每次 build 都变，git diff 充斥时间戳。
  *   - 改用 README + 脚本自身内容 hash —— 源数据未变 → hash 不变 → diff 干净；
  *     源数据变化 → hash 变化 → diff 体现真实变化。
+ *   - **Windows CRLF 防御**：所有被 hash 的内容先归一为 LF。git 在 Windows 上
+ *     checkout 时可能把 LF 转 CRLF，导致同一份 README 在 commit 时刻与 build 时刻
+ *     字节不同，hash 漂移。归一化后两端一致。
  *   - 8 位 hex = 32 bit 碰撞空间，对 10 个以内剧本的仓级 metadata 足够。
  *
  * @param {string[]} codenames 已发现的剧本 codename 列表
@@ -37,14 +40,15 @@ const OUT_FILE = path.join(ROOT, 'games.json');
 function buildMarker(codenames) {
   const hash = createHash('sha256');
   // 1) 把本脚本自身纳入 hash —— 脚本逻辑改了 hash 也变
-  hash.update(readFileSync(fileURLToPath(import.meta.url), 'utf-8'));
+  //    CRLF → LF 归一，规避 Windows checkout 引入的字节差异
+  hash.update(readFileSync(fileURLToPath(import.meta.url), 'utf-8').replace(/\r\n/g, '\n'));
   // 2) 按 codename 排序后逐个读 README 加入 hash
   //    排序保证遍历顺序无关（readdirSync 在 Windows / Linux 可能不同）
   for (const codename of [...codenames].sort()) {
     const readmePath = path.join(GAMES_DIR, codename, 'README.md');
     hash.update(`\n=== ${codename} ===\n`);
     if (existsSync(readmePath)) {
-      hash.update(readFileSync(readmePath, 'utf-8'));
+      hash.update(readFileSync(readmePath, 'utf-8').replace(/\r\n/g, '\n'));
     }
   }
   return `build-${hash.digest('hex').slice(0, 8)}`;
