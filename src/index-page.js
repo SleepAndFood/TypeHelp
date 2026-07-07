@@ -1,6 +1,12 @@
 // src/index-page.js
 //
-// index.html 首页的纯渲染 + 清洗逻辑（被首页 <script type="module"> 引入）。
+// index.html 首页的纯渲染 + 清洗逻辑。
+//
+// 用法（双轨制，本文件同时被两端 import）：
+//   1. **浏览器端**（生产）：scripts/build-index.js 在 build 时把本文件内容转译为
+//      浏览器可执行代码（剥离 `export`），inline 注入 index.html 的 INLINE 标记块。
+//      部署路径上不再出现 src/，index.html 是自包含的单文件。
+//   2. **测试端**（开发）：test/unit/index-page.test.js 直接 import 本文件做单测覆盖。
 //
 // 设计目标：
 //   1. **XSS 防御**：所有从外部源（games.json / README 抽取）拼到 HTML 字符串的字段
