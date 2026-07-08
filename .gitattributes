@@ -1,0 +1,3 @@
+# 强制所有 .js / .html / .json / .md 文本文件使用 LF 行尾（避免 Windows CRLF 引入无意义 diff）
+# 图片、二进制、生成产物不受影响
+* text=auto eol=lf

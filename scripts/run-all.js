@@ -29,6 +29,8 @@ if (!existsSync(cfgPath)) {
   process.exit(1);
 }
 
+const GAMES_DIR = path.join(ROOT, 'games');
+
 const cfgMod = await import(pathToFileURL(path.resolve(ROOT, cfgPath)).href);
 const cfg = cfgMod.default;
 const hasHtml = !!cfg.htmlFile && existsSync(cfg.htmlFile);
@@ -59,8 +61,37 @@ let failed = 0;
 let warned = 0;
 const summary = [];
 
+// ===== L0 阶段：首页数据准备（确保 games.json / index.html inline 与各剧本 README 同步） =====
+// 修复前：package.json 的 pretest 钩子会"每次 npm test 都静默改源"——违反 AGENTS.md 心法"全部 CI 化"
+//        + 由于 generatedAt 是时间戳，每次 build 都会产生无意义 git diff
+// 修复后：把 build:games / build:index:check 显式提到 run-all.js 入口（在门禁 A/B/C 之前），
+//        与"显式门禁链"风格一致。
+// 注：单跑 L1/L2/L3/L4/L5（npm run test:xxx）时不再隐式触发 build —— 因为 L1-L5 单层不依赖 games.json
+if (existsSync(path.join(ROOT, 'index.html')) && existsSync(GAMES_DIR)) {
+  const l0Steps = [
+    { name: 'L0 build:games',         args: ['run', 'build:games'] },
+    { name: 'L0 build:index:check',   args: ['run', 'build:index:check'] },
+  ];
+  for (const step of l0Steps) {
+    const { r: buildR, ms: buildMs } = run(step.name, NPM_CMD, step.args);
+    if (buildR.status === 0) {
+      summary.push({ name: step.name, status: 'OK', ms: buildMs });
+    } else if (gatesMode === 'warn') {
+      console.error(`[WARN] ${step.name} (${buildMs}ms) - 非零退出但 --gates=warn 继续`);
+      summary.push({ name: step.name, status: 'WARN', ms: buildMs });
+      warned++;
+    } else {
+      console.error(`[FAIL] ${step.name} (${buildMs}ms) - 立即终止（games.json / index.html inline 缺失或损坏）`);
+      summary.push({ name: step.name, status: 'FAIL', ms: buildMs });
+      failed++;
+      // build:games 失败会连带 build:index:check 没意义（games.json 缺失）
+      break;
+    }
+  }
+}
+
 // ===== 强制门禁 A/B/C =====
-if (hasHtml) {
+if (hasHtml && failed === 0) {
   for (const gate of PY_SCRIPTS) {
     if (!existsSync(gate.script)) {
       console.log(`[skip] ${gate.name}: 脚本不存在 ${gate.script}`);

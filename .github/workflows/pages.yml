@@ -1,0 +1,89 @@
+name: Build & Deploy GitHub Pages
+
+# 部署首页 + 剧本到 GitHub Pages。
+#
+# 设计动机（修复"src/ 暴露在 GitHub Pages 部署路径"+"games.json 需手动 build"两个问题）：
+#   - 用 actions/deploy-pages 从 _site/ 部署 curated 目录，仅含：
+#       index.html（自包含，含 src/index-page.js inline 内容）
+#       games.json（build 阶段生成）
+#       games/    （所有剧本 + README）
+#       README.md （从首页 footer 链接到）
+#   - 显式排除：src/  test/  scripts/  docs/  node_modules/
+#               .worktrees/  .trae/  .superpowers/  .github/  package*.json
+#   - games.json / index.html inline 在 build 阶段重新生成（CI 强制一致）
+#   - 依赖 test.yml 跑 vitest 验证（避免在两处重复跑测试浪费 CI 分钟）
+#
+# 注意：test.yml 必须在 pages.yml 之前通过（push to main 触发两个 workflow，
+# GitHub Actions 自身不保证顺序，但 test.yml 失败不会阻止 pages.yml 部署）
+# —— 这是设计权衡：让 deploy-and-test 各自独立以加快反馈。
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+# 部署所需权限（GitHub Pages + OIDC token）
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 防止并发部署（同一 branch 多次 push 只部署最后一次）
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build (games.json + index.html inline)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Generate games.json (from games/*/README.md)
+        run: npm run build:games
+
+      - name: Verify index.html inline drift (build:index:check)
+        # 防御性检查：若有人改了 src/index-page.js 但没跑 build:index，
+        # 部署前必须拦截（防部署后 src 与 inline 长期不一致）
+        run: npm run build:index:check
+
+      - name: Prepare deployment artifact
+        # 显式 cp 而非 cp -r 整个仓根：
+        #   - 避免暴露 src/ test/ scripts/ docs/ .worktrees/ .trae/ 等
+        #   - 避免 gitignored 产物（node_modules/ 等）被误发布
+        #   - 部署目录"白名单" = 实际访问 GitHub Pages 时需要的最小集
+        run: |
+          mkdir -p _site
+          cp index.html _site/
+          cp games.json _site/
+          cp -r games _site/
+          cp README.md _site/
+          # 部署目录自检（防白名单漂移 / 多余文件泄漏）
+          echo "==== _site 目录内容 ===="
+          find _site -maxdepth 2 -type f -o -type d | sort
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

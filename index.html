@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TxtGame · 多剧本文字推理游戏合集</title>
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #141414;
+      --border: #2a2a2a;
+      --text: #e0e0e0;
+      --muted: #888888;
+      --accent: #33ff33;
+      --accent-dim: #1a801a;
+      --warning: #ffb000;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Courier New", Consolas, "SF Mono", monospace;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container { max-width: 960px; margin: 0 auto; padding: 2rem 1rem; }
+    header { border-bottom: 1px dashed var(--border); padding-bottom: 1.5rem; margin-bottom: 2rem; }
+    header h1 { margin: 0 0 0.5rem; font-size: 2rem; color: var(--accent); }
+    header p { margin: 0; color: var(--muted); }
+    .stats { margin-top: 1rem; color: var(--accent); }
+    .section-title { color: var(--accent); margin: 2rem 0 1rem; font-size: 1.1rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+      transition: border-color 0.2s, transform 0.1s;
+    }
+    .card:hover { border-color: var(--accent-dim); }
+    .card h2 { margin: 0 0 0.25rem; font-size: 1.2rem; }
+    .card .subtitle { color: var(--muted); font-size: 0.85rem; margin-bottom: 0.5rem; }
+    .card .genre { color: var(--warning); font-size: 0.85rem; margin-bottom: 0.75rem; }
+    .card .desc { color: var(--muted); font-size: 0.9rem; margin-bottom: 1rem; }
+    .card .status { font-size: 0.8rem; color: var(--accent); }
+    .card a.launch { display: inline-block; margin-top: 0.75rem; padding: 0.35rem 0.75rem; border: 1px solid var(--accent-dim); }
+    .card a.launch:hover { background: var(--accent-dim); color: var(--bg); text-decoration: none; }
+    .card.disabled { opacity: 0.6; }
+    .card.disabled a.launch { pointer-events: none; }
+    .error { color: var(--warning); border: 1px dashed var(--warning); padding: 1rem; margin-bottom: 1rem; grid-column: 1 / -1; }
+    footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px dashed var(--border); color: var(--muted); font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>&gt; TxtGame</h1>
+      <p>基于 SugarCube / Twine 的纯文本交互式推理游戏合集</p>
+      <p class="stats" id="stats">正在连接数据终端...</p>
+    </header>
+
+    <main>
+      <div class="section-title">&gt; 选择剧本</div>
+      <div id="games-grid" class="grid">加载中...</div>
+    </main>
+
+    <footer>
+      <p>[?] 每个剧本独立运行，输入 help 查看游戏内命令。</p>
+      <p><a href="https://github.com/MrSun/txtgame" target="_blank" rel="noopener">GitHub</a> · <a href="README.md">项目说明</a></p>
+    </footer>
+  </div>
+
+  <!-- INLINE:INDEX_PAGE_JS_START -->
+<!-- 以下内容由 scripts/build-index.js 从 src/index-page.js 自动生成。
+     改 src/index-page.js 后跑 npm run build:index 重新生成。 -->
+<script>
+// src/index-page.js
+//
+// index.html 首页的纯渲染 + 清洗逻辑。
+//
+// 用法（双轨制，本文件同时被两端 import）：
+//   1. **浏览器端**（生产）：scripts/build-index.js 在 build 时把本文件内容转译为
+//      浏览器可执行代码（剥离 `export`），inline 注入 index.html 的 INLINE 标记块。
+//      部署路径上不再出现 src/，index.html 是自包含的单文件。
+//   2. **测试端**（开发）：test/unit/index-page.test.js 直接 import 本文件做单测覆盖。
+//
+// 设计目标：
+//   1. **XSS 防御**：所有从外部源（games.json / README 抽取）拼到 HTML 字符串的字段
+//      都必须经 escapeHtml 转换；URL 必须经 sanitizeHtmlFile 校验白名单。
+//   2. **零依赖**：不引入 DOMPurify 之类运行时库；用最小白名单手写。
+//   3. **可测试**：所有逻辑都是纯函数（输入 → 字符串/对象），无 DOM 依赖，
+//      可在 jsdom / Node 环境下直接 import 断言。
+//
+// 公开 API：
+//   - escapeHtml(s)
+//   - sanitizeHtmlFile(href)
+//   - sanitizeGamesPayload(data)
+//   - renderCardHtml(game)
+//   - renderStats(games)
+
+/**
+ * HTML 文本节点 / 属性值转义，防止 XSS 注入。
+ * 规则：处理 & < > " ' 五字符；& 必须最先替换，避免双重转义。
+ *
+ * @param {unknown} s
+ * @returns {string}
+ */
+function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/**
+ * 校验并清洗 htmlFile 字段。
+ *
+ * 规则（按"白名单"思路设计，多重防御）：
+ *   1. 仅允许以 "games/" 开头（锁定到仓内 games 目录 + 强制同源）
+ *   2. 必须以 ".html" 结尾（不暴露非 HTML 资源）
+ *   3. 中间部分仅允许 [A-Za-z0-9._/-]（拒绝 :, ?, #, %, \\, 空格、控制字符等）
+ *   4. 拒绝空段、拒绝以 "/" 开头的"games//"前缀
+ *   5. 拒绝 ".."（防目录遍历）
+ *   6. 拒绝 "games" 根（必须有文件名）
+ *
+ * 不通过返回 null。调用方按"不可启动"路径处理（指向 README.md）。
+ *
+ * @param {unknown} href
+ * @returns {string|null}
+ */
+function sanitizeHtmlFile(href) {
+  if (href == null) return null;
+  if (typeof href !== 'string') return null;
+  const trimmed = href.trim();
+  if (!trimmed) return null;
+  // 整体形态：games/<segment>/<...>/<file>.html
+  if (!/^games\/[A-Za-z0-9._/-]+\.html$/.test(trimmed)) return null;
+  // 拒绝 "games//xxx"（双斜杠）和 "games/."（当前目录）
+  if (trimmed.includes('//') || trimmed.includes('/.')) return null;
+  // 拒绝目录遍历
+  if (trimmed.includes('..')) return null;
+  // 必须有目录 + 文件名（至少 games/x/y.html）
+  const segments = trimmed.split('/');
+  if (segments.length < 3) return null;
+  return trimmed;
+}
+
+/**
+ * 校验 games.json 整体结构 + 逐项清洗。
+ * 任何异常结构 → 抛 Error（由调用方 catch 后走 fallback 列表）。
+ *
+ * @param {unknown} data
+ * @returns {{ generatedAt: string, games: Array<{codename:string,title:string,subtitle:string,genre:string,status:string,description:string,htmlFile:(string|null)}> }}
+ */
+function sanitizeGamesPayload(data) {
+  if (!data || typeof data !== 'object') {
+    throw new Error('games.json 根必须是对象');
+  }
+  if (!Array.isArray(data.games)) {
+    throw new Error('games.json 缺少 games 数组');
+  }
+  return {
+    generatedAt: typeof data.generatedAt === 'string' ? data.generatedAt : '',
+    games: data.games.map((g, i) => sanitizeGameEntry(g, i)),
+  };
+}
+
+function sanitizeGameEntry(g, i) {
+  if (!g || typeof g !== 'object') {
+    throw new Error(`games[${i}] 不是对象`);
+  }
+  if (typeof g.codename !== 'string' || !/^[a-z0-9-]+$/.test(g.codename)) {
+    throw new Error(`games[${i}].codename 缺失或非法`);
+  }
+  return {
+    codename: g.codename,
+    title: typeof g.title === 'string' ? g.title : '',
+    subtitle: typeof g.subtitle === 'string' ? g.subtitle : '',
+    genre: typeof g.genre === 'string' ? g.genre : '',
+    status: typeof g.status === 'string' ? g.status : '',
+    description: typeof g.description === 'string' ? g.description : '',
+    htmlFile: sanitizeHtmlFile(g.htmlFile),
+  };
+}
+
+/**
+ * 渲染单张剧本卡片为 HTML 字符串。
+ * 所有动态字段都经 escapeHtml；URL 经 sanitizeHtmlFile。
+ * 不可启动剧本（htmlFile 为 null）→ 链接指向 games/<codename>/README.md，class 包含 disabled。
+ *
+ * @param {{codename:string,title:string,subtitle:string,genre:string,status:string,description:string,htmlFile:(string|null)}} game
+ * @returns {string}
+ */
+function renderCardHtml(game) {
+  const codename = escapeHtml(game.codename || '');
+  const title = escapeHtml(game.title || game.codename || '未命名剧本');
+  const subtitle = escapeHtml(game.subtitle);
+  const genre = escapeHtml(game.genre);
+  const desc = escapeHtml(game.description);
+  const status = escapeHtml(game.status);
+  // 双重防御：即便调用方忘了 sanitizeGamesPayload，这里也兜底清洗一次
+  const safeFile = sanitizeHtmlFile(game.htmlFile);
+  const playable = !!safeFile;
+  const href = playable
+    ? escapeHtml(safeFile)
+    : `games/${codename}/README.md`;
+  const label = playable ? '[ 开始游戏 ]' : '[ 查看说明 ]';
+  const cls = playable ? 'card' : 'card disabled';
+  return `
+    <article class="${cls}" data-codename="${codename}">
+      <h2>${title}</h2>
+      ${subtitle ? `<div class="subtitle">${subtitle}</div>` : ''}
+      <div class="genre">${genre}</div>
+      <div class="desc">${desc}</div>
+      <div class="status">状态：${status}</div>
+      <a class="launch" href="${href}">${label}</a>
+    </article>
+  `.trim();
+}
+
+/**
+ * 渲染顶部 stats 文字。
+ *
+ * @param {Array<{htmlFile:(string|null)}>} games
+ * @returns {string}
+ */
+function renderStats(games) {
+  const total = games.length;
+  const playable = games.filter(g => g.htmlFile).length;
+  return `当前收录 ${total} 个剧本 · ${playable} 个可玩`;
+}
+
+// === auto-generated by build-index.js ===
+window.IndexPage = { escapeHtml, sanitizeHtmlFile, sanitizeGamesPayload, renderCardHtml, renderStats };
+
+</script>
+<!-- INLINE:INDEX_PAGE_JS_END -->
+
+  <script>
+    // 页面业务逻辑：引用 window.IndexPage（由上方 inline 块提供）。
+    // 设计：放在 IIFE 里避免污染全局；并对 window.IndexPage 做存在性检查
+    // —— 如果 inline 块因 build 失败缺失，立即在 console 给出明显错误，
+    //   而不是静默走 FALLBACK 列表掩盖问题。
+    (function () {
+      if (!window.IndexPage) {
+        console.error('[FATAL] window.IndexPage 未加载 —— src/index-page.js 的 inline 内容缺失。请运行 `npm run build:index` 后重试。');
+        document.getElementById('games-grid').textContent = '[FATAL] 内部脚本缺失，请联系维护者。';
+        return;
+      }
+      const { renderCardHtml, renderStats, sanitizeGamesPayload } = window.IndexPage;
+
+      // 兜底列表：fetch games.json 失败时使用。保持与 generate-games-json.js 同字段。
+      const FALLBACK_GAMES = [
+        {
+          codename: 'galley-villa',
+          title: '嘉利别墅',
+          subtitle: 'Galley Villa',
+          genre: '1936 英国古堡暴风雪山庄 + meta 心理恐怖',
+          status: '完整可玩',
+          description: '你是一名调查员，面前是一台从已故同僚处回收的旧计算机。',
+          htmlFile: 'games/galley-villa/TypeHelp.html',
+        },
+        {
+          codename: 'island-death',
+          title: '岛主之死',
+          subtitle: 'Coral Bay',
+          genre: '2017-2024 南海私人岛屿 / 法律推理',
+          status: '设计完成',
+          description: '5 幕社会派 + meta 悬疑 + 法律推理。',
+          htmlFile: 'games/island-death/island-death.html',
+        },
+        {
+          codename: 'terminal-mystery',
+          title: '沈家山庄事件',
+          subtitle: 'Case Recovery System',
+          genre: '暴风雪山庄 / 早期探索',
+          status: '早期探索 / 不可启动',
+          description: 'Solo Agent 早期对 TypeHelp 引擎的探索项目。',
+          htmlFile: null,
+        },
+      ];
+
+      // 错误提示中的 message 可能含 HTML 元字符（fetch 错误信息含 URL 等），
+      // 单独再 escape 一次以策安全（renderCardHtml 内部已 escape，此处仅针对 error 文案）。
+      function escapeInline(s) {
+        return String(s == null ? '' : s)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+      }
+
+      function renderAll(games) {
+        const grid = document.getElementById('games-grid');
+        const stats = document.getElementById('stats');
+        grid.innerHTML = games.map(renderCardHtml).join('');
+        stats.textContent = renderStats(games);
+      }
+
+      function renderFallback(error) {
+        const grid = document.getElementById('games-grid');
+        const stats = document.getElementById('stats');
+        // FALLBACK_GAMES 是硬编码常量，但仍走 sanitizeGamesPayload 走一遍清洗逻辑，
+        // 防止后续修改 FALLBACK_GAMES 时引入非法字段（如把 codename 写成空串）。
+        let fbGames;
+        try {
+          fbGames = sanitizeGamesPayload({ games: FALLBACK_GAMES }).games;
+        } catch (sanitizeErr) {
+          console.error('FALLBACK_GAMES 自身异常：', sanitizeErr);
+          grid.innerHTML = `<div class="error" style="grid-column: 1 / -1;">
+            [FATAL] 备用列表也无效：${escapeInline(sanitizeErr.message)}
+          </div>`;
+          stats.textContent = '当前使用备用列表（异常）';
+          return;
+        }
+        grid.innerHTML = `
+          <div class="error" style="grid-column: 1 / -1;">
+            [WARN] 无法加载 games.json，使用本地备用列表。<br>
+            错误：${escapeInline(error.message)}
+          </div>
+          ${fbGames.map(renderCardHtml).join('')}
+        `;
+        stats.textContent = '当前使用备用列表';
+      }
+
+      async function load() {
+        try {
+          const res = await fetch('./games.json', { cache: 'no-store' });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const raw = await res.json();
+          const data = sanitizeGamesPayload(raw);
+          renderAll(data.games);
+        } catch (err) {
+          console.error('加载 games.json 失败：', err);
+          renderFallback(err);
+        }
+      }
+
+      load();
+    })();
+  </script>
+</body>
+</html>
