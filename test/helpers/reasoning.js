@@ -222,7 +222,8 @@ export function parseExposesFromIndex(indexContent) {
   const result = {};
   const sections = indexContent.split(/^(?=###\s)/m);
   for (const section of sections) {
-    const headerMatch = section.match(/^###\s+(\S+)/);
+    // 只提取 ASCII 字母数字+连字符作为文件名，去掉中文注释如"（隐藏文件）"
+    const headerMatch = section.match(/^###\s+([A-Za-z0-9][A-Za-z0-9-]*)/);
     if (!headerMatch) continue;
     const fileName = headerMatch[1];
     const exposesMatch = section.match(EXPOSES_RE);

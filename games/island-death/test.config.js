@@ -32,4 +32,20 @@ export default {
   criticalClues: [],
   characterConstraints: [],
   hasTestingMode: false,
+  // 推理充分性测试（L6）
+  reasoning: {
+    enabled: true,
+    maxSteps: 30,
+    startPassage: '00-00-readme-0',
+    endingPassages: ['30-05-PL-1', '00-final-note-0'],  // 结局 passage + final-note
+    gracePeriod: false,
+    // 隐藏文件虚拟入边：隐藏文件通过命令触发（find/输入文件名），
+    // tag 图和 cache.push 无法捕捉，需显式声明触发源
+    hiddenFileEdges: [
+      { from: '00-00-readme-0', to: '00-dream', via: '输入文件名' },
+      { from: '25-05-PL-1', to: '00-chen-video', via: '输入文件名（找到离线硬盘后）' },
+      { from: '27-05-PL-1', to: '00-su-identity', via: 'find su（集齐物证后）' },
+      { from: '22-04-PL-1', to: '00-meta-warning', via: '自动触发（发现管家死亡规律）' },
+    ],
+  },
 };

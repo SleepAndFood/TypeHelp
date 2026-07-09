@@ -1,25 +1,8 @@
 {
   "gameKey": "island-death",
-  "generatedAt": "2026-07-09T15:02:11.271Z",
+  "generatedAt": "2026-07-09T15:15:01.477Z",
   "tagGraph": {
     "nodes": [
-      "StoryCaption",
-      "PassageHeader",
-      "StoryInit",
-      "Start",
-      "Background",
-      "Intro",
-      "Box",
-      "help",
-      "list",
-      "name",
-      "name_detail",
-      "find_results",
-      "note_list",
-      "inbox",
-      "message2-",
-      "hangman",
-      "End",
       "00-readme",
       "00-invitation",
       "00-safety-brief",
@@ -481,23 +464,6 @@
   },
   "unlockGraph": {
     "nodes": [
-      "StoryCaption",
-      "PassageHeader",
-      "StoryInit",
-      "Start",
-      "Background",
-      "Intro",
-      "Box",
-      "help",
-      "list",
-      "name",
-      "name_detail",
-      "find_results",
-      "note_list",
-      "inbox",
-      "message2-",
-      "hangman",
-      "End",
       "00-readme",
       "00-invitation",
       "00-safety-brief",
@@ -536,319 +502,377 @@
       "30-05-PL-1",
       "00-chen-video",
       "00-su-identity",
-      "00-meta-warning"
+      "00-meta-warning",
+      "00-00-readme-0"
     ],
     "edges": [
       {
-        "from": "Box",
-        "to": "00-meta-warning"
+        "from": "00-00-readme-0",
+        "to": "00-dream",
+        "via": "输入文件名"
+      },
+      {
+        "from": "25-05-PL-1",
+        "to": "00-chen-video",
+        "via": "输入文件名（找到离线硬盘后）"
+      },
+      {
+        "from": "27-05-PL-1",
+        "to": "00-su-identity",
+        "via": "find su（集齐物证后）"
+      },
+      {
+        "from": "22-04-PL-1",
+        "to": "00-meta-warning",
+        "via": "自动触发（发现管家死亡规律）"
       }
     ]
   },
   "facts": [
     {
       "fId": "F1",
-      "exposesIn": [],
+      "exposesIn": [
+        "05-01-PL-1",
+        "11-02-ZM-1",
+        "20-04-ZE-1",
+        "25-05-PL-1",
+        "27-05-PL-1"
+      ],
       "requiredForEnding": true,
-      "verifiableClaims": [],
-      "reachable": false,
-      "shortestPath": null,
-      "reachableExposesCount": 0,
-      "evidenceCount": 0
+      "verifiableClaims": [
+        "赵某推江某",
+        "23:40",
+        "泳池",
+        "非意外"
+      ],
+      "reachable": true,
+      "shortestPath": 7,
+      "reachableExposesCount": 5,
+      "evidenceCount": 5
     },
     {
       "fId": "F2",
-      "exposesIn": [],
+      "exposesIn": [
+        "05-01-PL-1",
+        "11-02-ZM-1",
+        "21-04-PL-1"
+      ],
       "requiredForEnding": true,
-      "verifiableClaims": [],
-      "reachable": false,
-      "shortestPath": null,
-      "reachableExposesCount": 0,
-      "evidenceCount": 0
+      "verifiableClaims": [
+        "监控替换",
+        "循环录像",
+        "23:30",
+        "哈希一致"
+      ],
+      "reachable": true,
+      "shortestPath": 5,
+      "reachableExposesCount": 3,
+      "evidenceCount": 3
     },
     {
       "fId": "F3",
-      "exposesIn": [],
+      "exposesIn": [
+        "12-02-QM-ZM-SM-LM-SU-5",
+        "27-05-PL-1"
+      ],
       "requiredForEnding": true,
-      "verifiableClaims": [],
-      "reachable": false,
-      "shortestPath": null,
-      "reachableExposesCount": 0,
-      "evidenceCount": 0
+      "verifiableClaims": [
+        "委员会阻止警方",
+        "1998条例",
+        "调查权移交",
+        "无尸检"
+      ],
+      "reachable": true,
+      "shortestPath": 4,
+      "reachableExposesCount": 2,
+      "evidenceCount": 2
     },
     {
       "fId": "F4",
-      "exposesIn": [],
-      "requiredForEnding": true,
-      "verifiableClaims": [],
-      "reachable": false,
-      "shortestPath": null,
-      "reachableExposesCount": 0,
-      "evidenceCount": 0
+      "exposesIn": [
+        "00-safety-brief-0",
+        "03-01-PL-1",
+        "29-05-PL-1"
+      ],
+      "requiredForEnding": false,
+      "verifiableClaims": [
+        "1998特殊条例",
+        "准自治权",
+        "2024暂停"
+      ],
+      "reachable": true,
+      "shortestPath": 4,
+      "reachableExposesCount": 2,
+      "evidenceCount": 3
     },
     {
       "fId": "F5",
-      "exposesIn": [],
+      "exposesIn": [
+        "07-02-JZ-1",
+        "25-05-PL-1"
+      ],
       "requiredForEnding": true,
-      "verifiableClaims": [],
-      "reachable": false,
-      "shortestPath": null,
-      "reachableExposesCount": 0,
-      "evidenceCount": 0
+      "verifiableClaims": [
+        "填海超批复",
+        "12.6公顷",
+        "偷税5200万",
+        "离岸公司"
+      ],
+      "reachable": true,
+      "shortestPath": 4,
+      "reachableExposesCount": 2,
+      "evidenceCount": 2
     },
     {
       "fId": "F6",
-      "exposesIn": [],
+      "exposesIn": [
+        "07-02-JZ-1",
+        "08-02-JZ-1",
+        "14-03-LI-1",
+        "26-05-PL-1"
+      ],
       "requiredForEnding": true,
-      "verifiableClaims": [],
-      "reachable": false,
-      "shortestPath": null,
-      "reachableExposesCount": 0,
-      "evidenceCount": 0
+      "verifiableClaims": [
+        "江某举报邮件",
+        "2017.08.10",
+        "卫星网络",
+        "填海偷税证据"
+      ],
+      "reachable": true,
+      "shortestPath": 6,
+      "reachableExposesCount": 4,
+      "evidenceCount": 4
     },
     {
       "fId": "F7",
-      "exposesIn": [],
+      "exposesIn": [
+        "00-su-identity"
+      ],
       "requiredForEnding": true,
-      "verifiableClaims": [],
-      "reachable": false,
-      "shortestPath": null,
-      "reachableExposesCount": 0,
-      "evidenceCount": 0
+      "verifiableClaims": [
+        "苏某是江某之女",
+        "1992年出生",
+        "DNA鉴定",
+        "私生女"
+      ],
+      "reachable": true,
+      "shortestPath": 3,
+      "reachableExposesCount": 1,
+      "evidenceCount": 1
     },
     {
       "fId": "F8",
-      "exposesIn": [],
-      "requiredForEnding": true,
-      "verifiableClaims": [],
-      "reachable": false,
-      "shortestPath": null,
-      "reachableExposesCount": 0,
-      "evidenceCount": 0
+      "exposesIn": [
+        "00-su-identity"
+      ],
+      "requiredForEnding": false,
+      "verifiableClaims": [
+        "苏某不知父女关系",
+        "2017合谋",
+        "日记称江总",
+        "保护投资"
+      ],
+      "reachable": true,
+      "shortestPath": 3,
+      "reachableExposesCount": 1,
+      "evidenceCount": 1
     },
     {
       "fId": "F9",
-      "exposesIn": [],
-      "requiredForEnding": true,
-      "verifiableClaims": [],
-      "reachable": false,
-      "shortestPath": null,
-      "reachableExposesCount": 0,
-      "evidenceCount": 0
+      "exposesIn": [
+        "05-01-PL-1",
+        "09-02-QM-ZM-SM-LM-SU-ZU-6",
+        "19-04-PL-1"
+      ],
+      "requiredForEnding": false,
+      "verifiableClaims": [
+        "周某反侦察培训",
+        "2017.08.11",
+        "门禁6人",
+        "监控替换手法"
+      ],
+      "reachable": true,
+      "shortestPath": 5,
+      "reachableExposesCount": 3,
+      "evidenceCount": 3
     },
     {
       "fId": "F10",
-      "exposesIn": [],
-      "requiredForEnding": true,
-      "verifiableClaims": [],
-      "reachable": false,
-      "shortestPath": null,
-      "reachableExposesCount": 0,
-      "evidenceCount": 0
+      "exposesIn": [
+        "19-04-PL-1"
+      ],
+      "requiredForEnding": false,
+      "verifiableClaims": [
+        "周某被吊销执照",
+        "2015住建部处罚",
+        "江某举报",
+        "不合格建材"
+      ],
+      "reachable": true,
+      "shortestPath": 3,
+      "reachableExposesCount": 1,
+      "evidenceCount": 1
     },
     {
       "fId": "F11",
-      "exposesIn": [],
+      "exposesIn": [
+        "05-01-PL-1",
+        "15-03-QM-ZM-SM-LM-SU-5",
+        "16-03-SM-LI-2",
+        "17-03-LI-1",
+        "18-03-SM-1",
+        "27-05-PL-1"
+      ],
       "requiredForEnding": true,
-      "verifiableClaims": [],
-      "reachable": false,
-      "shortestPath": null,
-      "reachableExposesCount": 0,
-      "evidenceCount": 0
+      "verifiableClaims": [
+        "林律师中毒",
+        "琥珀胆碱",
+        "孙某投毒",
+        "橙汁",
+        "全麻溺水"
+      ],
+      "reachable": true,
+      "shortestPath": 8,
+      "reachableExposesCount": 6,
+      "evidenceCount": 6
     },
     {
       "fId": "F12",
-      "exposesIn": [],
+      "exposesIn": [
+        "05-01-PL-1",
+        "13-03-LI-1"
+      ],
       "requiredForEnding": true,
-      "verifiableClaims": [],
-      "reachable": false,
-      "shortestPath": null,
-      "reachableExposesCount": 0,
-      "evidenceCount": 0
+      "verifiableClaims": [
+        "林律师U盘",
+        "通话录音备份",
+        "47段",
+        "举报通话"
+      ],
+      "reachable": true,
+      "shortestPath": 4,
+      "reachableExposesCount": 2,
+      "evidenceCount": 2
     },
     {
       "fId": "F13",
-      "exposesIn": [],
+      "exposesIn": [
+        "05-01-PL-1",
+        "06-01-PL-1",
+        "27-05-PL-1",
+        "00-chen-video"
+      ],
       "requiredForEnding": true,
-      "verifiableClaims": [],
-      "reachable": false,
-      "shortestPath": null,
-      "reachableExposesCount": 0,
-      "evidenceCount": 0
+      "verifiableClaims": [
+        "陈某被迷晕",
+        "GHB药物",
+        "李某投药",
+        "伪造自缢",
+        "红酒杯指纹"
+      ],
+      "reachable": true,
+      "shortestPath": 6,
+      "reachableExposesCount": 4,
+      "evidenceCount": 4
     },
     {
       "fId": "F14",
-      "exposesIn": [],
+      "exposesIn": [
+        "05-01-PL-1",
+        "00-chen-video"
+      ],
       "requiredForEnding": true,
-      "verifiableClaims": [],
-      "reachable": false,
-      "shortestPath": null,
-      "reachableExposesCount": 0,
-      "evidenceCount": 0
+      "verifiableClaims": [
+        "陈某手写信",
+        "线索索引",
+        "NAS路径",
+        "云盘密码",
+        "硬盘位置"
+      ],
+      "reachable": true,
+      "shortestPath": 4,
+      "reachableExposesCount": 2,
+      "evidenceCount": 2
     },
     {
       "fId": "F15",
-      "exposesIn": [],
+      "exposesIn": [
+        "22-04-PL-1",
+        "00-meta-warning"
+      ],
       "requiredForEnding": true,
-      "verifiableClaims": [],
-      "reachable": false,
-      "shortestPath": null,
-      "reachableExposesCount": 0,
-      "evidenceCount": 0
+      "verifiableClaims": [
+        "玩家是第4任管家",
+        "前3任身亡",
+        "5人委员会出具",
+        "死亡报告"
+      ],
+      "reachable": true,
+      "shortestPath": 4,
+      "reachableExposesCount": 2,
+      "evidenceCount": 2
     }
   ],
-  "unreachableFacts": [
-    "F1",
-    "F2",
-    "F3",
-    "F4",
-    "F5",
-    "F6",
-    "F7",
-    "F8",
-    "F9",
-    "F10",
-    "F11",
-    "F12",
-    "F13",
-    "F14",
-    "F15"
-  ],
-  "unreachableFiles": [
-    "StoryCaption",
-    "PassageHeader",
-    "StoryInit",
-    "Start",
-    "Background",
-    "Intro",
-    "Box",
-    "help",
-    "list",
-    "name",
-    "name_detail",
-    "find_results",
-    "note_list",
-    "inbox",
-    "message2-",
-    "hangman",
-    "End",
-    "00-dream",
-    "00-chen-video",
-    "00-su-identity"
-  ],
+  "unreachableFacts": [],
+  "unreachableFiles": [],
   "deadEndFiles": [],
   "evidenceInsufficient": [
     {
-      "fId": "F1",
-      "reachableExposesCount": 0,
-      "totalExposesCount": 0
-    },
-    {
-      "fId": "F2",
-      "reachableExposesCount": 0,
-      "totalExposesCount": 0
-    },
-    {
-      "fId": "F3",
-      "reachableExposesCount": 0,
-      "totalExposesCount": 0
-    },
-    {
-      "fId": "F4",
-      "reachableExposesCount": 0,
-      "totalExposesCount": 0
-    },
-    {
-      "fId": "F5",
-      "reachableExposesCount": 0,
-      "totalExposesCount": 0
-    },
-    {
-      "fId": "F6",
-      "reachableExposesCount": 0,
-      "totalExposesCount": 0
-    },
-    {
       "fId": "F7",
-      "reachableExposesCount": 0,
-      "totalExposesCount": 0
+      "reachableExposesCount": 1,
+      "totalExposesCount": 1
     },
     {
       "fId": "F8",
-      "reachableExposesCount": 0,
-      "totalExposesCount": 0
-    },
-    {
-      "fId": "F9",
-      "reachableExposesCount": 0,
-      "totalExposesCount": 0
+      "reachableExposesCount": 1,
+      "totalExposesCount": 1
     },
     {
       "fId": "F10",
-      "reachableExposesCount": 0,
-      "totalExposesCount": 0
-    },
-    {
-      "fId": "F11",
-      "reachableExposesCount": 0,
-      "totalExposesCount": 0
-    },
-    {
-      "fId": "F12",
-      "reachableExposesCount": 0,
-      "totalExposesCount": 0
-    },
-    {
-      "fId": "F13",
-      "reachableExposesCount": 0,
-      "totalExposesCount": 0
-    },
-    {
-      "fId": "F14",
-      "reachableExposesCount": 0,
-      "totalExposesCount": 0
-    },
-    {
-      "fId": "F15",
-      "reachableExposesCount": 0,
-      "totalExposesCount": 0
+      "reachableExposesCount": 1,
+      "totalExposesCount": 1
     }
   ],
   "reachableNodes": [
-    "00-readme",
-    "00-invitation",
-    "00-safety-brief",
-    "00-list-of-people",
-    "01-01-PL-1",
-    "02-01-PL-1",
-    "03-01-PL-1",
-    "04-01-PL-1",
-    "12-02-QM-ZM-SM-LM-SU-5",
-    "05-01-PL-1",
-    "06-01-PL-1",
-    "11-02-ZM-1",
+    "00-00-readme-0",
+    "00-dream",
+    "00-final-note",
+    "30-05-PL-1",
+    "29-05-PL-1",
     "28-05-PL-1",
-    "19-04-PL-1",
+    "27-05-PL-1",
+    "12-02-QM-ZM-SM-LM-SU-5",
     "25-05-PL-1",
     "26-05-PL-1",
-    "07-02-JZ-1",
+    "00-su-identity",
+    "11-02-ZM-1",
+    "03-01-PL-1",
+    "24-04-PL-1",
+    "05-01-PL-1",
+    "00-chen-video",
+    "08-02-JZ-1",
+    "13-03-LI-1",
     "09-02-QM-ZM-SM-LM-SU-ZU-6",
     "10-02-JZ-1",
     "21-04-PL-1",
-    "27-05-PL-1",
-    "29-05-PL-1",
-    "24-04-PL-1",
-    "08-02-JZ-1",
-    "13-03-LI-1",
+    "02-01-PL-1",
+    "04-01-PL-1",
+    "23-04-PL-1",
+    "06-01-PL-1",
+    "19-04-PL-1",
+    "07-02-JZ-1",
+    "14-03-LI-1",
     "22-04-PL-1",
     "20-04-ZE-1",
-    "30-05-PL-1",
-    "23-04-PL-1",
-    "14-03-LI-1",
-    "00-final-note",
+    "01-01-PL-1",
     "15-03-QM-ZM-SM-LM-SU-5",
+    "00-meta-warning",
+    "00-invitation",
     "16-03-SM-LI-2",
+    "00-readme",
+    "00-safety-brief",
     "17-03-LI-1",
+    "00-list-of-people",
     "18-03-SM-1"
   ]
 }

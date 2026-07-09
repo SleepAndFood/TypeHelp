@@ -27,6 +27,15 @@ if (!config.htmlFile) {
   process.exit(0);
 }
 
+// SugarCube 引擎内置系统 passage（不参与推理图分析）
+// 这些是命令路由/UI/引擎功能 passage，非游戏内容文件
+const SUGARCUBE_SYSTEM_PASSAGES = [
+  'StoryCaption', 'PassageHeader', 'PassageFooter', 'StoryInit', 'Start',
+  'Background', 'Intro', 'Box', 'End',
+  'help', 'list', 'name', 'name_detail', 'find_results', 'note_list',
+  'inbox', 'hangman', 'title', 'act', 'find', 'note', 'save', 'back',
+];
+
 // 1. 解析 HTML passages
 const htmlPath = join(projectRoot, config.htmlFile);
 const html = readFileSync(htmlPath, 'utf-8');
@@ -42,9 +51,38 @@ $('tw-passagedata').each((_, el) => {
   });
 });
 
-// 2. 构建 tag 图 + 解锁图
-const tagGraph = buildTagGraph(passages);
-const unlockGraph = buildUnlockGraph(passages);
+// 过滤系统 passage：排除引擎功能 passage，只保留游戏内容文件
+const reasoningConfig = config.reasoning || { maxSteps: 30, startPassage: '00-readme', endingPassages: [] };
+const systemNames = new Set([
+  ...SUGARCUBE_SYSTEM_PASSAGES,
+  ...(config.systemPassages || []),
+  ...(reasoningConfig.systemPassageNames || []),
+]);
+const systemPrefixes = [
+  ...(config.systemPassagePrefixes || []),
+  ...(reasoningConfig.systemPassagePrefixes || []),
+];
+const gamePassages = passages.filter(p => {
+  if (systemNames.has(p.name)) return false;
+  for (const prefix of systemPrefixes) {
+    if (p.name.startsWith(prefix)) return false;
+  }
+  return true;
+});
+
+// 2. 构建 tag 图 + 解锁图（仅用游戏内容 passage）
+const tagGraph = buildTagGraph(gamePassages);
+const unlockGraph = buildUnlockGraph(gamePassages);
+
+// 2a. 注入隐藏文件虚拟入边：隐藏文件通过命令触发（find/输入文件名），
+// tag 图和 cache.push 无法捕捉，需通过配置显式声明
+if (reasoningConfig.hiddenFileEdges) {
+  for (const edge of reasoningConfig.hiddenFileEdges) {
+    unlockGraph.edges.push(edge);
+    if (!unlockGraph.nodes.includes(edge.to)) unlockGraph.nodes.push(edge.to);
+    if (!unlockGraph.nodes.includes(edge.from)) unlockGraph.nodes.push(edge.from);
+  }
+}
 
 // 3. 解析 file_index.md 的 exposes 标注
 const indexContent = readFileSync(join(gameDir, 'file_index.md'), 'utf-8');
@@ -60,8 +98,7 @@ for (const fact of facts) {
     .map(([fileName, _]) => fileName);
 }
 
-// 5. 汇总分析
-const reasoningConfig = config.reasoning || { maxSteps: 30, startPassage: '00-readme', endingPassages: [] };
+// 5. 汇总分析（reasoningConfig 已在上方声明）
 const analysis = analyzeReasoning(tagGraph, unlockGraph, facts, {
   startPassage: reasoningConfig.startPassage,
   endingPassages: reasoningConfig.endingPassages || [],
