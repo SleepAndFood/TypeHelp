@@ -103,24 +103,32 @@ export function detectUnreachableFiles(tagGraph, unlockGraph, options) {
 }
 
 /**
- * 检测死胡同文件：有入边但无出边，且非结局文件。
+ * 检测死胡同文件：可达但无出边，且非结局文件。
+ * 死胡同文件 ≠ 不可达文件（前者可达但无处可去，后者根本到不了）。
  * @param {object} tagGraph
  * @param {object} unlockGraph
- * @param {{endingPassages: string[]}} options
+ * @param {{endingPassages: string[], startPassage?: string}} options
  * @returns {string[]} 死胡同文件名列表
  */
 export function detectDeadEndFiles(tagGraph, unlockGraph, options) {
-  const { endingPassages } = options;
+  const { endingPassages, startPassage } = options;
   const endingSet = new Set(endingPassages);
   // 收集所有有出边的文件
   const hasOutgoing = new Set();
   for (const e of tagGraph.edges) hasOutgoing.add(e.from);
   for (const e of unlockGraph.edges) hasOutgoing.add(e.from);
+  // 收集所有有入边的文件（用于排除不可达文件）
+  const hasIncoming = new Set();
+  for (const e of tagGraph.edges) hasIncoming.add(e.to);
+  for (const e of unlockGraph.edges) hasIncoming.add(e.to);
   // 所有节点
   const allNodes = new Set([...tagGraph.nodes, ...unlockGraph.nodes]);
   const deadEnds = [];
   for (const node of allNodes) {
     if (endingSet.has(node)) continue;
+    if (node === startPassage) continue; // 起点不算死胡同
+    // 排除不可达文件（无入边且非起点 = 不可达，不算死胡同）
+    if (!hasIncoming.has(node)) continue;
     if (!hasOutgoing.has(node)) deadEnds.push(node);
   }
   return deadEnds;
@@ -145,4 +153,60 @@ export function checkEvidenceSufficiency(facts, reachableSet) {
     }
   }
   return { insufficient };
+}
+
+/**
+ * 分析每个 F 的可达性。
+ * @param {Array<{fId: string, exposesIn: string[], requiredForEnding: boolean, verifiableClaims: string[]}>} facts
+ * @param {Set<string>} reachableSet
+ * @param {{maxSteps: number}} options
+ * @returns {Array<object>} 每个 F 的分析结果
+ */
+export function analyzeFacts(facts, reachableSet, options) {
+  const { maxSteps } = options;
+  return facts.map(fact => {
+    const reachableExposes = (fact.exposesIn || []).filter(f => reachableSet.has(f));
+    const reachable = reachableExposes.length > 0;
+    // shortestPath 占位：用 reachableExposes 数量粗略估算（PoC 阶段简化，后续可用 BFS 精确算）
+    const shortestPath = reachable ? Math.min(maxSteps, reachableExposes.length + 2) : Infinity;
+    return {
+      fId: fact.fId,
+      exposesIn: fact.exposesIn || [],
+      requiredForEnding: fact.requiredForEnding,
+      verifiableClaims: fact.verifiableClaims || [],
+      reachable,
+      shortestPath,
+      reachableExposesCount: reachableExposes.length,
+      evidenceCount: (fact.exposesIn || []).length,
+    };
+  });
+}
+
+/**
+ * 汇总分析：合并 tag 图 + 解锁图，检测 F 可达性 + 不可达文件 + 死胡同 + 双证据。
+ * @param {object} tagGraph
+ * @param {object} unlockGraph
+ * @param {Array<object>} facts
+ * @param {{startPassage: string, endingPassages: string[], maxSteps: number}} options
+ * @returns {object} 完整分析报告
+ */
+export function analyzeReasoning(tagGraph, unlockGraph, facts, options) {
+  const { startPassage, endingPassages, maxSteps } = options;
+  const reachable = bfsReachable(
+    { nodes: [...new Set([...tagGraph.nodes, ...unlockGraph.nodes])], edges: [...tagGraph.edges, ...unlockGraph.edges] },
+    startPassage
+  );
+  const factAnalysis = analyzeFacts(facts, reachable, { maxSteps });
+  const unreachableFacts = factAnalysis.filter(f => !f.reachable).map(f => f.fId);
+  const unreachableFiles = detectUnreachableFiles(tagGraph, unlockGraph, { startPassage, endingPassages });
+  const deadEndFiles = detectDeadEndFiles(tagGraph, unlockGraph, { startPassage, endingPassages });
+  const evidenceCheck = checkEvidenceSufficiency(facts, reachable);
+  return {
+    facts: factAnalysis,
+    unreachableFacts,
+    unreachableFiles,
+    deadEndFiles,
+    evidenceInsufficient: evidenceCheck.insufficient,
+    reachableNodes: [...reachable],
+  };
 }

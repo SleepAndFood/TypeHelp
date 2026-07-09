@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { buildTagGraph, buildUnlockGraph, bfsReachable, detectUnreachableFiles, detectDeadEndFiles, checkEvidenceSufficiency } from '../helpers/reasoning.js';
+import { buildTagGraph, buildUnlockGraph, bfsReachable, detectUnreachableFiles, detectDeadEndFiles, checkEvidenceSufficiency, analyzeFacts, analyzeReasoning } from '../helpers/reasoning.js';
 
 describe('buildTagGraph', () => {
   test('从 passages 构建 tag 图（含双向边）', () => {
@@ -172,5 +172,51 @@ describe('checkEvidenceSufficiency', () => {
     const reachable = new Set(['01-ST-1', '02-BR-1']);
     const result = checkEvidenceSufficiency(facts, reachable);
     expect(result.insufficient).toEqual([]);
+  });
+});
+
+describe('analyzeFacts', () => {
+  test('所有揭露文件可达 → reachable=true', () => {
+    const facts = [
+      { fId: 'F1', exposesIn: ['01-ST-1', '02-BR-1'], requiredForEnding: true, verifiableClaims: ['A', 'B'] },
+    ];
+    const reachable = new Set(['00-readme', '01-ST-1', '02-BR-1']);
+    const result = analyzeFacts(facts, reachable, { maxSteps: 30 });
+    expect(result[0].reachable).toBe(true);
+    expect(result[0].shortestPath).toBeLessThanOrEqual(30);
+  });
+
+  test('揭露文件不可达 → reachable=false', () => {
+    const facts = [
+      { fId: 'F2', exposesIn: ['99-XX-9'], requiredForEnding: false, verifiableClaims: ['C'] },
+    ];
+    const reachable = new Set(['00-readme']);
+    const result = analyzeFacts(facts, reachable, { maxSteps: 30 });
+    expect(result[0].reachable).toBe(false);
+  });
+});
+
+describe('analyzeReasoning', () => {
+  test('汇总分析：unreachableFacts + unreachableFiles + deadEndFiles', () => {
+    const tagGraph = {
+      nodes: ['00-readme', '01-ST-1', '02-BR-1', '03-OR-1'],
+      edges: [
+        { from: '00-readme', to: '01-ST-1' },
+        { from: '01-ST-1', to: '02-BR-1' },
+      ],
+    };
+    const unlockGraph = { nodes: tagGraph.nodes, edges: [] };
+    const facts = [
+      { fId: 'F1', exposesIn: ['01-ST-1', '02-BR-1'], requiredForEnding: true, verifiableClaims: ['A'] },
+      { fId: 'F2', exposesIn: ['03-OR-1'], requiredForEnding: false, verifiableClaims: ['B'] },
+    ];
+    const result = analyzeReasoning(tagGraph, unlockGraph, facts, {
+      startPassage: '00-readme',
+      endingPassages: ['02-BR-1'],
+      maxSteps: 30,
+    });
+    expect(result.unreachableFacts).toEqual(['F2']);
+    expect(result.unreachableFiles).toEqual(['03-OR-1']);
+    expect(result.deadEndFiles).toEqual([]); // 02-BR-1 是结局，不算死胡同
   });
 });
