@@ -16,7 +16,9 @@
     "test:unit": "vitest run test/unit test/helpers",
     "test:narrative": "vitest run test/narrative test/helpers",
     "test:render": "vitest run test/render test/helpers",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "reasoning:build-graph": "node scripts/build-reasoning-graph.js",
+    "reasoning:simulate": "node scripts/reasoning-simulator-launcher.js"
   },
   "engines": {
     "node": ">=18"

@@ -1,0 +1,854 @@
+{
+  "gameKey": "island-death",
+  "generatedAt": "2026-07-09T15:02:11.271Z",
+  "tagGraph": {
+    "nodes": [
+      "StoryCaption",
+      "PassageHeader",
+      "StoryInit",
+      "Start",
+      "Background",
+      "Intro",
+      "Box",
+      "help",
+      "list",
+      "name",
+      "name_detail",
+      "find_results",
+      "note_list",
+      "inbox",
+      "message2-",
+      "hangman",
+      "End",
+      "00-readme",
+      "00-invitation",
+      "00-safety-brief",
+      "00-list-of-people",
+      "00-dream",
+      "00-final-note",
+      "01-01-PL-1",
+      "02-01-PL-1",
+      "03-01-PL-1",
+      "04-01-PL-1",
+      "05-01-PL-1",
+      "06-01-PL-1",
+      "07-02-JZ-1",
+      "08-02-JZ-1",
+      "09-02-QM-ZM-SM-LM-SU-ZU-6",
+      "10-02-JZ-1",
+      "11-02-ZM-1",
+      "12-02-QM-ZM-SM-LM-SU-5",
+      "13-03-LI-1",
+      "14-03-LI-1",
+      "15-03-QM-ZM-SM-LM-SU-5",
+      "16-03-SM-LI-2",
+      "17-03-LI-1",
+      "18-03-SM-1",
+      "19-04-PL-1",
+      "20-04-ZE-1",
+      "21-04-PL-1",
+      "22-04-PL-1",
+      "23-04-PL-1",
+      "24-04-PL-1",
+      "25-05-PL-1",
+      "26-05-PL-1",
+      "27-05-PL-1",
+      "28-05-PL-1",
+      "29-05-PL-1",
+      "30-05-PL-1",
+      "00-chen-video",
+      "00-su-identity",
+      "00-meta-warning"
+    ],
+    "edges": [
+      {
+        "from": "00-readme",
+        "to": "00-invitation"
+      },
+      {
+        "from": "00-readme",
+        "to": "00-safety-brief"
+      },
+      {
+        "from": "00-readme",
+        "to": "00-list-of-people"
+      },
+      {
+        "from": "00-invitation",
+        "to": "00-readme"
+      },
+      {
+        "from": "00-invitation",
+        "to": "00-safety-brief"
+      },
+      {
+        "from": "00-invitation",
+        "to": "01-01-PL-1"
+      },
+      {
+        "from": "00-safety-brief",
+        "to": "00-readme"
+      },
+      {
+        "from": "00-safety-brief",
+        "to": "00-invitation"
+      },
+      {
+        "from": "00-safety-brief",
+        "to": "00-list-of-people"
+      },
+      {
+        "from": "00-list-of-people",
+        "to": "00-safety-brief"
+      },
+      {
+        "from": "00-list-of-people",
+        "to": "01-01-PL-1"
+      },
+      {
+        "from": "00-dream",
+        "to": "00-final-note"
+      },
+      {
+        "from": "00-dream",
+        "to": "30-05-PL-1"
+      },
+      {
+        "from": "00-final-note",
+        "to": "30-05-PL-1"
+      },
+      {
+        "from": "01-01-PL-1",
+        "to": "02-01-PL-1"
+      },
+      {
+        "from": "01-01-PL-1",
+        "to": "03-01-PL-1"
+      },
+      {
+        "from": "01-01-PL-1",
+        "to": "00-invitation"
+      },
+      {
+        "from": "02-01-PL-1",
+        "to": "01-01-PL-1"
+      },
+      {
+        "from": "02-01-PL-1",
+        "to": "03-01-PL-1"
+      },
+      {
+        "from": "02-01-PL-1",
+        "to": "04-01-PL-1"
+      },
+      {
+        "from": "03-01-PL-1",
+        "to": "02-01-PL-1"
+      },
+      {
+        "from": "03-01-PL-1",
+        "to": "04-01-PL-1"
+      },
+      {
+        "from": "03-01-PL-1",
+        "to": "12-02-QM-ZM-SM-LM-SU-5"
+      },
+      {
+        "from": "04-01-PL-1",
+        "to": "05-01-PL-1"
+      },
+      {
+        "from": "04-01-PL-1",
+        "to": "06-01-PL-1"
+      },
+      {
+        "from": "04-01-PL-1",
+        "to": "03-01-PL-1"
+      },
+      {
+        "from": "05-01-PL-1",
+        "to": "04-01-PL-1"
+      },
+      {
+        "from": "05-01-PL-1",
+        "to": "06-01-PL-1"
+      },
+      {
+        "from": "05-01-PL-1",
+        "to": "19-04-PL-1"
+      },
+      {
+        "from": "05-01-PL-1",
+        "to": "25-05-PL-1"
+      },
+      {
+        "from": "05-01-PL-1",
+        "to": "26-05-PL-1"
+      },
+      {
+        "from": "06-01-PL-1",
+        "to": "05-01-PL-1"
+      },
+      {
+        "from": "06-01-PL-1",
+        "to": "04-01-PL-1"
+      },
+      {
+        "from": "06-01-PL-1",
+        "to": "07-02-JZ-1"
+      },
+      {
+        "from": "07-02-JZ-1",
+        "to": "08-02-JZ-1"
+      },
+      {
+        "from": "07-02-JZ-1",
+        "to": "10-02-JZ-1"
+      },
+      {
+        "from": "07-02-JZ-1",
+        "to": "06-01-PL-1"
+      },
+      {
+        "from": "08-02-JZ-1",
+        "to": "07-02-JZ-1"
+      },
+      {
+        "from": "08-02-JZ-1",
+        "to": "09-02-QM-ZM-SM-LM-SU-ZU-6"
+      },
+      {
+        "from": "08-02-JZ-1",
+        "to": "26-05-PL-1"
+      },
+      {
+        "from": "09-02-QM-ZM-SM-LM-SU-ZU-6",
+        "to": "08-02-JZ-1"
+      },
+      {
+        "from": "09-02-QM-ZM-SM-LM-SU-ZU-6",
+        "to": "10-02-JZ-1"
+      },
+      {
+        "from": "09-02-QM-ZM-SM-LM-SU-ZU-6",
+        "to": "11-02-ZM-1"
+      },
+      {
+        "from": "09-02-QM-ZM-SM-LM-SU-ZU-6",
+        "to": "19-04-PL-1"
+      },
+      {
+        "from": "10-02-JZ-1",
+        "to": "07-02-JZ-1"
+      },
+      {
+        "from": "10-02-JZ-1",
+        "to": "09-02-QM-ZM-SM-LM-SU-ZU-6"
+      },
+      {
+        "from": "10-02-JZ-1",
+        "to": "11-02-ZM-1"
+      },
+      {
+        "from": "11-02-ZM-1",
+        "to": "09-02-QM-ZM-SM-LM-SU-ZU-6"
+      },
+      {
+        "from": "11-02-ZM-1",
+        "to": "10-02-JZ-1"
+      },
+      {
+        "from": "11-02-ZM-1",
+        "to": "12-02-QM-ZM-SM-LM-SU-5"
+      },
+      {
+        "from": "11-02-ZM-1",
+        "to": "21-04-PL-1"
+      },
+      {
+        "from": "12-02-QM-ZM-SM-LM-SU-5",
+        "to": "11-02-ZM-1"
+      },
+      {
+        "from": "12-02-QM-ZM-SM-LM-SU-5",
+        "to": "28-05-PL-1"
+      },
+      {
+        "from": "12-02-QM-ZM-SM-LM-SU-5",
+        "to": "03-01-PL-1"
+      },
+      {
+        "from": "13-03-LI-1",
+        "to": "14-03-LI-1"
+      },
+      {
+        "from": "13-03-LI-1",
+        "to": "26-05-PL-1"
+      },
+      {
+        "from": "14-03-LI-1",
+        "to": "13-03-LI-1"
+      },
+      {
+        "from": "14-03-LI-1",
+        "to": "15-03-QM-ZM-SM-LM-SU-5"
+      },
+      {
+        "from": "15-03-QM-ZM-SM-LM-SU-5",
+        "to": "14-03-LI-1"
+      },
+      {
+        "from": "15-03-QM-ZM-SM-LM-SU-5",
+        "to": "16-03-SM-LI-2"
+      },
+      {
+        "from": "16-03-SM-LI-2",
+        "to": "15-03-QM-ZM-SM-LM-SU-5"
+      },
+      {
+        "from": "16-03-SM-LI-2",
+        "to": "17-03-LI-1"
+      },
+      {
+        "from": "17-03-LI-1",
+        "to": "16-03-SM-LI-2"
+      },
+      {
+        "from": "17-03-LI-1",
+        "to": "18-03-SM-1"
+      },
+      {
+        "from": "18-03-SM-1",
+        "to": "17-03-LI-1"
+      },
+      {
+        "from": "19-04-PL-1",
+        "to": "05-01-PL-1"
+      },
+      {
+        "from": "19-04-PL-1",
+        "to": "21-04-PL-1"
+      },
+      {
+        "from": "19-04-PL-1",
+        "to": "09-02-QM-ZM-SM-LM-SU-ZU-6"
+      },
+      {
+        "from": "20-04-ZE-1",
+        "to": "19-04-PL-1"
+      },
+      {
+        "from": "20-04-ZE-1",
+        "to": "11-02-ZM-1"
+      },
+      {
+        "from": "20-04-ZE-1",
+        "to": "21-04-PL-1"
+      },
+      {
+        "from": "21-04-PL-1",
+        "to": "19-04-PL-1"
+      },
+      {
+        "from": "21-04-PL-1",
+        "to": "11-02-ZM-1"
+      },
+      {
+        "from": "21-04-PL-1",
+        "to": "22-04-PL-1"
+      },
+      {
+        "from": "21-04-PL-1",
+        "to": "20-04-ZE-1"
+      },
+      {
+        "from": "22-04-PL-1",
+        "to": "21-04-PL-1"
+      },
+      {
+        "from": "22-04-PL-1",
+        "to": "23-04-PL-1"
+      },
+      {
+        "from": "23-04-PL-1",
+        "to": "22-04-PL-1"
+      },
+      {
+        "from": "23-04-PL-1",
+        "to": "24-04-PL-1"
+      },
+      {
+        "from": "24-04-PL-1",
+        "to": "23-04-PL-1"
+      },
+      {
+        "from": "24-04-PL-1",
+        "to": "25-05-PL-1"
+      },
+      {
+        "from": "24-04-PL-1",
+        "to": "26-05-PL-1"
+      },
+      {
+        "from": "25-05-PL-1",
+        "to": "24-04-PL-1"
+      },
+      {
+        "from": "25-05-PL-1",
+        "to": "27-05-PL-1"
+      },
+      {
+        "from": "25-05-PL-1",
+        "to": "05-01-PL-1"
+      },
+      {
+        "from": "26-05-PL-1",
+        "to": "25-05-PL-1"
+      },
+      {
+        "from": "26-05-PL-1",
+        "to": "27-05-PL-1"
+      },
+      {
+        "from": "26-05-PL-1",
+        "to": "08-02-JZ-1"
+      },
+      {
+        "from": "26-05-PL-1",
+        "to": "13-03-LI-1"
+      },
+      {
+        "from": "27-05-PL-1",
+        "to": "25-05-PL-1"
+      },
+      {
+        "from": "27-05-PL-1",
+        "to": "26-05-PL-1"
+      },
+      {
+        "from": "27-05-PL-1",
+        "to": "28-05-PL-1"
+      },
+      {
+        "from": "28-05-PL-1",
+        "to": "27-05-PL-1"
+      },
+      {
+        "from": "28-05-PL-1",
+        "to": "29-05-PL-1"
+      },
+      {
+        "from": "28-05-PL-1",
+        "to": "12-02-QM-ZM-SM-LM-SU-5"
+      },
+      {
+        "from": "29-05-PL-1",
+        "to": "28-05-PL-1"
+      },
+      {
+        "from": "29-05-PL-1",
+        "to": "30-05-PL-1"
+      },
+      {
+        "from": "30-05-PL-1",
+        "to": "29-05-PL-1"
+      },
+      {
+        "from": "30-05-PL-1",
+        "to": "00-final-note"
+      },
+      {
+        "from": "00-chen-video",
+        "to": "25-05-PL-1"
+      },
+      {
+        "from": "00-chen-video",
+        "to": "05-01-PL-1"
+      },
+      {
+        "from": "00-su-identity",
+        "to": "27-05-PL-1"
+      },
+      {
+        "from": "00-meta-warning",
+        "to": "23-04-PL-1"
+      },
+      {
+        "from": "00-meta-warning",
+        "to": "24-04-PL-1"
+      }
+    ]
+  },
+  "unlockGraph": {
+    "nodes": [
+      "StoryCaption",
+      "PassageHeader",
+      "StoryInit",
+      "Start",
+      "Background",
+      "Intro",
+      "Box",
+      "help",
+      "list",
+      "name",
+      "name_detail",
+      "find_results",
+      "note_list",
+      "inbox",
+      "message2-",
+      "hangman",
+      "End",
+      "00-readme",
+      "00-invitation",
+      "00-safety-brief",
+      "00-list-of-people",
+      "00-dream",
+      "00-final-note",
+      "01-01-PL-1",
+      "02-01-PL-1",
+      "03-01-PL-1",
+      "04-01-PL-1",
+      "05-01-PL-1",
+      "06-01-PL-1",
+      "07-02-JZ-1",
+      "08-02-JZ-1",
+      "09-02-QM-ZM-SM-LM-SU-ZU-6",
+      "10-02-JZ-1",
+      "11-02-ZM-1",
+      "12-02-QM-ZM-SM-LM-SU-5",
+      "13-03-LI-1",
+      "14-03-LI-1",
+      "15-03-QM-ZM-SM-LM-SU-5",
+      "16-03-SM-LI-2",
+      "17-03-LI-1",
+      "18-03-SM-1",
+      "19-04-PL-1",
+      "20-04-ZE-1",
+      "21-04-PL-1",
+      "22-04-PL-1",
+      "23-04-PL-1",
+      "24-04-PL-1",
+      "25-05-PL-1",
+      "26-05-PL-1",
+      "27-05-PL-1",
+      "28-05-PL-1",
+      "29-05-PL-1",
+      "30-05-PL-1",
+      "00-chen-video",
+      "00-su-identity",
+      "00-meta-warning"
+    ],
+    "edges": [
+      {
+        "from": "Box",
+        "to": "00-meta-warning"
+      }
+    ]
+  },
+  "facts": [
+    {
+      "fId": "F1",
+      "exposesIn": [],
+      "requiredForEnding": true,
+      "verifiableClaims": [],
+      "reachable": false,
+      "shortestPath": null,
+      "reachableExposesCount": 0,
+      "evidenceCount": 0
+    },
+    {
+      "fId": "F2",
+      "exposesIn": [],
+      "requiredForEnding": true,
+      "verifiableClaims": [],
+      "reachable": false,
+      "shortestPath": null,
+      "reachableExposesCount": 0,
+      "evidenceCount": 0
+    },
+    {
+      "fId": "F3",
+      "exposesIn": [],
+      "requiredForEnding": true,
+      "verifiableClaims": [],
+      "reachable": false,
+      "shortestPath": null,
+      "reachableExposesCount": 0,
+      "evidenceCount": 0
+    },
+    {
+      "fId": "F4",
+      "exposesIn": [],
+      "requiredForEnding": true,
+      "verifiableClaims": [],
+      "reachable": false,
+      "shortestPath": null,
+      "reachableExposesCount": 0,
+      "evidenceCount": 0
+    },
+    {
+      "fId": "F5",
+      "exposesIn": [],
+      "requiredForEnding": true,
+      "verifiableClaims": [],
+      "reachable": false,
+      "shortestPath": null,
+      "reachableExposesCount": 0,
+      "evidenceCount": 0
+    },
+    {
+      "fId": "F6",
+      "exposesIn": [],
+      "requiredForEnding": true,
+      "verifiableClaims": [],
+      "reachable": false,
+      "shortestPath": null,
+      "reachableExposesCount": 0,
+      "evidenceCount": 0
+    },
+    {
+      "fId": "F7",
+      "exposesIn": [],
+      "requiredForEnding": true,
+      "verifiableClaims": [],
+      "reachable": false,
+      "shortestPath": null,
+      "reachableExposesCount": 0,
+      "evidenceCount": 0
+    },
+    {
+      "fId": "F8",
+      "exposesIn": [],
+      "requiredForEnding": true,
+      "verifiableClaims": [],
+      "reachable": false,
+      "shortestPath": null,
+      "reachableExposesCount": 0,
+      "evidenceCount": 0
+    },
+    {
+      "fId": "F9",
+      "exposesIn": [],
+      "requiredForEnding": true,
+      "verifiableClaims": [],
+      "reachable": false,
+      "shortestPath": null,
+      "reachableExposesCount": 0,
+      "evidenceCount": 0
+    },
+    {
+      "fId": "F10",
+      "exposesIn": [],
+      "requiredForEnding": true,
+      "verifiableClaims": [],
+      "reachable": false,
+      "shortestPath": null,
+      "reachableExposesCount": 0,
+      "evidenceCount": 0
+    },
+    {
+      "fId": "F11",
+      "exposesIn": [],
+      "requiredForEnding": true,
+      "verifiableClaims": [],
+      "reachable": false,
+      "shortestPath": null,
+      "reachableExposesCount": 0,
+      "evidenceCount": 0
+    },
+    {
+      "fId": "F12",
+      "exposesIn": [],
+      "requiredForEnding": true,
+      "verifiableClaims": [],
+      "reachable": false,
+      "shortestPath": null,
+      "reachableExposesCount": 0,
+      "evidenceCount": 0
+    },
+    {
+      "fId": "F13",
+      "exposesIn": [],
+      "requiredForEnding": true,
+      "verifiableClaims": [],
+      "reachable": false,
+      "shortestPath": null,
+      "reachableExposesCount": 0,
+      "evidenceCount": 0
+    },
+    {
+      "fId": "F14",
+      "exposesIn": [],
+      "requiredForEnding": true,
+      "verifiableClaims": [],
+      "reachable": false,
+      "shortestPath": null,
+      "reachableExposesCount": 0,
+      "evidenceCount": 0
+    },
+    {
+      "fId": "F15",
+      "exposesIn": [],
+      "requiredForEnding": true,
+      "verifiableClaims": [],
+      "reachable": false,
+      "shortestPath": null,
+      "reachableExposesCount": 0,
+      "evidenceCount": 0
+    }
+  ],
+  "unreachableFacts": [
+    "F1",
+    "F2",
+    "F3",
+    "F4",
+    "F5",
+    "F6",
+    "F7",
+    "F8",
+    "F9",
+    "F10",
+    "F11",
+    "F12",
+    "F13",
+    "F14",
+    "F15"
+  ],
+  "unreachableFiles": [
+    "StoryCaption",
+    "PassageHeader",
+    "StoryInit",
+    "Start",
+    "Background",
+    "Intro",
+    "Box",
+    "help",
+    "list",
+    "name",
+    "name_detail",
+    "find_results",
+    "note_list",
+    "inbox",
+    "message2-",
+    "hangman",
+    "End",
+    "00-dream",
+    "00-chen-video",
+    "00-su-identity"
+  ],
+  "deadEndFiles": [],
+  "evidenceInsufficient": [
+    {
+      "fId": "F1",
+      "reachableExposesCount": 0,
+      "totalExposesCount": 0
+    },
+    {
+      "fId": "F2",
+      "reachableExposesCount": 0,
+      "totalExposesCount": 0
+    },
+    {
+      "fId": "F3",
+      "reachableExposesCount": 0,
+      "totalExposesCount": 0
+    },
+    {
+      "fId": "F4",
+      "reachableExposesCount": 0,
+      "totalExposesCount": 0
+    },
+    {
+      "fId": "F5",
+      "reachableExposesCount": 0,
+      "totalExposesCount": 0
+    },
+    {
+      "fId": "F6",
+      "reachableExposesCount": 0,
+      "totalExposesCount": 0
+    },
+    {
+      "fId": "F7",
+      "reachableExposesCount": 0,
+      "totalExposesCount": 0
+    },
+    {
+      "fId": "F8",
+      "reachableExposesCount": 0,
+      "totalExposesCount": 0
+    },
+    {
+      "fId": "F9",
+      "reachableExposesCount": 0,
+      "totalExposesCount": 0
+    },
+    {
+      "fId": "F10",
+      "reachableExposesCount": 0,
+      "totalExposesCount": 0
+    },
+    {
+      "fId": "F11",
+      "reachableExposesCount": 0,
+      "totalExposesCount": 0
+    },
+    {
+      "fId": "F12",
+      "reachableExposesCount": 0,
+      "totalExposesCount": 0
+    },
+    {
+      "fId": "F13",
+      "reachableExposesCount": 0,
+      "totalExposesCount": 0
+    },
+    {
+      "fId": "F14",
+      "reachableExposesCount": 0,
+      "totalExposesCount": 0
+    },
+    {
+      "fId": "F15",
+      "reachableExposesCount": 0,
+      "totalExposesCount": 0
+    }
+  ],
+  "reachableNodes": [
+    "00-readme",
+    "00-invitation",
+    "00-safety-brief",
+    "00-list-of-people",
+    "01-01-PL-1",
+    "02-01-PL-1",
+    "03-01-PL-1",
+    "04-01-PL-1",
+    "12-02-QM-ZM-SM-LM-SU-5",
+    "05-01-PL-1",
+    "06-01-PL-1",
+    "11-02-ZM-1",
+    "28-05-PL-1",
+    "19-04-PL-1",
+    "25-05-PL-1",
+    "26-05-PL-1",
+    "07-02-JZ-1",
+    "09-02-QM-ZM-SM-LM-SU-ZU-6",
+    "10-02-JZ-1",
+    "21-04-PL-1",
+    "27-05-PL-1",
+    "29-05-PL-1",
+    "24-04-PL-1",
+    "08-02-JZ-1",
+    "13-03-LI-1",
+    "22-04-PL-1",
+    "20-04-ZE-1",
+    "30-05-PL-1",
+    "23-04-PL-1",
+    "14-03-LI-1",
+    "00-final-note",
+    "15-03-QM-ZM-SM-LM-SU-5",
+    "16-03-SM-LI-2",
+    "17-03-LI-1",
+    "18-03-SM-1"
+  ]
+}
