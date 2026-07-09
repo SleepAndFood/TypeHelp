@@ -35,4 +35,12 @@ export default {
   hasTestingMode: false,
   testingVariable: '$testing',
   testingPassage: 'Testing vars',
+  // 推理充分性测试（L6）
+  reasoning: {
+    enabled: false,        // 默认关闭，剧本通过 test.config.js 显式开启
+    maxSteps: 30,
+    startPassage: '00-readme',
+    endingPassages: [],
+    gracePeriod: false,    // 新剧本可设 true 获得 30 天豁免
+  },
 };
