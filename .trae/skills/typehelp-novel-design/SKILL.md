@@ -1,6 +1,6 @@
 ---
 name: "typehelp-novel-design"
-description: "为 TypeHelp 文字推理游戏设计新剧本。提供真相优先方法论、三轴交叉矩阵、标签互引图、三性验证、9 项硬约束、8 个 Agent 协作提示词。当用户要求设计 TypeHelp 剧本、启动新项目、或按既定方法论产出设计文档时调用。"
+description: "为 TypeHelp 文字推理游戏设计新剧本。提供真相优先方法论、三轴交叉矩阵、标签互引图、三性验证、10 项硬约束、10 个 Agent 协作提示词（8 设计 + 2 推理验证）。当用户要求设计 TypeHelp 剧本、启动新项目、或按既定方法论产出设计文档时调用。"
 ---
 
 # TypeHelp 文字推理游戏剧本设计
@@ -78,7 +78,7 @@ Phase 6（可并行）：Playtester × 3-5 真实玩家
 3. **契诃夫之枪**：出现过的元素必须有用途
 4. **三一律**：时间/地点/逻辑自洽
 
-### 3.2 TypeHelp 9 项硬约束
+### 3.2 TypeHelp 10 项硬约束
 
 | # | 约束 | 影响 |
 |---|---|---|
@@ -91,6 +91,7 @@ Phase 6（可并行）：Playtester × 3-5 真实玩家
 | C7 | 教程渐进式解锁 | $seen_xxx 标志分布在 4 幕 |
 | C8 | 多视角通过同事件多文件 | 每个 F 至少 2 个文件揭露 |
 | C9 | 唯一结局 = 阈值 + final-note | 单一通关路径 |
+| C10 | 推理充分性可验证 | 必须通过 Inference Simulator + Grader 黑盒验证（`required_recall = 1.0`，9 类失败归因全为 0），且 L6 静态分析无不可达 F / 无不可达文件 |
 
 ### 3.3 9 阶段流程
 
@@ -118,7 +119,7 @@ Phase 6（可并行）：Playtester × 3-5 真实玩家
 
 ---
 
-## 4. 8 个 Agent 提示词
+## 4. 10 个 Agent 提示词
 
 > 完整 system prompt 见 `.trae/specs/typehelp-novel-design/prompts/`
 
@@ -133,6 +134,8 @@ Phase 6（可并行）：Playtester × 3-5 真实玩家
 | 06 | Formal Verifier | [formal-verifier.md](../specs/typehelp-novel-design/prompts/formal-verifier.md) | 三性检查（独立否决权） |
 | 07 | Twine Implementer | [twine-implementer.md](../specs/typehelp-novel-design/prompts/twine-implementer.md) | 设计 → TypeHelp HTML 1:1 翻译 |
 | 08 | Playtester | [playtester.md](../specs/typehelp-novel-design/prompts/playtester.md) | 黑盒试玩 + 卡点记录 |
+| 09 | Inference Simulator | [inference-simulator.md](../specs/typehelp-novel-design/prompts/inference-simulator.md) | 黑盒模拟玩家推理，产出 `inference_trace.json`（过程，需人在环触发） |
+| 10 | Inference Grader | [inference-grader.md](../specs/typehelp-novel-design/prompts/inference-grader.md) | 白盒判定 F 命中 + recall + 9 类失败归因，产出 `inference_grades.json` + `inference_report.md` |
 
 ### 4.1 关键约束：每个 Agent 只产一类文档
 
@@ -147,6 +150,8 @@ Phase 6（可并行）：Playtester × 3-5 真实玩家
 | Formal Verifier | verification_report.md | 不修改任何上游（仅检查） |
 | Twine Implementer | TypeHelp_NewGame.html | 不得变更设计 |
 | Playtester | playtest_log.md | 不读任何设计文档 |
+| Inference Simulator | inference_trace.json | 不读 truth.md / file_index.md / axis_matrix.md / tag_graph.md / verification_report.md / playtest_log.md（黑盒权限） |
+| Inference Grader | inference_grades.json, inference_report.md | 不修改 truth.md（仅读取用于判定） |
 
 ### 4.2 handoff 协议
 
@@ -258,6 +263,20 @@ meta 元素: 调查员视角
 - 真实试玩（不查设计文档）
 - 招募 3-5 名真实玩家
 - 数据统计
+
+**Step 19**: Inference Simulator 产 `inference_trace.json`（手动触发，需人在环）
+- 通过 `npm run reasoning:simulate -- --game=<key>` 组装提示词
+- 黑盒玩家视角模拟推理（不读 truth.md / file_index.md 等设计文档）
+- 证据锚定：每条推理必须引用具体文件名 + 原文片段
+- 终止条件：达成结局 / 卡死 / 超时
+- 产出 `inference_trace.json`（过程记录，不含分数）
+
+**Step 20**: Inference Grader 产 `inference_grades.json` + `inference_report.md`（手动触发，消费 trace + truth.md）
+- 白盒判定：对每个 F 用语义匹配判定是否被 Simulator 推理覆盖（≥60% verifiable_claims 命中）
+- 计算 `required_recall` / `optional_recall`
+- 9 类失败归因：信息不足 / 歧义 / 推理谬误 / 死胡同 / meta 触发失败 / 命名不可推断 / 教程解锁错位 / 时空错位 / 无明示需有暗示
+- 类型套话基线对比：要求 Simulator recall - baseline recall ≥ 0.2（防止纯类型推理）
+- 通过标准：`required_recall = 1.0` 且 `optional_recall ≥ 0.5` 且 9 类失败归因全为 0
 
 ---
 

@@ -6,7 +6,7 @@
 
 ## §1 项目一句话定位
 
-TxtGame = **多剧本文字推理游戏合集**（SugarCube/Twine + TypeHelp 引擎），采用 **9 阶段方法论 + 8 Agent 协作** 模式设计新剧本。
+TxtGame = **多剧本文字推理游戏合集**（SugarCube/Twine + TypeHelp 引擎），采用 **9 阶段方法论 + 10 Agent 协作**（8 设计 Agent + 2 推理验证 Agent）模式设计新剧本。
 
 ---
 
@@ -28,7 +28,7 @@ TxtGame = **多剧本文字推理游戏合集**（SugarCube/Twine + TypeHelp 引
 
 ## §3 仓级规范速查（4 张子表）
 
-### 表 1：方法论 9 项硬约束 C1–C9
+### 表 1：方法论 10 项硬约束 C1–C10
 
 | # | 约束 | 含义 |
 |---|---|---|
@@ -41,8 +41,9 @@ TxtGame = **多剧本文字推理游戏合集**（SugarCube/Twine + TypeHelp 引
 | C7 | 教程渐进式解锁 | `$seen_xxx` 标志分布在 4 幕 |
 | C8 | 多视角通过同事件多文件 | 每个 F 至少 2 个文件揭露（双证据原则） |
 | C9 | 唯一结局 = 阈值 + final-note | 单一通关路径 |
+| C10 | 推理充分性可验证 | 每个剧本必须通过 Inference Simulator + Grader 黑盒验证（`required_recall = 1.0`，9 类失败归因全为 0），且 L6 静态分析无不可达 F / 无不可达文件 |
 
-### 表 2：5 层测试金字塔
+### 表 2：6 层测试金字塔
 
 | 层 | 工具 | 入口 | 覆盖目标 |
 |---|---|---|---|
@@ -51,6 +52,7 @@ TxtGame = **多剧本文字推理游戏合集**（SugarCube/Twine + TypeHelp 引
 | L3 叙事 | Node + Vitest | `test/narrative/*.test.js` | 时间线、线索、人物代词 |
 | L4 渲染 | jsdom + Vitest | `test/render/*.test.js` | SugarCube 引擎初始化、passage 渲染 |
 | L5 E2E | Playwright | `test/e2e/*.test.js` | 真实浏览器关键路径冒烟（含 index.html 首页：正常 / XSS / fetch 失败） |
+| L6 推理 | Vitest + Agent 提示词 | `test/reasoning/*.test.js` + `npm run reasoning:simulate` | F 可达性 / 死胡同 / 双证据 / 黑盒推理 recall（L6a 静态构图 + L6b CI 验证 + L6c Agent 人在环模拟） |
 
 > **L0 build 阶段**（在门禁 A/B/C 之前）：`run-all.js` 显式跑 `build:games` + `build:index:check`（drift 检测），任何失败立即终止。
 

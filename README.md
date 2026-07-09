@@ -17,9 +17,9 @@
 
 **AI 协作者必读顺序**：
 
-1. [AGENTS.md](AGENTS.md) — 仓级入口（5 个章节：C1–C9 / 5 层 / 4 步门禁 / 多剧本基线 / 禁止行为）
+1. [AGENTS.md](AGENTS.md) — 仓级入口（5 个章节：C1–C10 / 6 层 / 4 步门禁 / 多剧本基线 / 禁止行为）
 2. [README.md](README.md) — 本文件
-3. [SKILL.md](.trae/skills/typehelp-novel-design/SKILL.md) — 9 阶段方法论 + 8 Agent 提示词
+3. [SKILL.md](.trae/skills/typehelp-novel-design/SKILL.md) — 9 阶段方法论 + 10 Agent 提示词（8 设计 + 2 推理验证）
 4. [typehelp-novel-design spec.md](.trae/specs/typehelp-novel-design/spec.md) — 完整方法论推导
 5. `games/<target>/README.md` — 目标剧本说明
 
@@ -112,7 +112,7 @@ SS-AA-X-Y
 
 ## 设计方法论
 
-本合集中的剧本均基于 **TypeHelp 文字推理游戏剧本设计方法论** 设计（9 阶段 + 8 Agent 协作 + 9 项硬约束）。
+本合集中的剧本均基于 **TypeHelp 文字推理游戏剧本设计方法论** 设计（9 阶段 + 10 Agent 协作 + 10 项硬约束；8 设计 Agent + 2 推理验证 Agent）。
 
 **方法论约束**（每个剧本必须满足）：
 
@@ -127,6 +127,7 @@ SS-AA-X-Y
 | C7 | 教程渐进式解锁 | $seen_xxx 标志分布在 4-5 幕 |
 | C8 | 多视角通过同事件多文件 | 每个事件至少 2 个文件揭露 |
 | C9 | 唯一结局 = 阈值 + final-note | 单一通关路径 |
+| C10 | 推理充分性可验证 | 必须通过 Inference Simulator + Grader 黑盒验证（`required_recall = 1.0`，9 类失败归因全为 0），且 L6 静态分析无不可达 F / 无不可达文件 |
 
 每个剧本目录下的 `*.md` / `*.json` 文件即为该方法论的产出文档，按 9 阶段顺序命名：
 
@@ -198,4 +199,4 @@ TxtGame/
 - **Akita23508** — TypeHelp 中文翻译
 - **SugarCube** — 游戏引擎 [GitHub](https://github.com/tmedwards/sugarcube)
 - **Twine** — 交互式故事开发工具 [官网](https://twinery.org/)
-- **TypeHelp 文字推理游戏剧本设计方法论**（9 阶段 + 8 Agent）
+- **TypeHelp 文字推理游戏剧本设计方法论**（9 阶段 + 10 Agent：8 设计 + 2 推理验证）
