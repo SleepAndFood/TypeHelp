@@ -101,3 +101,48 @@ export function detectUnreachableFiles(tagGraph, unlockGraph, options) {
   }
   return unreachable;
 }
+
+/**
+ * 检测死胡同文件：有入边但无出边，且非结局文件。
+ * @param {object} tagGraph
+ * @param {object} unlockGraph
+ * @param {{endingPassages: string[]}} options
+ * @returns {string[]} 死胡同文件名列表
+ */
+export function detectDeadEndFiles(tagGraph, unlockGraph, options) {
+  const { endingPassages } = options;
+  const endingSet = new Set(endingPassages);
+  // 收集所有有出边的文件
+  const hasOutgoing = new Set();
+  for (const e of tagGraph.edges) hasOutgoing.add(e.from);
+  for (const e of unlockGraph.edges) hasOutgoing.add(e.from);
+  // 所有节点
+  const allNodes = new Set([...tagGraph.nodes, ...unlockGraph.nodes]);
+  const deadEnds = [];
+  for (const node of allNodes) {
+    if (endingSet.has(node)) continue;
+    if (!hasOutgoing.has(node)) deadEnds.push(node);
+  }
+  return deadEnds;
+}
+
+/**
+ * 检查每个 F 的可达揭露文件数是否 >= 2。
+ * @param {Array<{fId: string, exposesIn: string[], requiredForEnding: boolean}>} facts
+ * @param {Set<string>} reachableSet - 从起点 BFS 可达的文件集合
+ * @returns {{insufficient: Array<{fId: string, reachableExposesCount: number, totalExposesCount: number}>}}
+ */
+export function checkEvidenceSufficiency(facts, reachableSet) {
+  const insufficient = [];
+  for (const fact of facts) {
+    const reachableExposes = (fact.exposesIn || []).filter(f => reachableSet.has(f));
+    if (reachableExposes.length < 2) {
+      insufficient.push({
+        fId: fact.fId,
+        reachableExposesCount: reachableExposes.length,
+        totalExposesCount: (fact.exposesIn || []).length,
+      });
+    }
+  }
+  return { insufficient };
+}

@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { buildTagGraph, buildUnlockGraph, bfsReachable, detectUnreachableFiles } from '../helpers/reasoning.js';
+import { buildTagGraph, buildUnlockGraph, bfsReachable, detectUnreachableFiles, detectDeadEndFiles, checkEvidenceSufficiency } from '../helpers/reasoning.js';
 
 describe('buildTagGraph', () => {
   test('从 passages 构建 tag 图（含双向边）', () => {
@@ -114,5 +114,63 @@ describe('detectUnreachableFiles', () => {
       endingPassages: ['01-ST-1'],
     });
     expect(result).toEqual([]);
+  });
+});
+
+describe('detectDeadEndFiles', () => {
+  test('无出边且非结局的文件 = 死胡同', () => {
+    const tagGraph = {
+      nodes: ['00-readme', '01-ST-1', '02-END-1'],
+      edges: [
+        { from: '00-readme', to: '01-ST-1' },
+        { from: '01-ST-1', to: '02-END-1' },
+      ],
+    };
+    const unlockGraph = { nodes: tagGraph.nodes, edges: [] };
+    const result = detectDeadEndFiles(tagGraph, unlockGraph, {
+      endingPassages: ['02-END-1'],
+    });
+    expect(result).toEqual([]); // 01-ST-1 有出边到 02-END-1
+  });
+
+  test('有入边但无出边的非结局文件 = 死胡同', () => {
+    const tagGraph = {
+      nodes: ['00-readme', '01-ST-1', '02-DEAD-1', '03-END-1'],
+      edges: [
+        { from: '00-readme', to: '01-ST-1' },
+        { from: '01-ST-1', to: '02-DEAD-1' }, // 02-DEAD-1 有入边但无出边
+        { from: '01-ST-1', to: '03-END-1' },
+      ],
+    };
+    const unlockGraph = { nodes: tagGraph.nodes, edges: [] };
+    const result = detectDeadEndFiles(tagGraph, unlockGraph, {
+      endingPassages: ['03-END-1'],
+    });
+    expect(result).toEqual(['02-DEAD-1']);
+  });
+});
+
+describe('checkEvidenceSufficiency', () => {
+  test('可达揭露文件数 < 2 → 证据不足', () => {
+    const facts = [
+      { fId: 'F1', exposesIn: ['01-ST-1', '02-BR-1'], requiredForEnding: true },
+      { fId: 'F2', exposesIn: ['03-OR-1'], requiredForEnding: false },
+    ];
+    const reachable = new Set(['00-readme', '01-ST-1', '02-BR-1']);
+    const result = checkEvidenceSufficiency(facts, reachable);
+    // F1: 2 个揭露文件都可达 → OK
+    // F2: 仅 1 个揭露文件且不可达 → 证据不足
+    expect(result.insufficient).toEqual([
+      { fId: 'F2', reachableExposesCount: 0, totalExposesCount: 1 },
+    ]);
+  });
+
+  test('所有 F 的揭露文件都可达且 >= 2 → 空', () => {
+    const facts = [
+      { fId: 'F1', exposesIn: ['01-ST-1', '02-BR-1'], requiredForEnding: true },
+    ];
+    const reachable = new Set(['01-ST-1', '02-BR-1']);
+    const result = checkEvidenceSufficiency(facts, reachable);
+    expect(result.insufficient).toEqual([]);
   });
 });
