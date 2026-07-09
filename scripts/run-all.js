@@ -115,7 +115,7 @@ if (hasHtml && failed === 0) {
   console.log(`[skip] ${gameKey} 无 HTML → 门禁 A/B/C 跳过`);
 }
 
-// ===== 5 层金字塔 =====
+// ===== 6 层金字塔 =====
 if (failed === 0) {
   const layers = [
     { name: 'L1 静态分析',  args: ['run', 'test:static'] },
@@ -123,6 +123,9 @@ if (failed === 0) {
     { name: 'L3 叙事',     args: ['run', 'test:narrative'] },
   ];
   if (hasHtml) layers.push({ name: 'L4 渲染', args: ['run', 'test:render'] });
+  // L6 推理（CI 静态部分）：不依赖浏览器，先于 L5 E2E 跑（快速失败原则）
+  // L6b 测试内部用 forAllGames 自动跳过未启用 reasoning 的剧本，与 gameKey 无关
+  layers.push({ name: 'L6 推理', args: ['run', 'test:reasoning'] });
   if (hasHtml && !skipL5) layers.push({ name: 'L5 E2E', args: ['run', 'test:e2e'] });
 
   for (const layer of layers) {
