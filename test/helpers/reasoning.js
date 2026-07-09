@@ -25,3 +25,27 @@ export function buildTagGraph(passages) {
   }
   return { nodes, edges };
 }
+
+const CACHE_PUSH_RE = /<<\s*run\s+\$cache\.push\(\s*['"]([^'"]+)['"]\s*\)\s*>>/g;
+
+/**
+ * 从 passage body 的 <<run $cache.push("filename")>> 构建解锁图。
+ * 调用方 → 参数文件名 = 有向边。
+ * @param {Array<{name: string, text: string}>} passages
+ * @returns {{nodes: string[], edges: Array<{from: string, to: string}>}}
+ */
+export function buildUnlockGraph(passages) {
+  const nameSet = new Set(passages.map(p => p.name));
+  const nodes = [...nameSet];
+  const edges = [];
+  for (const p of passages) {
+    let match;
+    CACHE_PUSH_RE.lastIndex = 0;
+    while ((match = CACHE_PUSH_RE.exec(p.text || '')) !== null) {
+      const target = match[1];
+      if (!nameSet.has(target)) continue;
+      edges.push({ from: p.name, to: target });
+    }
+  }
+  return { nodes, edges };
+}

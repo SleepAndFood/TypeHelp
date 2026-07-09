@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { buildTagGraph } from '../helpers/reasoning.js';
+import { buildTagGraph, buildUnlockGraph } from '../helpers/reasoning.js';
 
 describe('buildTagGraph', () => {
   test('从 passages 构建 tag 图（含双向边）', () => {
@@ -35,5 +35,38 @@ describe('buildTagGraph', () => {
     ];
     const graph = buildTagGraph(passages);
     expect(graph.edges).not.toContainEqual({ from: '00-readme', to: '99-XX-9' });
+  });
+});
+
+describe('buildUnlockGraph', () => {
+  test('从 passage body 提取 $cache.push("filename") 构建解锁边', () => {
+    const passages = [
+      { name: '00-readme', text: '欢迎<<run $cache.push("01-ST-1")>>结束' },
+      { name: '01-ST-1', text: '内容<<run $cache.push("02-BR-1")>>结尾' },
+      { name: '02-BR-1', text: '结局' },
+    ];
+    const graph = buildUnlockGraph(passages);
+    expect(graph.edges).toContainEqual({ from: '00-readme', to: '01-ST-1' });
+    expect(graph.edges).toContainEqual({ from: '01-ST-1', to: '02-BR-1' });
+  });
+
+  test('匹配多种 cache.push 写法（单引号/双引号/无空格）', () => {
+    const passages = [
+      { name: 'A', text: "<<run $cache.push('B')>>" },
+      { name: 'B', text: '<<run $cache.push("C")>>' },
+      { name: 'C', text: '<<run $cache.push("D") >>' },
+      { name: 'D', text: 'end' },
+    ];
+    const graph = buildUnlockGraph(passages);
+    expect(graph.edges).toHaveLength(3);
+  });
+
+  test('过滤不存在的目标文件', () => {
+    const passages = [
+      { name: 'A', text: '<<run $cache.push("ZZ-NO")>>' },
+      { name: 'B', text: 'end' },
+    ];
+    const graph = buildUnlockGraph(passages);
+    expect(graph.edges).toHaveLength(0);
   });
 });
