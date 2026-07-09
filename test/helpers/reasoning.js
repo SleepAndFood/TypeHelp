@@ -210,3 +210,25 @@ export function analyzeReasoning(tagGraph, unlockGraph, facts, options) {
     reachableNodes: [...reachable],
   };
 }
+
+const EXPOSES_RE = /- \*\*exposes\*\*:\s*`([^`]+)`/;
+
+/**
+ * 从 file_index.md 内容解析每个文件的 exposes 标注。
+ * @param {string} indexContent - file_index.md 的完整文本
+ * @returns {Object<string, string[]>} { 文件名: [F1, F2, ...] }
+ */
+export function parseExposesFromIndex(indexContent) {
+  const result = {};
+  const sections = indexContent.split(/^(?=###\s)/m);
+  for (const section of sections) {
+    const headerMatch = section.match(/^###\s+(\S+)/);
+    if (!headerMatch) continue;
+    const fileName = headerMatch[1];
+    const exposesMatch = section.match(EXPOSES_RE);
+    if (exposesMatch) {
+      result[fileName] = exposesMatch[1].split(',').map(s => s.trim()).filter(Boolean);
+    }
+  }
+  return result;
+}

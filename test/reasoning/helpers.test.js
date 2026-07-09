@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { buildTagGraph, buildUnlockGraph, bfsReachable, detectUnreachableFiles, detectDeadEndFiles, checkEvidenceSufficiency, analyzeFacts, analyzeReasoning } from '../helpers/reasoning.js';
+import { buildTagGraph, buildUnlockGraph, bfsReachable, detectUnreachableFiles, detectDeadEndFiles, checkEvidenceSufficiency, analyzeFacts, analyzeReasoning, parseExposesFromIndex } from '../helpers/reasoning.js';
 
 describe('buildTagGraph', () => {
   test('从 passages 构建 tag 图（含双向边）', () => {
@@ -218,5 +218,30 @@ describe('analyzeReasoning', () => {
     expect(result.unreachableFacts).toEqual(['F2']);
     expect(result.unreachableFiles).toEqual(['03-OR-1']);
     expect(result.deadEndFiles).toEqual([]); // 02-BR-1 是结局，不算死胡同
+  });
+});
+
+describe('parseExposesFromIndex', () => {
+  test('从 file_index.md 内容解析每个文件的 exposes 标注', () => {
+    const indexContent = `### 11-11-MV-1
+- **tags**: \`10-11-MV-1, 12-12-CH-1\`
+- **exposes**: \`F1, F2\`
+- **内容类型**: 玩家日志
+
+### 21-SR-1
+- **tags**: \`20-11-MV-1\`
+- **exposes**: \`F1\`
+- **内容类型**: 监控室`;
+    const result = parseExposesFromIndex(indexContent);
+    expect(result['11-11-MV-1']).toEqual(['F1', 'F2']);
+    expect(result['21-SR-1']).toEqual(['F1']);
+  });
+
+  test('无 exposes 字段的文件不出现', () => {
+    const indexContent = `### 00-readme
+- **tags**: \`01-ST-1\`
+- **内容类型**: meta教程`;
+    const result = parseExposesFromIndex(indexContent);
+    expect(result['00-readme']).toBeUndefined();
   });
 });
