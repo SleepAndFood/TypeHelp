@@ -1,0 +1,7 @@
+<!-- 合成极简剧本：4 文件 + tag 互引 + 1 不可达文件 -->
+<tw-storydata name="reasoning-fixture" startnode="1">
+  <tw-passagedata pid="1" name="00-readme" tags="01-ST-1">欢迎。<<run $cache.push("01-ST-1")>></tw-passagedata>
+  <tw-passagedata pid="2" name="01-ST-1" tags="00-readme,02-BR-1">第一幕内容。<<run $cache.push("02-BR-1")>></tw-passagedata>
+  <tw-passagedata pid="3" name="02-BR-1" tags="01-ST-1">结局文件。</tw-passagedata>
+  <tw-passagedata pid="4" name="03-OR-1" tags="">孤儿文件（无入边，不可达）。</tw-passagedata>
+</tw-storydata>
