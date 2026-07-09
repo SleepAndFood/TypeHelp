@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { buildTagGraph, buildUnlockGraph, bfsReachable, detectUnreachableFiles, detectDeadEndFiles, checkEvidenceSufficiency, analyzeFacts, analyzeReasoning, parseExposesFromIndex } from '../helpers/reasoning.js';
+import { buildTagGraph, buildUnlockGraph, bfsReachable, detectUnreachableFiles, detectDeadEndFiles, checkEvidenceSufficiency, analyzeFacts, analyzeReasoning, parseExposesFromIndex, parseFactsFromTruth } from '../helpers/reasoning.js';
 
 describe('buildTagGraph', () => {
   test('从 passages 构建 tag 图（含双向边）', () => {
@@ -243,5 +243,60 @@ describe('parseExposesFromIndex', () => {
 - **内容类型**: meta教程`;
     const result = parseExposesFromIndex(indexContent);
     expect(result['00-readme']).toBeUndefined();
+  });
+});
+
+describe('parseFactsFromTruth', () => {
+  test('从 truth.md §2 表格解析 F 事实 + 新标注字段', () => {
+    const truthContent = `## 2. 客观事实表 F
+
+| 编号 | 事实 | 物理验证方式 |
+|---|---|---|
+| **F1** | 江某被赵某推入泳池 | 监控日志 | inferability: medium | required_for_ending: true | verifiable_claims: ["赵某推江某", "23:40", "泳池"] |
+| **F2** | 苏某是江某之女 | DNA报告 | inferability: hard | required_for_ending: false | verifiable_claims: ["苏某", "江某之女"] |
+`;
+    const result = parseFactsFromTruth(truthContent);
+    expect(result).toHaveLength(2);
+    expect(result[0].fId).toBe('F1');
+    expect(result[0].inferability).toBe('medium');
+    expect(result[0].requiredForEnding).toBe(true);
+    expect(result[0].verifiableClaims).toEqual(['赵某推江某', '23:40', '泳池']);
+    expect(result[1].fId).toBe('F2');
+    expect(result[1].requiredForEnding).toBe(false);
+  });
+
+  test('缺少标注字段的 F 用默认值填充', () => {
+    const truthContent = `## 2. 客观事实表 F
+
+| 编号 | 事实 | 物理验证方式 |
+|---|---|---|
+| **F3** | 某事件 | 某证据 |
+`;
+    const result = parseFactsFromTruth(truthContent);
+    expect(result[0].fId).toBe('F3');
+    expect(result[0].inferability).toBe('medium');
+    expect(result[0].requiredForEnding).toBe(true);
+    expect(result[0].verifiableClaims).toEqual([]);
+  });
+
+  test('支持多个子表（L1/L2/... 分块）', () => {
+    const truthContent = `## 2. 客观事实表 F
+
+**L1 物理层**
+
+| 编号 | 事实 | 物理验证方式 |
+|---|---|---|
+| **F1** | 事件1 | 证据1 |
+
+**L2 自治层**
+
+| 编号 | 事实 | 物理验证方式 |
+|---|---|---|
+| **F3** | 事件3 | 证据3 |
+`;
+    const result = parseFactsFromTruth(truthContent);
+    expect(result).toHaveLength(2);
+    expect(result[0].fId).toBe('F1');
+    expect(result[1].fId).toBe('F3');
   });
 });

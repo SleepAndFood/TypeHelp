@@ -232,3 +232,46 @@ export function parseExposesFromIndex(indexContent) {
   }
   return result;
 }
+
+/**
+ * 从 truth.md §2 表格解析 F 事实列表。
+ * 支持 §2 下多个子表（L1/L2/... 分块），每行可选标注：
+ *   inferability / required_for_ending / verifiable_claims
+ * @param {string} truthContent - truth.md 的完整文本
+ * @returns {Array<{fId: string, description: string, evidence: string, inferability: string, requiredForEnding: boolean, verifiableClaims: string[]}>}
+ */
+export function parseFactsFromTruth(truthContent) {
+  const result = [];
+  const lines = truthContent.split('\n');
+  let inFactSection = false;
+  for (const line of lines) {
+    if (line.startsWith('## 2.')) { inFactSection = true; continue; }
+    if (inFactSection && /^##\s/.test(line)) { inFactSection = false; continue; }
+    if (!inFactSection) continue;
+    if (line.startsWith('|---') || /^\|\s*编号/.test(line)) continue;
+    if (!line.startsWith('|')) continue;
+    // 解析表格行：| **F1** | 事实 | 证据 | inferability: X | required_for_ending: Y | verifiable_claims: [...] |
+    const cells = line.split('|').map(c => c.trim()).filter((_, i, arr) => i > 0 && i < arr.length);
+    if (cells.length < 1) continue;
+    const fIdMatch = cells[0].match(/\*\*(F\d+)\*\*/);
+    if (!fIdMatch) continue;
+    const fId = fIdMatch[1];
+    const description = cells[1] || '';
+    const evidence = cells[2] || '';
+    // 从剩余 cells 解析标注
+    let inferability = 'medium';
+    let requiredForEnding = true;
+    let verifiableClaims = [];
+    const restText = cells.slice(3).join(' ');
+    const infMatch = restText.match(/inferability:\s*(\w+)/);
+    if (infMatch) inferability = infMatch[1];
+    const reqMatch = restText.match(/required_for_ending:\s*(true|false)/);
+    if (reqMatch) requiredForEnding = reqMatch[1] === 'true';
+    const claimsMatch = restText.match(/verifiable_claims:\s*\[([^\]]*)\]/);
+    if (claimsMatch) {
+      verifiableClaims = claimsMatch[1].split(',').map(s => s.trim().replace(/^["']|["']$/g, '')).filter(Boolean);
+    }
+    result.push({ fId, description, evidence, inferability, requiredForEnding, verifiableClaims });
+  }
+  return result;
+}
