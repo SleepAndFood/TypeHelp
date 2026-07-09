@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { buildTagGraph, buildUnlockGraph } from '../helpers/reasoning.js';
+import { buildTagGraph, buildUnlockGraph, bfsReachable, detectUnreachableFiles } from '../helpers/reasoning.js';
 
 describe('buildTagGraph', () => {
   test('从 passages 构建 tag 图（含双向边）', () => {
@@ -68,5 +68,51 @@ describe('buildUnlockGraph', () => {
     ];
     const graph = buildUnlockGraph(passages);
     expect(graph.edges).toHaveLength(0);
+  });
+});
+
+describe('bfsReachable', () => {
+  test('从起点 BFS 返回所有可达节点', () => {
+    const graph = {
+      nodes: ['A', 'B', 'C', 'D'],
+      edges: [
+        { from: 'A', to: 'B' },
+        { from: 'B', to: 'C' },
+      ],
+    };
+    const reachable = bfsReachable(graph, 'A');
+    expect(reachable).toEqual(new Set(['A', 'B', 'C']));
+    expect(reachable.has('D')).toBe(false);
+  });
+});
+
+describe('detectUnreachableFiles', () => {
+  test('无入边且非起点非结局的文件 = 不可达', () => {
+    const tagGraph = {
+      nodes: ['00-readme', '01-ST-1', '02-BR-1', '03-OR-1'],
+      edges: [
+        { from: '00-readme', to: '01-ST-1' },
+        { from: '01-ST-1', to: '02-BR-1' },
+      ],
+    };
+    const unlockGraph = { nodes: tagGraph.nodes, edges: [] };
+    const result = detectUnreachableFiles(tagGraph, unlockGraph, {
+      startPassage: '00-readme',
+      endingPassages: ['02-BR-1'],
+    });
+    expect(result).toEqual(['03-OR-1']);
+  });
+
+  test('结局文件和起始文件不算不可达', () => {
+    const tagGraph = {
+      nodes: ['00-readme', '01-ST-1'],
+      edges: [{ from: '00-readme', to: '01-ST-1' }],
+    };
+    const unlockGraph = { nodes: tagGraph.nodes, edges: [] };
+    const result = detectUnreachableFiles(tagGraph, unlockGraph, {
+      startPassage: '00-readme',
+      endingPassages: ['01-ST-1'],
+    });
+    expect(result).toEqual([]);
   });
 });
