@@ -189,6 +189,7 @@ var LZString={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234
 &lt;&lt;set $acts to ["","","","",""]&gt;&gt;
 &lt;&lt;set $titles to {}&gt;&gt;
 &lt;&lt;set $cache to ["00-readme"]&gt;&gt;
+&lt;&lt;set $unlocked to ["00-readme"]&gt;&gt;
 &lt;&lt;set $is_complete to false&gt;&gt;
 &lt;&lt;set $final_message_viewed to false&gt;&gt;
 &lt;&lt;set $seen_help to false&gt;&gt;
@@ -416,11 +417,26 @@ var LZString={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234
     &lt;&lt;set $cache to $cache.sort()&gt;&gt;
     &lt;br&gt;&lt;span class="recent_ii"&gt;//得到新文件——收录至文件列表//&lt;/span&gt;&lt;br&gt;
   &lt;&lt;/if&gt;&gt;
+  &lt;&lt;if not $unlocked.includes($command)&gt;&gt;
+    &lt;&lt;run $unlocked.push($command)&gt;&gt;
+    &lt;&lt;set $unlocked to $unlocked.sort()&gt;&gt;
+  &lt;&lt;/if&gt;&gt;
+  &lt;&lt;set _tags to tags($command)&gt;&gt;
+  &lt;&lt;for _i to 0; _i lt _tags.length; _i++&gt;&gt;
+    &lt;&lt;if not $unlocked.includes(_tags[_i]) and Story.has(_tags[_i]) and not _tags[_i].startsWith("00-")&gt;&gt;
+      &lt;&lt;run $unlocked.push(_tags[_i])&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+  &lt;&lt;/for&gt;&gt;
+  &lt;&lt;set $unlocked to $unlocked.sort()&gt;&gt;
   &lt;&lt;if ("23-04-PL-1" is $command) or ("24-04-PL-1" is $command)&gt;&gt;
     &lt;&lt;if not $cache.includes("00-meta-warning")&gt;&gt;
       &lt;&lt;run $cache.push("00-meta-warning")&gt;&gt;
       &lt;&lt;set $cache to $cache.sort()&gt;&gt;
       &lt;br&gt;&lt;span class="recent_ii"&gt;//得到新文件——00-meta-warning 已解锁//&lt;/span&gt;&lt;br&gt;
+    &lt;&lt;/if&gt;&gt;
+    &lt;&lt;if not $unlocked.includes("00-meta-warning")&gt;&gt;
+      &lt;&lt;run $unlocked.push("00-meta-warning")&gt;&gt;
+      &lt;&lt;set $unlocked to $unlocked.sort()&gt;&gt;
     &lt;&lt;/if&gt;&gt;
   &lt;&lt;/if&gt;&gt;
   &lt;&lt;set $previous_scene to $command&gt;&gt;
@@ -475,27 +491,41 @@ save / load — 保存/加载进度&lt;br&gt;
 &lt;&lt;set _act_start to $act_starts[$page]&gt;&gt;
 &lt;&lt;set _act_end to $act_starts[$page+1]&gt;&gt;
 &lt;&lt;set _shown to 0&gt;&gt;
-&lt;&lt;for _i to 0; _i lt $cache.length; _i++&gt;&gt;
-  &lt;&lt;set _fn to $cache[_i]&gt;&gt;
+&lt;&lt;for _i to 0; _i lt $unlocked.length; _i++&gt;&gt;
+  &lt;&lt;set _fn to $unlocked[_i]&gt;&gt;
   &lt;&lt;set _fn_prefix to _fn.substr(0,2)&gt;&gt;
   &lt;&lt;if (_fn_prefix gte _act_start) and (_fn_prefix lt _act_end)&gt;&gt;
-    &lt;&lt;set _tags to tags($cache[_i])&gt;&gt;
+    &lt;&lt;set _tags to tags($unlocked[_i])&gt;&gt;
     &lt;&lt;set _tag_count to _tags.length&gt;&gt;
     &lt;&lt;for _j to 0; _j lt _tags.length; _j++&gt;&gt;
-      &lt;&lt;if $cache.includes(_tags[_j])&gt;&gt;
+      &lt;&lt;if $unlocked.includes(_tags[_j])&gt;&gt;
         &lt;&lt;set _tag_count -= 1&gt;&gt;
       &lt;&lt;/if&gt;&gt;
     &lt;&lt;/for&gt;&gt;
-    &lt;&lt;if _fn_prefix is "00"&gt;&gt;
-      &lt;span class="act_ii"&gt;&lt;&lt;link _fn&gt;&gt;&lt;&lt;goto _fn&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/span&gt;
-    &lt;&lt;elseif _fn_prefix gte "01" and _fn_prefix lte "06"&gt;&gt;
-      &lt;span class="act_ii"&gt;&lt;&lt;link _fn&gt;&gt;&lt;&lt;goto _fn&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/span&gt;
-    &lt;&lt;elseif _fn_prefix gte "07" and _fn_prefix lte "12"&gt;&gt;
-      &lt;span class="act_iii"&gt;&lt;&lt;link _fn&gt;&gt;&lt;&lt;goto _fn&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/span&gt;
-    &lt;&lt;elseif _fn_prefix gte "13" and _fn_prefix lte "18"&gt;&gt;
-      &lt;span class="act_iv"&gt;&lt;&lt;link _fn&gt;&gt;&lt;&lt;goto _fn&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/span&gt;
+    &lt;&lt;if $cache.includes(_fn)&gt;&gt;
+      &lt;&lt;if _fn_prefix is "00"&gt;&gt;
+        &lt;span class="act_ii"&gt;&lt;&lt;link _fn&gt;&gt;&lt;&lt;goto _fn&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/span&gt;
+      &lt;&lt;elseif _fn_prefix gte "01" and _fn_prefix lte "06"&gt;&gt;
+        &lt;span class="act_ii"&gt;&lt;&lt;link _fn&gt;&gt;&lt;&lt;goto _fn&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/span&gt;
+      &lt;&lt;elseif _fn_prefix gte "07" and _fn_prefix lte "12"&gt;&gt;
+        &lt;span class="act_iii"&gt;&lt;&lt;link _fn&gt;&gt;&lt;&lt;goto _fn&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/span&gt;
+      &lt;&lt;elseif _fn_prefix gte "13" and _fn_prefix lte "18"&gt;&gt;
+        &lt;span class="act_iv"&gt;&lt;&lt;link _fn&gt;&gt;&lt;&lt;goto _fn&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/span&gt;
+      &lt;&lt;else&gt;&gt;
+        &lt;&lt;link _fn&gt;&gt;&lt;&lt;goto _fn&gt;&gt;&lt;&lt;/link&gt;&gt;
+      &lt;&lt;/if&gt;&gt;
     &lt;&lt;else&gt;&gt;
-      &lt;&lt;link _fn&gt;&gt;&lt;&lt;goto _fn&gt;&gt;&lt;&lt;/link&gt;&gt;
+      &lt;&lt;if _fn_prefix is "00"&gt;&gt;
+        &lt;span class="act_ii"&gt;&lt;&lt;link _fn&gt;&gt;&lt;&lt;goto _fn&gt;&gt;&lt;&lt;/link&gt;&gt; &lt;span class="hints"&gt;[未读]&lt;/span&gt;&lt;/span&gt;
+      &lt;&lt;elseif _fn_prefix gte "01" and _fn_prefix lte "06"&gt;&gt;
+        &lt;span class="act_ii"&gt;&lt;&lt;link _fn&gt;&gt;&lt;&lt;goto _fn&gt;&gt;&lt;&lt;/link&gt;&gt; &lt;span class="hints"&gt;[未读]&lt;/span&gt;&lt;/span&gt;
+      &lt;&lt;elseif _fn_prefix gte "07" and _fn_prefix lte "12"&gt;&gt;
+        &lt;span class="act_iii"&gt;&lt;&lt;link _fn&gt;&gt;&lt;&lt;goto _fn&gt;&gt;&lt;&lt;/link&gt;&gt; &lt;span class="hints"&gt;[未读]&lt;/span&gt;&lt;/span&gt;
+      &lt;&lt;elseif _fn_prefix gte "13" and _fn_prefix lte "18"&gt;&gt;
+        &lt;span class="act_iv"&gt;&lt;&lt;link _fn&gt;&gt;&lt;&lt;goto _fn&gt;&gt;&lt;&lt;/link&gt;&gt; &lt;span class="hints"&gt;[未读]&lt;/span&gt;&lt;/span&gt;
+      &lt;&lt;else&gt;&gt;
+        &lt;&lt;link _fn&gt;&gt;&lt;&lt;goto _fn&gt;&gt;&lt;&lt;/link&gt;&gt; &lt;span class="hints"&gt;[未读]&lt;/span&gt;
+      &lt;&lt;/if&gt;&gt;
     &lt;&lt;/if&gt;&gt;
     &lt;&lt;if _tag_count gt 0&gt;&gt;
       &lt;span class="hints"&gt;(&lt;&lt;= _tag_count&gt;&gt;)&lt;/span&gt;
@@ -575,8 +605,8 @@ save / load — 保存/加载进度&lt;br&gt;
 &lt;br&gt;搜索"&lt;&lt;= _keyword&gt;&gt;"的结果：&lt;br&gt;&lt;br&gt;
 &lt;&lt;set _found_count to 0&gt;&gt;
 &lt;&lt;set _shown to []&gt;&gt;
-&lt;&lt;for _i to 0; _i lt $cache.length; _i++&gt;&gt;
-  &lt;&lt;set _fn to $cache[_i]&gt;&gt;
+&lt;&lt;for _i to 0; _i lt $unlocked.length; _i++&gt;&gt;
+  &lt;&lt;set _fn to $unlocked[_i]&gt;&gt;
   &lt;&lt;set _text to ""&gt;&gt;
   &lt;&lt;if Story.has(_fn)&gt;&gt;
     &lt;&lt;set _text to Story.get(_fn).text.toLowerCase()&gt;&gt;
@@ -803,7 +833,7 @@ C份在一个离线硬盘里，藏在"风往北吹"的地方。&lt;br&gt;&lt;br&
 第2页：5人委员会——钱某、赵某、孙某、李某、苏某——他们是合谋者。2017年8月11日晚上，赵某把江某推进了泳池。其余4人在保安室伪造了监控录像。安全顾问周某提供了反侦察培训。&lt;br&gt;&lt;br&gt;
 第3页：2021年，林律师发现了江某的通话录音备份，他向钱某勒索500万。5人委员会决定灭口。孙某去了广州，在酒店里毒死了林律师。2024年，他们发现我在调查，就决定处理我。李某约我今晚喝酒——我知道那瓶酒有问题。&lt;br&gt;
 请帮我完成我没有完成的事。找到三份证据，交给警方。不要相信任何人。&lt;br&gt;&lt;br&gt;
-[@] 三处关键线索：NAS隐藏分区（路径已给出）、云盘（密码提示：林律师的生日）、离线硬盘（"风往北吹"=发电机房通风管道）。
+[@] 三处关键线索：NAS隐藏分区（路径已给出）、云盘（密码提示：林律师的生日）、离线硬盘（"风往北吹"=发电机房通风管道）。陈某在信中提到"A份在NAS隐藏分区里"——那里的文件似乎是江某本人的工作记录。如果你想了解江某死前到底发现了什么，试试 find 江某 或 find 填海。
 </tw-passagedata>
 
 <tw-passagedata pid="23" name="06-01-PL-1" tags="05-01-PL-1 04-01-PL-1 07-02-JZ-1" position="200,800" size="100,100">
@@ -811,7 +841,7 @@ C份在一个离线硬盘里，藏在"风往北吹"的地方。&lt;br&gt;&lt;br&
 [33] 我去了医务室。韩某（医护）在值班。我问了关于陈某自杀的事。&lt;br&gt;
 韩某的表情变了——他看了一眼门口，确认没有人，然后小声说："陈某不是自杀。2月11日晚上，李某来医务室取了一盒'安眠药'。我看了标签——那是GHB，γ-羟基丁酸。李某说'是委员会要求的'。我没敢拒绝。"&lt;br&gt;
 韩某说完就闭嘴了，让我不要再问。&lt;br&gt;&lt;br&gt;
-[@] GHB（γ-羟基丁酸）是强效镇静剂，口服15-30分钟起效，可导致深度昏迷。这与陈某手写信中"李某约我今晚喝酒"吻合。
+[@] GHB（γ-羟基丁酸）是强效镇静剂，口服15-30分钟起效，可导致深度昏迷。这与陈某手写信中"李某约我今晚喝酒"吻合。韩某还提到，陈某生前曾在NAS里整理过一批2017年的旧档案——江某死前那几天发生了什么？输入 list 查看已解锁的文件，或试试 find 2017。
 </tw-passagedata>
 
 <!-- ======== 第二幕 THE DROWNING ======== -->
@@ -932,7 +962,7 @@ U盘根目录：/Jiang_Case_Backup/&lt;br&gt;
 [33] 我在NAS管理后台输入了隐藏分区路径：/volumes/.hidden/coral_bay_backup。密码：71202891（陈某生日1981-02-17倒序）。分区打开了。&lt;br&gt;
 里面有三个文件夹：1. surveillance_logs/——监控日志碎片和门禁记录来自这里。2. jiang_files/——江某的工作日志和邮件缓存来自这里。3. zhou_files/——周某的培训笔记和住建部处罚决定书。&lt;br&gt;
 周某的培训笔记标题是《珊瑚湾安保系统操作手册》，第3章"监控管理"详细描述了如何替换循环录像、删除操作日志、利用监控盲区移动。&lt;br&gt;&lt;br&gt;
-[@] 陈某在NAS中整理了所有证据。周某的培训笔记直接证实了反侦察培训。住建部处罚决定书证实了周某被江某举报。
+[@] 陈某在NAS中整理了所有证据。周某的培训笔记直接证实了反侦察培训。住建部处罚决定书证实了周某被江某举报。NAS分区的三个文件夹里还有更多文件——surveillance_logs/（监控日志）、jiang_files/（江某日志和邮件）、zhou_files/（周某笔记）。这些文件已解锁，输入 list 查看第二幕和第三幕的完整文件列表。
 </tw-passagedata>
 
 <tw-passagedata pid="37" name="20-04-ZE-1" tags="19-04-PL-1 11-02-ZM-1 21-04-PL-1" position="100,1100" size="100,100">
